@@ -1,0 +1,1333 @@
+\documentclass[journal]{IEEEtran}
+
+\usepackage{amsmath,amssymb,amsfonts}
+\usepackage{booktabs}
+\usepackage{cite}
+\usepackage{graphicx}
+\usepackage{algorithm}
+\usepackage{algpseudocode}
+\floatstyle{plaintop}
+\restylefloat{algorithm}
+\usepackage{array}
+\usepackage{url}
+
+\title{Transition-Aware Closed-Loop Restoration for Mobility-Coupled Distribution Systems with Measured Charging and Executable Actions}
+
+\author{Weian~Guo, Jun~Min, and Wuzhao~Li%
+\thanks{Weian Guo is with the Sino-German College of Applied Sciences, Tongji
+University, Shanghai, China, email guoweian@tongji.edu.cn.}%
+\thanks{Jun Min is with the College of Information Engineering, China Jiliang
+University, Hangzhou, Zhejiang, China, email minjun@cjlu.edu.cn.}%
+\thanks{Wuzhao Li is with Wenzhou Polytechnic, Wenzhou, Zhejiang, China, 310000,
+email lwzhao055@wzpt.edu.cn. Corresponding author is Wuzhao Li.}}
+
+\begin{document}
+\maketitle
+
+\begin{abstract}
+Restoring mobility-coupled distribution systems requires charging,
+communication, and repair actions that remain executable under cross-domain
+degradation.  We propose transition-aware physics-guided coupled (PC) rollout,
+which evaluates multistep threat propagation under a calibrated transition and
+realizes repair only through integer crew-completion events.  Forecast-matched,
+central PC, and a worst-set robust extension share forecasts and a finite route
+portfolio; all six policies share packet, SMART-DS/OpenDSS, station-flow, and
+crew-execution gates.  Evaluation combines 148,136 measured Boulder charging
+transactions, EAGLE-I outages, and a separate SMART-DS feeder.  Across 4,096
+paired scenarios, central PC reduced dimensionless cost by 0.6327\% against the
+forecast-matched no-transition ablation (paired-difference 95\% bootstrap
+interval $[-7.0372,-5.5195]$); reductions ranged from an operationally
+negligible 0.0020\% nominal effect to 1.1296\% in OOD compound cases and
+persisted under objective reweighting.  The robust extension was 0.1708\%
+worse in mean cost and improved neither CVaR nor maximum cost, so no robustness
+advantage is claimed.  Under $20\times$ electrical stress, projection corrected
+1,089 raw-infeasible hours while retaining 99.26\% of requested service.
+Theory covers the continuous predictive layer and a conditional finite-route
+bound, with discrete execution treated separately.  The result is a
+reproducible public-data service-restoration benchmark, not a field deployment
+or feeder-switching model.
+\end{abstract}
+
+\begin{IEEEkeywords}
+Smart grid restoration, electric vehicle charging, distribution systems,
+transition-aware rollout, communication networks, crew routing.
+\end{IEEEkeywords}
+
+\section{Introduction}
+
+Distribution grids are becoming coupled operating systems.  Electric vehicles
+create charging demand whose location follows urban activity and road network
+access.  Charging demand consumes feeder margin and may create local backlog
+when service capacity is insufficient.  Communication service supports charging
+coordination, sensing, and control.  A power disturbance can reduce that service
+when local routers, charging controllers, or edge devices exhaust their backup
+supply, thereby increasing backlog and affecting mobility operation before the
+full spatial consequence is observed.  Dedicated utility communication and
+backup batteries can weaken or remove this dependency; power-to-communication
+coupling is therefore a scenario coefficient, not a universal property.  The
+same effect may move
+in the opposite direction when mobility congestion changes charging arrival
+patterns and raises the load on communication-assisted charging services
+\cite{cui2021pricing,ran2024fast}.  This coupling changes restoration from a
+single-layer repair task into a finite-horizon decision problem.
+
+Power and transportation coupling has been studied from planning, pricing, and
+traffic assignment perspectives.  Coordinated charging station planning and
+traffic power flow models describe how electric mobility reshapes distribution
+operation \cite{wei2018trafficpower,qian2021fast}.  More recent work has linked
+route choice, charging navigation, and grid states in coupled urban systems
+\cite{li2024inverse,tao2024distributed}.  These studies show that charging load
+cannot be treated as a static exogenous demand when the transportation layer is
+under stress.  At the same time, cyber-physical resilience studies show that
+service disruption may spread across power, communication, and transportation
+layers rather than staying inside the first failed domain
+\cite{ti2022resilience,wen2025robust}.  A restoration method for such systems
+must therefore reason about both demand movement and threat propagation.
+
+Forecasting alone is not enough for this restoration task.  Graph forecasting
+models can estimate the near future distribution of mobility demand by using
+spatial dependence and recent temporal patterns \cite{li2018dcrnn,bai2020agcrn}.
+Digital twin models can evaluate operating constraints and service loss in a
+form that is closer to the control objective \cite{tao2019digital,
+fuller2020digital}.  The missing link is an online decision rule that converts
+forecasted charging states and propagating cyber-physical threats into
+restoration actions.  A greedy rule that repairs zones with the largest current
+loss may ignore zones that are not yet highly damaged but are positioned on a
+future cascade path.  A neural rollout rule that follows predicted demand can
+also miss this effect if restoration is still tied to the current threat map.
+
+We develop transition-aware physics-guided coupled rollout (PC rollout) for
+this decision task.
+A graph-recurrent model forecasts measured station arrivals and charging energy.
+A nonnegative transition propagates road/mobility, power, and communication
+service degradation, while restoration changes its next state.  Coefficients
+estimated from Boulder charging and EAGLE-I outage records are separated from
+constructed and sensitivity-only coefficients.  The primary central-PC policy
+scores each candidate under the calibrated transition; a separate robust
+extension takes the minimum benefit over a declared 21-matrix set.  The
+requested action is then made executable: an independent SMART-DS/OpenDSS loop
+projects charging power, a packet emulator derates late control commands, and
+an integer vehicle-routing solver creates work orders and completion events.
+The next observation closes the receding-horizon loop.
+
+The paper makes the following bounded theoretical and algorithmic contributions.
+\begin{itemize}
+\item It formulates an action-dependent, transition-aware finite-horizon
+rollout under a calibrated central propagation model and separately audits a
+worst-set extension over data-derived and sign-constrained intervals.
+\item It turns charging, communication, and repair requests into executable
+actions through AC feeder projection, packet-deadline feedback, cross-station
+flow, and route-aware integer crew scheduling.
+\item It proves conditional finite-horizon sensitivity, finite-portfolio route
+regret, budget preservation, backlog boundedness, and projected-state
+invariance, then maps each property to source-level numerical checks.
+\item It evaluates the complete loop with measured Boulder charging sessions,
+held-out EAGLE-I outage evidence, SMART-DS power flow, and 4,096 paired uncertain
+transition scenarios against an information-matched no-transition baseline and
+the worst-set extension.
+\end{itemize}
+
+The rest of this paper is organized as follows.  Section II reviews the related
+literature.  Section III gives the coupled decision model.  Section IV presents
+the propagation model, the rollout policy, and the proof.  Section V describes
+the implementation, experimental design, and empirical results.  Section VI
+discusses scope and limitations, Section VII gives data and code availability,
+and Section VIII concludes the paper.
+
+\section{Related Literature}
+
+\subsection{Electric mobility and distribution grids}
+
+Electric mobility couples urban travel activity with distribution grid
+operation.  Early charging deployment and demand models linked station access,
+charging service, and grid impacts \cite{he2015charging,sadeghi2014fast,
+alizadeh2014pev}.  These models are useful because they connect trip patterns
+with electricity demand, but most of them address planning or aggregate load
+estimation.  Later studies considered uncertainty in charging station planning,
+coordinated urban power and transportation networks, and extreme fast charging
+facilities \cite{deb2022charging,li2023milp,qian2021fast}.  Traffic power flow
+formulations further showed that transportation decisions and electrical
+constraints can be optimized in a common mathematical model
+\cite{wei2018trafficpower,lv2020semidynamic}.
+
+Recent smart grid studies have moved from planning toward operational coupling.
+Pricing and navigation models coordinate electric vehicle route choice with
+charging and grid states \cite{cui2021pricing,li2024inverse,ran2024fast}.
+Distributed electric vehicle assignment and charging navigation have also been
+studied in cyber-physical settings \cite{tao2024distributed}.  Robust planning
+for charging infrastructure has been used to improve resilience in coupled power
+distribution and transportation systems \cite{wen2025robust}.  Those studies
+motivate the coupled decision model used here.  The difference is the decision
+time scale.  Planning models decide where capacity should be built, while
+restoration must decide where scarce service and repair effort should move
+during an unfolding event.  In this setting, feeder margin, communication
+service, charging backlog, and mobility delay must be evaluated together over a
+finite-horizon.
+
+\subsection{Cyber physical resilience and digital twins}
+
+Interdependent infrastructure theory has long recognized that failures can move
+across network layers.  Foundational studies described infrastructure
+interdependencies and reviewed simulation models for interdependent critical
+systems \cite{rinaldi2001interdependencies,ouyang2014review}.  Network science
+then showed that coupled networks may experience abrupt cascade effects
+\cite{buldyrev2010cascade}.  Spreading process analysis provides mathematical
+tools for bounding the growth of such processes on graphs
+\cite{nowzari2016epidemics}.  Power system resilience studies connect these
+ideas to restoration, service continuity, and operation under disruptive events
+\cite{panteli2015resilience,arab2015proactive,ti2022resilience}.
+
+Physics-constrained security research addresses a related but distinct question:
+whether adversarial inputs to learned grid functions satisfy power balance,
+operating limits, and stealth constraints.  Formal robustness evaluation has
+been developed for intelligent security assessment and tree-ensemble smart-grid
+applications \cite{zhang2023robustness,zhang2023datasecurity}; recent work also
+constructs physically admissible attacks and defenses for hybrid learned and
+classical load-frequency control \cite{zhang2026physicsattack}.  These studies
+show why cyber scenarios must respect physical restrictions.  They do not,
+however, allocate executable restoration resources across mobility,
+communication, and distribution-service states.  PC rollout addresses that
+decision layer, while the independent feeder below constrains action execution
+without entering the policy score.
+
+Digital twins provide a modeling basis for cyber-physical decision support.
+General digital twin studies define the connection between a physical asset, a
+virtual representation, and a data exchange process \cite{tao2019digital,
+fuller2020digital}.  Work in networked sensing and industrial informatics
+emphasizes that the digital representation should remain operationally
+meaningful rather than only visually descriptive \cite{minerva2020digital}.  In
+the present setting, a useful twin must represent the variables that constrain
+grid action.  These variables include charging service, backlog, feeder margin,
+communication capacity, and restoration resources.
+
+The restoration problem considered here draws from both lines of work.  The
+threat state is not only an outage indicator.  It is a vector field over
+mobility, power, and communication domains, and it evolves through spatial
+spread and cross domain couplings.  This representation follows the cascade
+view from interdependent infrastructure analysis, while the cost evaluation
+uses service variables that can be interpreted by grid operators.  The digital
+twin is therefore not used as a visualization device.  It acts as the finite
+horizon simulator in which restoration actions are tested before the first
+action is applied.
+
+\subsection{Graph forecasting for charging states}
+
+The distribution grid observes future electric mobility demand through
+forecasts because charging load is driven by travel activity.  Diffusion
+convolutional recurrent networks and
+spatiotemporal graph convolutional networks established influential approaches
+for modeling directed traffic dependence \cite{li2018dcrnn,yu2018stgcn}.  Graph
+WaveNet and adaptive graph recurrent models improved spatial adaptation and
+temporal receptive fields \cite{wu2019graphwavenet,bai2020agcrn}.  These
+representative methods justify a compact graph-recurrent state estimator.  The
+forecast architecture is not the contribution evaluated here; the scientific
+question is how a shared forecast and current observation are converted into a
+restoration action.
+
+These forecasting methods mainly optimize prediction error.  Restoration adds a
+different requirement.  Prediction errors matter through their effect on action
+selection, and a forecast that is accurate on average can still be insufficient
+when a future cascade changes the value of restoration at particular zones.  For
+this reason, the predictor in this paper is intentionally kept as a state
+estimator rather than treated as the main decision maker.  The rollout policy
+uses the forecast to estimate future charging load, then uses the propagation
+model to form the cascade envelope that drives restoration.  This distinction
+separates demand estimation from cyber-physical risk allocation, which is
+central to the method and to the experimental comparisons.
+
+\section{Coupled Smart Grid Operation Model}
+
+\subsection{Operating state}
+
+Let $G=(V,E)$ be an urban charging service graph with $N$ zones.  The weighted
+adjacency matrix $W$ is obtained from origin and destination flows that describe
+where electric mobility demand is likely to move.  A symmetrized normalized
+matrix is denoted by $A$.  At decision time $t$, the measured and estimated
+state is
+\begin{equation}
+x_t=(m_t,e_t,q_t,c_t,p_t,z_t),
+\end{equation}
+where $m_t\in\mathbb{R}_+^N$ is mobility activity that drives charging demand,
+$e_t\in\mathbb{R}_+^N$ is charging energy demand, $q_t\in\mathbb{R}_+^N$ is
+charging backlog, $c_t\in\mathbb{R}_+^N$ is communication load,
+$p_t\in\mathbb{R}_+^N$ is feeder load, and $z_t=(z_t^r,z_t^p,z_t^c)$ is the
+mobility, power, and communication threat field.  Each threat component lies in
+$[0,1]^N$.  It is a normalized service-degradation intensity, not the binary
+state of one breaker, line, or router.  For example, $z_i^p=0.6$ means a 60\%
+derating in the zone-level power-dependent service factor; $z_i^r=0.6$ produces
+a 60\% proportional mobility impairment before the communication term.  A
+binary outage can be represented as a high-intensity limiting case.  The
+scenario scope includes cyber-induced loss of sensing/control availability and
+physical or service failures; the model does not identify attack type.
+
+The requested decision is
+\begin{equation}
+a_t=(u_t^{\mathrm{ch}},u_t^{\mathrm{com}},u_t^{\mathrm{res}}).
+\end{equation}
+The first component allocates charging service capacity, the second allocates
+communication service capacity, and the third is a continuous restoration
+priority used by the predictive scoring layer.  It is not itself a completed
+repair.
+The feasible set is
+\begin{equation}
+\begin{aligned}
+\mathcal{A}=\{a_t\ge0 \mid&
+\mathbf{1}^{\top}u_t^{\mathrm{ch}}\le B_{\mathrm{ch}},\\
+&\mathbf{1}^{\top}u_t^{\mathrm{com}}\le B_{\mathrm{com}},\\
+&\mathbf{1}^{\top}u_t^{\mathrm{res}}\le B_{\mathrm{res}}\}.
+\end{aligned}
+\end{equation}
+Here $B_{\mathrm{ch}}$, $B_{\mathrm{com}}$, and $B_{\mathrm{res}}$ are the
+available charging, communication, and normalized restoration resources during
+one decision interval.  The continuous restoration variable is a service-level
+priority used to form candidate work orders.  Section V converts these
+candidates into integer crews, explicit road routes, service times, and
+repair-completion events.  At every policy hour, charging action is also
+projected through the SMART-DS/OpenDSS feasibility loop before service is
+credited and backlog is updated.
+
+\subsection{Grid and service equations}
+
+The continuous prediction layer uses monotone service equations that are
+continuous, piecewise smooth, and Lipschitz on the stated bounded domain.
+The minimum, positive-part, and clipping operators need not be differentiable
+at their switching points.
+For zone $i$ and rollout step $h$, available communication service is
+\begin{equation}
+\bar c_{i,h}=u_{i,h}^{\mathrm{com}}(1-z_{i,h}^{p})(1-\alpha_c z_{i,h}^{c}),
+\end{equation}
+where $\alpha_c\in[0,1]$ measures direct communication degradation.  The load
+placed on communication is
+\begin{equation}
+c_{i,h}=\beta_m m_{i,h}+\beta_e e_{i,h}
++\beta_r z_{i,h}^{r}+\beta_p z_{i,h}^{p}.
+\end{equation}
+The resulting communication loss is
+\begin{equation}
+\ell_{i,h}^{c}=[c_{i,h}-\bar c_{i,h}]_+.
+\end{equation}
+Communication support affects charging coordination and mobility service through
+\begin{equation}
+\eta_{i,h}^{c}=1-\min\left\{0.9,\frac{\ell_{i,h}^{c}}{1+c_{i,h}}\right\}.
+\end{equation}
+This algebraic relation is an hourly workload model.  Executability is supplied
+by a finite-buffer packet emulator with retransmission and deadline logic.  If
+$d_{i,h}\in[0,1]$ is the simulated fraction of control packets delivered before
+their deadline, the automated action applied to the service and threat
+transitions is
+\begin{equation}
+\tilde a_{i,h}=d_{i,h}a_{i,h}.
+\label{eq:packet-derate}
+\end{equation}
+The emulator keeps full service rate while backup power is available and
+applies power-induced service derating only after backup exhaustion.  Packet
+loss and delay therefore change the implemented action rather than appearing
+only as an after-the-fact diagnostic.
+Before charging service is credited, the packet-derated request is mapped to
+three-phase SMART-DS loads and scaled by the largest AC-feasible fraction
+$\alpha_h^{\mathrm{AC}}\in[0,1]$ found by bisection,
+\begin{equation}
+u_{i,h}^{\mathrm{ch,exec}}=
+\alpha_h^{\mathrm{AC}}\tilde u_{i,h}^{\mathrm{ch}}.
+\label{eq:smartds-project}
+\end{equation}
+The feeder must converge, all energized-node voltages must lie in
+$[0.95,1.05]$ p.u., and maximum line loading must not exceed 1.0 p.u.  Charging
+service is therefore
+\begin{equation}
+s_{i,h}^{\mathrm{ch}}=
+\min\left\{e_{i,h}+\rho_q q_{i,h},
+u_{i,h}^{\mathrm{ch,exec}}(1-z_{i,h}^{p})\eta_{i,h}^{c}\right\}.
+\end{equation}
+The charging backlog evolves as
+\begin{equation}
+q_{i,h+1}=
+\left[e_{i,h}+\rho_q q_{i,h}
+-s_{i,h}^{\mathrm{ch}}\right]_+ .
+\end{equation}
+We impose $0\le\rho_q<1$ (the implementation uses $\rho_q=0.22$).  If hourly
+arrival energy is bounded by $\bar e$, then
+$q_{i,h+1}\le \bar e+\rho_q q_{i,h}$ and consequently
+$q_{i,h}\le\max\{q_{i,0},\bar e/(1-\rho_q)\}$.
+
+The original zone-level feeder-margin surrogate is retained only as an
+interpretable service diagnostic,
+\begin{equation}
+\ell_{i,h}^{\mathrm{fm}}=
+\left[p_i^0+s_{i,h}^{\mathrm{ch}}
+-\bar p_i(1-\alpha_p z_{i,h}^{p})\right]_+,
+\end{equation}
+where $p_i^0$ is an abstract base load and $\bar p_i$ is an abstract local
+capacity.  It is neither called nor used as a voltage violation: executable
+charging is determined by the online OpenDSS projection in
+\eqref{eq:smartds-project}.
+Mobility delay is
+\begin{equation}
+\ell_{i,h}^{m}=
+m_{i,h}\left(z_{i,h}^{r}+\rho_c(1-\eta_{i,h}^{c})\right).
+\end{equation}
+Unserved charging is defined once as
+$\ell_{i,h}^{e}=[e_{i,h}+\rho_q q_{i,h}-s_{i,h}^{\mathrm{ch}}]_+$, and
+power-dependent service loss is
+$\ell_{i,h}^{p}=z_{i,h}^{p}(e_{i,h}+\rho_q q_{i,h})$.
+The coefficients in these equations have fixed physical roles.  The parameters
+$\beta_m$, $\beta_e$, $\beta_r$, and $\beta_p$ convert mobility activity,
+charging demand, mobility threat, and power threat into communication workload.
+The coefficient $\rho_q$ is backlog carryover, and $\alpha_p$ is the abstract
+capacity derating caused by power threat.  The coefficient $\rho_c$ converts
+communication service reduction into delayed-trip equivalents.
+The stage risk is
+\begin{align}
+L(x_h,a_h)
+=\sum_{i=1}^{N}\big(&
+\lambda_m\ell_{i,h}^{m}+\lambda_e\ell_{i,h}^{e} \nonumber\\
+&+\lambda_c\ell_{i,h}^{c}
++\lambda_p\ell_{i,h}^{p} \nonumber\\
+&+\lambda_z[z_{i,h}^{p}z_{i,h}^{c}
++z_{i,h}^{r}(1-\eta_{i,h}^{c})]\big).
+\label{eq:stage}
+\end{align}
+The nonnegative weights $\lambda_m$, $\lambda_e$, $\lambda_c$, $\lambda_p$, and
+$\lambda_z$ set the relative contributions of mobility delay, unmet charging
+demand, communication loss, power-dependent service loss, and cross-domain
+exposure.  The objective is dimensionless because these heterogeneous terms are
+combined with fixed relative weights; it is not a monetary operating cost.
+Unserved charging appears only through $\ell^e$.  All coefficients are held
+fixed across policies.
+
+For a feasible policy $\pi$, the finite-horizon rollout objective at decision
+time $t$ is
+\begin{align}
+J_H^{\pi}(x_t,\zeta_t)
+&=\sum_{h=0}^{H-1}\gamma^h L(x_{t+h},a_{t+h}), \label{eq:objective}\\
+a_{t+h}
+&=\pi(x_{t+h},\zeta_{t+h},A).
+\end{align}
+The closed loop controller applies only the first action from the horizon
+calculation.  At the next decision time, the observed state replaces the
+previous prediction and the calculation is repeated.  In this receding horizon
+interpretation, the next state measurement absorbs forecast errors and threat
+disturbances before the following decision.
+
+\subsection{Forecasting component}
+
+The forecaster estimates mobility and charging demand.
+\begin{equation}
+\hat y_{t+1:t+H}=f_{\theta}(y_{t-L+1:t},A),
+\end{equation}
+where $y_t=(m_t,e_t)$, $L$ is the historical window, and $H$ is the rollout
+horizon.  The implemented model first mixes node features through $A$, then
+updates zone states using a recurrent cell, and finally maps the hidden state to
+the horizon.  Keeping the forecaster small makes its role clear inside the
+larger decision model.  Classical baselines and the learned model are compared
+in Section V so that the decision results can be interpreted relative to the
+forecasting quality.
+
+The input series is transformed by a logarithmic map and normalized using only
+the training portion of the calendar year.  For a time index $\tau$,
+\begin{equation}
+\tilde y_{\tau}=
+\frac{\log(1+y_{\tau})-\mu}{\sigma}.
+\end{equation}
+The graph recurrent forecaster uses one graph mixing operation before each
+recurrent update.  With hidden state $h_{\ell}$ inside the historical window,
+\begin{align}
+g_{\ell} &= A\tilde y_{t-L+\ell},\\
+h_{\ell} &= \mathrm{GRU}(W_g g_{\ell},Ah_{\ell-1}),\\
+\hat y_{t+1:t+H} &= W_o\,\phi(h_L).
+\end{align}
+Here $\phi$ denotes the output transformation used by the prediction head.  The
+primary forecaster is trained with the Huber loss
+\begin{equation}
+\mathcal{L}_{\mathrm{for}}=\mathcal{L}_{\mathrm{Huber}}(\hat y,y).
+\end{equation}
+Its spatial inductive bias comes from the fixed origin--destination graph mixing
+inside the recurrent architecture, not from an additional physical penalty.
+Three random seeds are trained, and the checkpoint is selected only by the
+validation score defined in the accompanying code.  An auxiliary graph-smooth
+training mode is retained in the archive for reproducibility, but it is not used
+by the revised rollout evaluation because its validation score is worse.
+
+\section{Physics Guided Smart Grid Rollout}
+
+\subsection{Threat propagation}
+
+Let $\zeta_h=(z_h^r,z_h^p,z_h^c)\in[0,1]^{3N}$.  Two transitions are kept
+explicit because prediction and execution have different roles.  The
+continuous transition used only to score a requested restoration priority is
+\begin{equation}
+\hat\zeta_{h+1}=
+\Pi_{\mathcal{Z}}\left(M\hat\zeta_h-Ru_h^{\mathrm{pri}}+\hat\xi_h\right),
+\label{eq:propagation}
+\end{equation}
+where $\mathcal{Z}=[0,0.98]^{3N}$, $\Pi_{\mathcal{Z}}$ is Euclidean projection,
+$M\ge0$ is the cross-domain propagation matrix, $R\ge0$ maps the zone-level
+priority $u_h^{\mathrm{pri}}$ to predicted road, power, and communication
+relief, and $\hat\xi_h$ is the innovation assumed by the scorer.  Equation
+\eqref{eq:propagation} does not update the realized state.
+
+For execution, let $\bar r_{i,h}\in\{0,1\}$ indicate that a dispatched work
+order in zone $i$ has completed by the end of interval $h$, and define
+$D(\bar r_h)=I_3\otimes\operatorname{diag}(1-\bar r_h)$.  The main simulator
+uses
+\begin{equation}
+\zeta_{h+1}=D(\bar r_h)
+\Pi_{\mathcal Z}\left(M\zeta_h+\xi_h\right).
+\label{eq:executed-propagation}
+\end{equation}
+Waiting, travel, and service do not change $\bar r_h$; only a logged crew
+completion event changes it from zero to one.  Thus no continuous priority is
+credited as realized repair.  With
+$K_d=\rho_dI+\sigma A$ for $d\in\{r,p,c\}$, the implemented matrix is
+\begin{equation}
+M=\begin{bmatrix}
+K_r&\tau_{pr}I&\tau_{cr}I\\
+0&K_p&\tau_{cp}A\\
+\tau_{rc}A&\tau_{pc}I&K_c
+\end{bmatrix}.
+\label{eq:Mblocks}
+\end{equation}
+The normalized adjacency $A$ enters both within-domain spread and selected
+cross-domain paths.  Boulder charging deficits estimate $\rho_r$ and $\sigma$;
+EAGLE-I Boulder County outages estimate $\rho_p$; aligned outage and charging
+records bound $\tau_{pr}$; and the packet emulator constructs the
+power-to-communication interval for $\tau_{pc}$.  Coefficients lacking joint
+field observations are explicitly labeled sensitivity-only.  Bootstrap and
+sign-constrained intervals define an uncertainty set $\mathcal U$.  The central
+matrix has estimated spectral radius 1.028, so no asymptotic contraction is
+claimed; projection makes the implemented state set invariant and the policy is
+evaluated over a finite six-hour horizon and a 100,000-step stress test.
+
+PC rollout scores restoration by its action-dependent marginal benefit.  Let
+$w_{i,h}$ be a bounded exposure weight formed from the shared mobility and
+energy forecast, and let $\Omega=\mathrm{diag}(\omega_r,\omega_p,\omega_c)$.
+For a candidate first restoration vector $v$, define
+\begin{equation}
+\mathcal{C}_t(v)=\sum_{h=0}^{H-1}\sum_{i=1}^{N}
+ w_{i,h}\mathbf{1}^{\top}\Omega\hat\zeta_{i,t+h}(v),
+\label{eq:envelope}
+\end{equation}
+where $\hat\zeta_{t+h}(v)$ follows \eqref{eq:propagation}, using $v$ only in the
+first predicted transition.  For reference quantum $\delta$, the marginal
+benefit of repairing zone $i$ is
+$b_{i,t}(M)=[\mathcal{C}_t(0;M)-\mathcal{C}_t(\delta e_i;M)]_+$.  The primary
+transition-aware policy uses the calibrated central matrix $M_c$,
+$b_{i,t}^{\rm cen}=b_{i,t}(M_c)$.  A separately evaluated robust extension uses
+the lower envelope
+\begin{equation}
+b_{i,t}^{\rm rob}=\min_{M\in\mathcal U_V} b_{i,t}(M),
+\end{equation}
+where $\mathcal U_V$ contains the central matrix, joint lower and upper
+vertices, and one-coefficient-at-a-time interval endpoints (21 matrices in the
+implementation).  The policy-specific time-indexed restoration score is
+\begin{equation}
+s_{i,t}^{\mathrm{res}}=
+\omega_pz_{i,t}^{p}+\omega_cz_{i,t}^{c}+\omega_rz_{i,t}^{r}
++\omega_{\Gamma}b_{i,t}^{\pi}.
+\end{equation}
+Here $b^{\pi}=b^{\rm cen}$ for the primary central-PC method and
+$b^{\pi}=b^{\rm rob}$ only for the robust extension.
+The restoration action uses a small uniform reserve and a concave risk
+allocation.
+\begin{equation}
+u_i^{\mathrm{res}}=
+\frac{\eta B_{\mathrm{res}}}{N}
++(1-\eta)B_{\mathrm{res}}
+\frac{\sqrt{s_i^{\mathrm{res}}+\epsilon}}
+{\sum_{j=1}^{N}\sqrt{s_j^{\mathrm{res}}+\epsilon}},
+\label{eq:allocation}
+\end{equation}
+where $\eta$ is the reserve fraction.  The square root creates concavity.  It
+prevents a single zone from taking nearly all restoration effort while still
+giving more effort to zones with larger cascade exposure.
+The weights $\omega_p$, $\omega_c$, $\omega_r$, and $\omega_{\Gamma}$ are
+nonnegative constants that control direct domain exposure and the multi-step
+action benefit.  The constant $\epsilon$ is a small positive stabilizer that
+keeps every zone eligible for a nonzero reserve.
+
+Charging and communication capacities are assigned with the same allocator so
+that all resource decisions share the same feasibility structure.  For any
+budget $B$, nonnegative score vector $v$, and reserve fraction $\eta_B$, define
+\begin{equation}
+\Phi_i(B,v,\eta_B)=
+\frac{\eta_B B}{N}
++(1-\eta_B)B
+\frac{\sqrt{v_i+\epsilon}}
+{\sum_{j=1}^{N}\sqrt{v_j+\epsilon}}.
+\label{eq:allocator}
+\end{equation}
+PC rollout uses
+\begin{align}
+u_i^{\mathrm{ch}}&=\Phi_i(B_{\mathrm{ch}},g^{\mathrm{ch}},\eta_{\mathrm{ch}}),\\
+u_i^{\mathrm{com}}&=\Phi_i(B_{\mathrm{com}},g^{\mathrm{com}},\eta_{\mathrm{com}}),
+\end{align}
+where
+\begin{align}
+g_{i,t}^{\mathrm{ch}}
+&=\sum_{h=1}^{H}\hat e_{i,t+h}+\kappa_q q_{i,t}
++\kappa_{\mathrm{ch}}
+\left(z_{i,t}^{r}+z_{i,t}^{p}+z_{i,t}^{c}\right),\\
+g_{i,t}^{\mathrm{com}}
+&=\sum_{h=1}^{H}\hat m_{i,t+h}
++\kappa_E\left(\sum_{h=1}^{H}\hat e_{i,t+h}+\kappa_q q_{i,t}\right) \nonumber\\
+&\quad+\kappa_{\mathrm{com}}
+\left(z_{i,t}^{r}+z_{i,t}^{p}+z_{i,t}^{c}\right).
+\end{align}
+Service capacity follows predicted demand, while the requested restoration
+priority follows the future cascade envelope.  Charging and communication
+resources serve expected load.  In the scoring layer, priority perturbs
+\eqref{eq:propagation}; in the execution layer, only the completion indicator
+in \eqref{eq:executed-propagation} changes realized threat.
+The coefficients $\kappa_q$, $\kappa_{\mathrm{ch}}$, $\kappa_E$, and
+$\kappa_{\mathrm{com}}$ determine how observed backlog, current threat, and
+forecasted charging demand alter the time-varying service scores.  For the main
+experiment, an initial threat realization and adjacency-based propagation
+create a policy-independent set of at most 36 work orders.  Four integer crews
+start from a common depot.  Candidate routes are constructed from static,
+greedy, forecast-matched, central-PC, robust-PC, and uniform priorities using
+the same jobs, travel matrix, service-time draws, and dispatch uniforms for
+every policy.
+Forecast-matched, central PC, and robust PC see exactly this same finite route
+portfolio.  Forecast-matched minimizes current exposure-weighted completion
+without propagating $M$; central PC minimizes predicted integrated risk under
+the calibrated central $M$; robust PC minimizes the worst predicted integrated
+risk over the 21-matrix uncertainty set.  Travel uses geocoded station
+locations, 1.25 road circuity, and 30 km/h;
+service-time scenarios are informed by observed EAGLE-I post-peak recovery
+times.  Because those county traces are not work orders, they are an explicit
+scenario prior rather than measured crew durations.  A dispatched job changes
+no restoration state while waiting or being serviced.  Only its logged
+completion event clears local threat, after which the zone remains repaired
+within the horizon.  The mobility graph $A$ is used for propagation; crew
+travel uses the separate geocoded road-distance matrix.
+
+\begin{algorithm}[t]
+\caption{Transition-aware physics-guided coupled rollout}
+\label{alg:pcr}
+\begin{tabular}{@{}p{\linewidth}@{}}
+\toprule
+\begin{minipage}{0.96\linewidth}
+\textbf{Require:} Current state $x_t$, graph $A$, budgets
+$B_{\mathrm{ch}}$, $B_{\mathrm{com}}$, $B_{\mathrm{res}}$, horizon $H$, and
+trained forecaster $f_{\theta}$ \\
+\textbf{Ensure:} Executable service action and event-driven repair update
+\end{minipage}
+\\
+\midrule
+\begin{minipage}{0.96\linewidth}
+\begin{algorithmic}[1]
+\State Predict $\hat y_{t+1:t+H}$ with $f_{\theta}$
+\State Initialize mobility, power, and communication threats from the observed state
+\For{each zone $i$}
+\State Roll out \eqref{eq:propagation} at $M_c$ with no first action and candidate $\delta e_i$
+\State Set $b_{i,t}^{\rm cen}\gets[\mathcal{C}_t(0;M_c)-\mathcal{C}_t(\delta e_i;M_c)]_+$
+\State Optionally evaluate $b_{i,t}^{\rm rob}$ over $\mathcal U_V$ for the robust extension
+\EndFor
+\State Allocate charging and communication service with \eqref{eq:allocator}
+\State Compute requested restoration priority $u_t^{\mathrm{pri}}$ with \eqref{eq:allocation}
+\State Translate priorities into requested work orders
+\State Apply the packet deadline gate to form dispatched work orders
+\State Construct the common finite route portfolio over dispatched orders
+\State Select a route by current, central-$M$, or worst-set scoring according to policy
+\State Gate charging and communication actions by on-time packets
+\State Project charging through OpenDSS; credit only the executable service
+\State Advance \eqref{eq:executed-propagation} only when a crew completion event occurs
+\State Observe the next state and repeat
+\end{algorithmic}
+\end{minipage}
+\\
+\bottomrule
+\end{tabular}
+\end{algorithm}
+
+Algorithm~\ref{alg:pcr} states the decision rule.  Forecasting, propagation,
+service evaluation, and restoration allocation are kept as separate calculations
+so that the effect of each component can be inspected.
+
+\textit{Lemma 1.}  The restoration-priority allocation in \eqref{eq:allocation} is feasible
+for every nonnegative score vector.
+
+\textit{Proof.}  Each score satisfies $s_i^{\mathrm{res}}\ge0$ and
+$\epsilon>0$, so every square root in \eqref{eq:allocation} is positive.  Hence
+$u_i^{\mathrm{res}}\ge0$ for all zones.  Summing \eqref{eq:allocation} over all
+zones gives
+\begin{align}
+\sum_{i=1}^{N}u_i^{\mathrm{res}}
+&=\sum_{i=1}^{N}\frac{\eta B_{\mathrm{res}}}{N}
++(1-\eta)B_{\mathrm{res}}
+\frac{\sum_{i=1}^{N}\sqrt{s_i^{\mathrm{res}}+\epsilon}}
+{\sum_{j=1}^{N}\sqrt{s_j^{\mathrm{res}}+\epsilon}} \nonumber\\
+&=\eta B_{\mathrm{res}}+(1-\eta)B_{\mathrm{res}}
+=B_{\mathrm{res}}.
+\end{align}
+The requested priority satisfies the nonnegativity and budget constraints.  \hfill
+$\square$
+
+\subsection{Mathematical properties}
+
+The Lipschitz results below concern the continuous pre-execution prediction and
+allocation operators.  They exclude packet deadline switches, OpenDSS
+accept/reject tests and bisection, station-flow active-set changes, finite-route
+argmin selection, and integer completion events.  Those executable modules are
+covered instead by the finite-portfolio bound and constraint-preservation
+proposition below.
+
+The analysis uses the Euclidean norm.  The projection onto a closed convex set
+is nonexpansive, so
+\begin{equation}
+\|\Pi_{\mathcal{Z}}(u)-\Pi_{\mathcal{Z}}(v)\|\le \|u-v\|.
+\label{eq:projection}
+\end{equation}
+
+\textit{Condition 1.}  On the stated bounded continuous prediction domain and
+for all feasible requested actions, the one-step service-state operator
+$F_c(x,a,\zeta)$ is
+Lipschitz in $(x,\zeta)$ with finite constants $L_x$ and $L_z$.
+\begin{equation}
+\|F_c(x,a,\zeta)-F_c(\tilde x,a,\tilde \zeta)\|
+\le L_x\|x-\tilde x\|+L_z\|\zeta-\tilde \zeta\|.
+\end{equation}
+
+\textit{Condition 2.}  The stage risk in \eqref{eq:stage} is Lipschitz in
+$(x,\zeta)$ with constants $C_x$ and $C_z$ for all feasible actions.
+\begin{equation}
+|L(x,a,\zeta)-L(\tilde x,a,\tilde\zeta)|
+\le C_x\|x-\tilde x\|+C_z\|\zeta-\tilde \zeta\|.
+\end{equation}
+These conditions are justified for the continuous operators on the bounded
+domain, not for all of $\mathbb{R}^n$ or for the complete hybrid executor.
+Projection, scalar minimum, positive part, and clipping are nonexpansive but
+need not be differentiable at switching points.  The affine maps have finite
+operator norms, products are Lipschitz on a bounded set, and the backlog is
+bounded by $\rho_q<1$.  Finite composition therefore implies existence of
+finite constants for this continuous layer.  Numerical property tests check
+invariants and sampled contracts; they do not estimate or prove global
+Lipschitz constants.
+
+\textit{Lemma 2.}  For fixed action sequence and disturbance sequence, if two
+rollout trajectories start from threat fields $\zeta_0$ and $\tilde\zeta_0$ and
+from the same physical state, then
+\begin{equation}
+\|\zeta_h-\tilde\zeta_h\|
+\le\|M\|^h\|\zeta_0-\tilde\zeta_0\|.
+\label{eq:lemma1}
+\end{equation}
+
+\textit{Proof.}  Let $\Delta_h=\|\zeta_h-\tilde\zeta_h\|$ and
+$E_h=\|x_h-\tilde x_h\|$.  Because the action and innovation sequences are
+shared, \eqref{eq:propagation} and the nonexpansiveness in
+\eqref{eq:projection} give
+$\Delta_{h+1}\le\|M\|\Delta_h$.  Iteration proves \eqref{eq:lemma1}.
+\hfill $\square$
+
+\textit{Lemma 3.}  Under Condition 1, the service-state error satisfies
+\begin{equation}
+E_h\le
+\sum_{k=0}^{h-1}L_x^{h-1-k}L_z\Delta_k .
+\label{eq:lemma2}
+\end{equation}
+
+\textit{Proof.}  The two rollouts use the same action sequence.  Condition 1
+gives $E_{h+1}\le L_xE_h+L_z\Delta_h$.  Since the initial physical state is the
+same, $E_0=0$.  Expanding the recursion gives
+$E_1\le L_z\Delta_0$ and
+$E_2\le L_xL_z\Delta_0+L_z\Delta_1$.  Repeating the expansion gives
+\eqref{eq:lemma2}.  \hfill $\square$
+
+\textit{Theorem 1.}  Let $J_H(x_0,\zeta_0)$ be the discounted $H$ step risk of
+a fixed feasible action sequence, and let $\tilde J_H(x_0,\tilde\zeta_0)$ be the
+corresponding risk for an initial threat estimate $\tilde\zeta_0$.  For any
+$\alpha>0$, define
+\begin{equation}
+\chi_{\alpha}=
+\max\left\{\|M\|+\alpha L_z,\,
+L_x\right\}.
+\end{equation}
+If $\|\zeta_0-\tilde\zeta_0\|\le \varepsilon$, then
+\begin{equation}
+|J_H(x_0,\zeta_0)-\tilde J_H(x_0,\tilde\zeta_0)|
+\le
+\varepsilon \left(C_z+\frac{C_x}{\alpha}\right)
+\sum_{h=0}^{H-1}(\gamma\chi_{\alpha})^h .
+\label{eq:riskbound}
+\end{equation}
+For every finite $H$ the sum is finite.  If $\gamma\chi_{\alpha}<1$, it is also
+uniformly bounded as the horizon increases by
+\begin{equation}
+\varepsilon \left(C_z+\frac{C_x}{\alpha}\right)
+\frac{1}{1-\gamma\chi_{\alpha}}.
+\end{equation}
+
+\textit{Proof.}  Let
+$\Delta_h=\|\zeta_h-\tilde\zeta_h\|$ and
+$E_h=\|x_h-\tilde x_h\|$.  Lemma 2 and Condition 1 give the one-step bounds
+\begin{align}
+\Delta_{h+1} &\le \|M\|\Delta_h, \label{eq:delta_step}\\
+E_{h+1} &\le L_z\Delta_h+L_xE_h . \label{eq:state_step}
+\end{align}
+For a fixed $\alpha>0$, define the weighted error
+$V_h=\Delta_h+\alpha E_h$.  Multiplying \eqref{eq:state_step} by $\alpha$ and
+adding \eqref{eq:delta_step} gives
+\begin{align}
+V_{h+1}
+&\le (\|M\|+\alpha L_z)\Delta_h
++\alpha L_xE_h \nonumber\\
+&\le \chi_{\alpha}\Delta_h+\alpha\chi_{\alpha}E_h
+=\chi_{\alpha}V_h .
+\end{align}
+The two rollouts start from the same physical state, so $E_0=0$ and
+$V_0=\Delta_0\le\varepsilon$.  Induction gives
+$V_h\le\chi_{\alpha}^h\varepsilon$ for every $h$.  Since
+$\Delta_h\le V_h$ and $E_h\le V_h/\alpha$, Condition 2 yields
+\begin{equation}
+|L(x_h,a_h,\zeta_h)-L(\tilde x_h,a_h,\tilde\zeta_h)|
+\le
+\left(C_z+\frac{C_x}{\alpha}\right)
+\chi_{\alpha}^h\varepsilon .
+\end{equation}
+Multiplying by $\gamma^h$ and summing from $h=0$ to $H-1$ gives
+\eqref{eq:riskbound}.  The infinite geometric series gives the uniform bound
+when $\gamma\chi_{\alpha}<1$.  \hfill $\square$
+
+\textit{Condition 3.}  The continuous service transition, stage risk, and
+pre-execution PC allocation map $\pi_c$ are Lipschitz in the action argument on
+the compact feasible set.
+There are finite constants $L_a$, $C_a$, $L_{\pi}^x$, and $L_{\pi}^{z}$ such
+that
+\begin{align}
+\|F_c(x,a,\zeta)-F_c(x,\tilde a,\zeta)\|&\le L_a\|a-\tilde a\|,\\
+|L(x,a,\zeta)-L(x,\tilde a,\zeta)|&\le C_a\|a-\tilde a\|,\\
+\|\pi_c(x,\zeta,A)-\pi_c(\tilde x,\tilde\zeta,A)\|
+&\le L_{\pi}^x\|x-\tilde x\|+L_{\pi}^{z}\|\zeta-\tilde\zeta\|.
+\end{align}
+The last inequality concerns the continuous score-to-allocation map: candidate
+rollouts use \eqref{eq:propagation}, positive part is
+nonexpansive, and the allocator uses $\sqrt{s+\epsilon}$ with
+$\epsilon>0$.  Its derivative is bounded by $1/(2\sqrt{\epsilon})$, and the
+positive normalization denominator is bounded away from zero.  This supplies a
+finite constant on the compact continuous domain.  It does not apply to the
+subsequent finite-route argmin, packet events, OpenDSS projection switch, or
+integer crew completion process.
+
+\textit{Corollary 1 (continuous pre-execution sensitivity).}  Let
+$J_H^{\pi_c}(x_0,\zeta_0)$ and
+$\tilde J_H^{\pi_c}(x_0,\tilde\zeta_0)$ be the predictive risks generated by
+the continuous PC score-and-allocation layer from the same physical state and
+two initial threat estimates.  Define
+\begin{align}
+\bar L_x&=L_x+L_aL_{\pi}^x,\quad
+\bar L_z=L_z+L_aL_{\pi}^{z},\\
+\bar C_x&=C_x+C_aL_{\pi}^x,\quad
+\bar C_z=C_z+C_aL_{\pi}^{z}.
+\end{align}
+For any $\alpha>0$, let
+\begin{equation}
+\bar\chi_{\alpha}=
+\max\left\{\|M\|+\|R\|L_{\pi}^{z}+\alpha\bar L_z,\,
+\bar L_x+\frac{\|R\|L_{\pi}^{x}}{\alpha}\right\}.
+\end{equation}
+If $\|\zeta_0-\tilde\zeta_0\|\le\varepsilon$, then
+\begin{equation}
+|J_H^{\pi_c}(x_0,\zeta_0)-\tilde J_H^{\pi_c}(x_0,\tilde\zeta_0)|
+\le
+\varepsilon\left(\bar C_z+\frac{\bar C_x}{\alpha}\right)
+\sum_{h=0}^{H-1}(\gamma\bar\chi_{\alpha})^h .
+\end{equation}
+
+\textit{Proof.}  Let $a_h=\pi_c(x_h,\zeta_h,A)$ and
+$\tilde a_h=\pi_c(\tilde x_h,\tilde\zeta_h,A)$.  Condition 3 gives
+\[
+\|a_h-\tilde a_h\|\le L_{\pi}^xE_h+L_{\pi}^{z}\Delta_h .
+\]
+Combining this bound with Conditions 1 and 3 and the restoration term in
+\eqref{eq:propagation} yields
+\begin{align}
+E_{h+1}&\le \bar L_xE_h+\bar L_z\Delta_h,\\
+\Delta_{h+1}&\le
+(\|M\|+\|R\|L_{\pi}^{z})\Delta_h+\|R\|L_{\pi}^{x}E_h .
+\end{align}
+For $V_h=\Delta_h+\alpha E_h$, the preceding two inequalities give
+$V_{h+1}\le\bar\chi_{\alpha}V_h$.  Since $V_0\le\varepsilon$, induction gives
+$V_h\le\bar\chi_{\alpha}^h\varepsilon$.  The stage risk difference satisfies
+\[
+|L(x_h,a_h,\zeta_h)-L(\tilde x_h,\tilde a_h,\tilde\zeta_h)|
+\le \bar C_xE_h+\bar C_z\Delta_h .
+\]
+Using $E_h\le V_h/\alpha$ and $\Delta_h\le V_h$, then summing the discounted
+stage differences, gives the stated bound.  \hfill $\square$
+
+\textit{Theorem 2 (conditional finite-portfolio regret).}  Let $\mathcal P$ be the finite
+portfolio of integer crew routes available at one decision time.  Let $Q(P)$
+be the realized integrated risk of route $P$ and $\widehat Q(P)$ its
+information-feasible PC estimate.  Suppose
+$|Q(P)-\widehat Q(P)|\le\varepsilon_Q$ for every $P\in\mathcal P$, and the
+route solver returns $\widehat P$ satisfying
+\begin{equation}
+\widehat Q(\widehat P)\le\min_{P\in\mathcal P}\widehat Q(P)+\delta_s.
+\end{equation}
+Then
+\begin{equation}
+Q(\widehat P)\le\min_{P\in\mathcal P}Q(P)+2\varepsilon_Q+\delta_s.
+\label{eq:route-regret}
+\end{equation}
+If the realized optimum $P^*$ is unique with objective gap
+$\Delta_Q>2\varepsilon_Q+\delta_s$, then $\widehat P=P^*$.
+
+\textit{Proof.}  Let $P^*=\arg\min_P Q(P)$.  Uniform approximation and solver
+tolerance give
+$Q(\widehat P)\le\widehat Q(\widehat P)+\varepsilon_Q
+\le\widehat Q(P^*)+\delta_s+\varepsilon_Q
+\le Q(P^*)+2\varepsilon_Q+\delta_s$.
+For any $P\ne P^*$, the gap condition implies
+$\widehat Q(P)>\widehat Q(P^*)+\delta_s$, so no such plan can be returned.
+\hfill $\square$
+
+\textit{Proposition 1 (implementation feasibility and invariance).}  Assume
+the base feeder operating point is feasible, packet enactment satisfies
+$0\le d_{i,h}\le1$, service arrivals are bounded, $0\le\rho_q<1$, and every
+accepted work-order instance has a finite integer route.  Then every implemented
+step satisfies the three resource budgets, the packet-derated action cannot
+violate a budget that its requested action satisfied, the OpenDSS action
+projection returns an AC-feasible charging action, backlog remains bounded, and
+$\zeta_h\in\mathcal Z$ for all $h$.
+
+\textit{Proof.}  Lemma 1 applies to each allocator.  Elementwise multiplication
+by $d_h\in[0,1]^N$ preserves nonnegativity and cannot increase any budget sum.
+The feeder adapter searches decreasing charging fractions and includes zero
+incremental EV action; feasibility of the base point therefore supplies a
+feasible fallback.  The backlog bound follows from the stated scalar recursion,
+and projection in \eqref{eq:executed-propagation} makes $\mathcal Z$ invariant.  Finite
+route coverage makes every accepted repair completion well-defined.  The
+implementation checks these claims using 10,000 random budget tests, 5,000
+integer-crew tests, all 8,117 nonzero 2023 test hours for the backlog bound,
+100,000 projected threat steps, 14,902 standalone SMART-DS AC scenarios,
+147,456 online primary policy-hours, 36,864 online stress policy-hours, and
+explicit route-completion, route-coverage, packet-backup, and station-flow
+assertions. \hfill $\square$
+
+Theorem 1 and Corollary 1 are conditional finite-horizon sensitivity statements
+for the continuous predictive layer, not for the full hybrid execution loop and
+not proofs of asymptotic stability or global policy optimality.  Theorem 2 is a
+conditional finite-portfolio bound: we do not claim a numerical guarantee
+because a uniform empirical estimate of $\varepsilon_Q$ is not available.
+Proposition 1 instead establishes executable constraint preservation under its
+stated assumptions.  Random property checks exercise the covered operators and
+implementation assertions; they are not a proof of a global Lipschitz constant.
+
+\section{Experimental Design and Results}
+
+\subsection{Evidence sources, preprocessing, and splits}
+
+The revised evaluation separates measured demand, outage context, electrical
+feasibility, communication enactment, and crew execution instead of deriving
+all layers from one mobility proxy.  Table~\ref{tab:evidence-sources} records
+the role and boundary of each source.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_executable_system.pdf}
+\caption{Executable transition-aware-PC closed loop.  Boulder charging sessions supply
+measured demand and held-out forecasts; EAGLE-I supplies county-level outage
+calibration; SMART-DS independently constrains feeder action.  PC rollout issues
+requested actions, but service and threat states are updated only after AC
+projection, packet-deadline enactment, cross-station flow, and integer crew
+routing.  The next observation restarts the hourly horizon.  The three public
+data sources have distinct roles and are not represented as a geographically
+coincident utility system.}
+\label{fig:executable-system}
+\end{figure*}
+
+\input{table_evidence_sources}
+
+The primary demand source is the City of Boulder Electric Vehicle Charging
+Station Data under a CC0 license \cite{boulder2023ev}.  Its metadata defines one
+row as one transaction and provides local transaction time, station identity,
+charging duration, and delivered energy.  The local archive contains all
+148,136 transactions released for 2018--2023, with 50 station records and
+1,252,719.654 measured positive kWh.  Four records lack an end time, 16,113
+report zero energy, no duplicate source identifier or full row was found, and
+no negative energy was retained.  Arrival counts are exact transaction counts
+by start hour.  Session energy is measured; its hourly load profile is a stated
+proxy obtained by spreading each session's energy uniformly over the reported
+charging duration.  Conservation checks recover all 148,136 arrivals and the
+measured positive energy to within 0.001 kWh.
+
+Time was split before model fitting: 2018--2021 for training, 2022 for model
+selection, and 2023 for final testing.  No random row split crosses this
+calendar boundary.  A second five-fold spatial test withheld contiguous
+west--east station blocks from target fitting.  In that inductive deployment
+test, a held-out station's pre-2022 calibration and observed 1, 24, and 168 h
+lags were permitted, but its target values never entered coefficient fitting.
+
+Power-event evidence came from the CC BY 4.0 EAGLE-I release
+\cite{brelsford2024eaglei,eaglei2024figshare}.  The downloader verified 17 of 17
+repository files and streamed 249,316,543 source rows.  Preprocessing retained
+819,528 observations for Boulder County and its six adjacent counties,
+including 171,187 Boulder observations.  EAGLE-I timestamps are UTC and were
+converted to America/Denver only for alignment with local charging records.
+Because the source omits zero-outage records and cannot distinguish a true zero
+from a collection gap, absent county--time pairs were preserved as missing
+rather than silently imputed as zero.  Events were evaluated at 50, 100, and
+500 customers out.  At the 50-customer threshold, 2,535 events had median
+duration 1.75 h and 90th-percentile duration 6.5 h; the post-peak half-recovery
+time was observable for 19.6\% of events and had median 0.75 h.  These traces
+inform a scenario distribution, not station-level failure labels or utility
+work orders.
+
+The independent electrical test uses one complete SMART-DS v1.0 San Francisco
+P1U feeder and its unmodified OpenDSS files \cite{palmintier2020smartds,
+epri2026opendss}.  The solved circuit contains 80 buses, 219 nodes, 27 loads,
+67 lines, and 13 transformers.  Eighteen nodes already de-energized in the
+released base case are identified and excluded from active-voltage minima;
+they are not counted as EV-induced failures.  The base active-node voltage
+minimum is 0.989 p.u. and maximum line loading is 0.913 p.u.  Requested EV
+actions are aggregated as balanced three-phase, wye-connected constant-$PQ$
+increments at the 17 eligible three-phase loads.  Active power is the executed
+station request and reactive power follows a 0.98 lagging power factor; the
+released load voltage level (0.48 or 12.47 kV) and base-load parameters are
+otherwise unchanged.  Twenty
+seeded station-to-load mappings are prepared in advance; mapping $s\bmod20$ is
+shared by all six policies in scenario $s$ and recorded in the scenario table.
+At every simulated hour, station-level executable charging is aggregated at the
+assigned loads, OpenDSS solves the unprojected action, and a bisection backtracks
+its common fraction until voltage lies in $[0.95,1.05]$ p.u., line loading is at
+most 1.0 p.u., and the circuit converges.  Only this projected energy enters
+served-energy and backlog equations.  This gate validates the electrical
+feasibility of a proposed charging action.  It does not simulate feeder
+topology reconfiguration, switching or breaker operations, fault isolation,
+feeder resupply, or equipment-parameter changes after repair; the experiment is
+therefore a service-restoration benchmark, not a validated feeder switching
+schedule.
+
+\subsection{Demand forecasting and spatial generalization}
+
+\input{table_real_ev_forecast}
+
+Table~\ref{tab:real-ev-forecast} reports the fixed 2023 temporal test.  The
+graph-recurrent forecaster achieved arrival MAE 0.110 and energy MAE 0.945 kWh,
+compared with 0.137 and 1.101 kWh for the historical mean.  Its energy RMSE
+(3.113 kWh) did not beat the historical mean (3.026 kWh), so no uniform metric
+dominance is claimed.  Across three seeds, arrival MAE ranged from 0.1096 to
+0.1099 and energy MAE from 0.9452 to 0.9468 kWh.
+
+The inductive spatial test exposed a second boundary.  Pooling all five held-out
+blocks and six horizons, the spatial ridge model reduced energy MAE from 1.130
+to 1.054 kWh and RMSE from 2.928 to 2.272 kWh relative to station-wise weekly
+history.  Arrival RMSE also decreased from 0.557 to 0.440, but arrival MAE
+(0.161) was worse than the pooled calendar mean (0.139).  Thus the measured-data
+forecast supports temporal deployment and improves several unseen-station
+endpoints, but sparse stations remain a failure mode rather than a hidden
+success.
+
+\subsection{Propagation calibration and policy comparison}
+
+\input{table_calibrated_uncertainty}
+
+The coefficient ledger in Table~\ref{tab:calibrated-uncertainty} distinguishes
+estimated, observational, constructed, and sensitivity-only quantities.  A
+nonnegative station-deficit regression estimated road/mobility persistence and
+spatial spread from 1,268,661 training samples.  On 3,108 aligned 2023 test
+hours, its road-state RMSE was 0.306 versus 0.374 for persistence.  EAGLE-I
+estimated power persistence at 0.772 with a day-block bootstrap interval
+$[0.754,0.787]$.  The aligned power-to-EV-deficit coefficient was effectively
+zero with upper interval 0.032, providing no evidence for a strong direct
+conditional association.  The packet module constructed the
+power-to-communication interval.  Directions without joint field traces span
+sign-constrained sensitivity ranges including zero.
+
+The primary central-PC policy evaluates multistep propagation under the
+calibrated central matrix.  The robust extension evaluates 21 central/endpoint
+matrices and allocates using the smallest predicted marginal action benefit.
+In the realized dynamics,
+each coefficient was sampled independently from its prespecified interval for
+each scenario.  Forecast-matched, central PC, and robust PC received the same
+selected demand forecast, current threat observation, backlog, and realized
+past.  Static instead used historical station means, greedy used the common
+forecast but formed a direct current-threat route, and the oracle alone
+received future innovations.  The forecast-matched baseline uses no
+propagation matrix: it scores the common
+finite route portfolio from current threat and forecast exposure only.  Central
+PC propagates the calibrated central matrix, whereas robust PC minimizes the
+worst score over the 21-matrix set.  Thus forecast-matched is not central PC.
+Table~\ref{tab:policy-definitions} fixes the information and execution contract
+for all six policies; the oracle alone receives future innovations.  The
+primary family comprised central PC versus the matched baseline for total cost
+overall and in four prespecified threat classes.  We used 4,096 paired scenarios
+(1,024 per class), 20,000-resample
+paired bootstrap intervals, paired $t$ tests, two-sided Wilcoxon tests, and Holm
+correction across the five classwise tests.
+The complete parameter ledger is supplied as Supplementary Table S1 and as the
+machine-readable file \texttt{config/full\_parameter\_ledger.csv}; it reports
+each value, unit, role, provenance or calibration rule, selection data, and
+challenged range.
+
+\input{table_policy_definitions}
+
+\input{table_robust_boulder}
+
+Central PC reduced mean total cost by 0.6327\% overall relative to the matched
+baseline (paired difference $-6.2730$, 95\% bootstrap CI
+$[-7.0372,-5.5195]$).  The Holm-adjusted paired $t$ and Wilcoxon probabilities
+were $3.84\times10^{-56}$ and $9.76\times10^{-101}$, respectively.  All four
+prespecified groups had negative intervals, with reductions of 0.0020\% in
+nominal, 0.0433\% in single-domain, 0.6502\% in cascade, and 1.1296\% in OOD
+compound cases.  The nominal effect is statistically distinguishable in these
+simulated pairs but operationally negligible; the intervals quantify Monte
+Carlo scenario uncertainty, not variation across real utility systems.
+
+The robust extension had higher mean cost than central PC (986.85 versus
+985.17): the robust-minus-central difference was 1.6830 (95\% CI
+$[1.3298,2.0508]$), or a 0.1708\% penalty.  Its 95th-percentile cost was equal
+to central PC (2381.08), its 99th percentile was 7.47 lower, but its CVaR at
+95\% and 99\% was 4.48 and 3.19 higher, respectively, and the maximum was equal
+(4084.41).  Robust PC won 3.83\%, tied 88.50\%, and lost 7.67\% of paired
+scenarios.  These diagnostics do not support either an average-cost or a
+coherent tail-risk advantage for worst-set scoring, so robust PC is retained
+only as a sensitivity extension.  Central PC reduced cost by 7.885\% relative
+to static allocation.  The oracle alone received future innovations; its mean
+cost was 896.01, leaving central PC with a 9.95\%
+deployable-policy-to-oracle gap.  The oracle is therefore an information-value
+reference, not evidence of near-optimality.
+
+\input{table_objective_sensitivity}
+
+Reweighting one objective component at a time did not reverse the central-PC
+comparison with forecast-matched: the reduction ranged from 0.4105\% to
+0.7978\%, and every paired bootstrap interval remained below zero.  These fixed-
+trajectory tests assess evaluation-weight dependence; they do not claim that a
+policy re-optimized for each alternative objective would select the same route.
+
+\begin{figure*}[t]
+\centering
+\includegraphics[width=\textwidth]{fig_operational_evidence.pdf}
+\caption{Paired transition-aware and execution evidence.  (a) Central-PC cost
+reduction relative to the information-matched no-transition baseline; points are paired means
+and bars are 20,000-resample bootstrap 95\% intervals ($n=1,024$ per threat
+class and $n=4,096$ overall).  (b) Raw AC feasibility and the fraction of
+requested EV action retained by SMART-DS projection across 20 mappings and 24
+hours per load multiplier.  (c) Cost reduction relative to no backup at
+$2\times$ packet traffic; annotations give mean on-time action fraction
+($n=1,024$ paired scenarios).  (d) Route-aware PC integrated-risk reduction for
+128 paired scenarios per integer-crew/service-time cell.  Holm-adjusted tests
+and exact intervals for routing are reported in
+Table~\ref{tab:route-aware-crew}.  Source data are supplied with the figure.}
+\label{fig:operational-evidence}
+\end{figure*}
+
+\subsection{Action-in-loop electrical and mobility feasibility}
+
+\input{table_integrated_execution}
+
+The primary 4,096-scenario run made 147,456 online OpenDSS calls, one for each
+scenario--policy--hour.  At measured load, all raw actions were already feasible,
+so projection retained 100\% of requested charging; this is a valid feasibility
+result but cannot by itself demonstrate feedback.  The companion $20\times$
+stress run therefore used 1,024 paired scenarios and the same loop.  It produced
+1,089 raw-infeasible policy-hours; projection reduced this count to zero,
+retained 99.26\% of requested service on average, and placed 69,664.8 kWh of
+curtailed energy into unserved demand/backlog rather than crediting it as served.
+Thus the online adapter changes downstream state whenever the AC limit binds.
+
+\input{table_smartds_action_loop}
+
+The SMART-DS experiment comprised 20 randomized station-to-load mappings, 24
+test hours, and four EV load multipliers (1,920 cases).  Raw actions were all
+feasible at measured load.  At $3\times$, $5\times$, and $10\times$ load, raw
+feasibility fell to 83.1\%, 44.6\%, and 25.4\%, whereas the action projection
+retained 98.2\%, 81.1\%, and 57.7\% of requested EV power.  Every projected
+case converged and met the voltage and line limits.  A separate full-2023 test
+used all 7,451 nonzero hours at $1\times$ and $3\times$ load (14,902 cases).
+At $3\times$, 99.17\% of raw actions were feasible and projection retained
+99.94\% on average; all projected cases remained AC-feasible.  The reported
+curtailment is therefore produced inside the action path and not inferred from
+a post-hoc voltage label.
+
+\input{table_station_choice}
+
+Station closure does not automatically imply abandoned charging.  A separate
+capacity-constrained flow model distinguished local service, rerouting, and
+unserved demand across 24 observed peak hours.  Under measured demand and 10,
+20, and 30\% closures, preserving the original station served only 67.4, 55.8,
+and 43.7\% of energy.  Nearest, logit, and coordinated reassignment all served
+100\% in these cases.  The coordinated solution required only 0.32, 0.50, and
+0.97 km energy-weighted extra distance.  Under $4\times$ demand, total
+constructed capacity, rather than the choice model, became the limiting factor;
+this stress result prevents the rerouting mechanism from creating fictitious
+capacity.
+
+\subsection{Packet-level control feedback and executable crew routes}
+
+The packet emulator is a finite-buffer first-come, first-served discrete-event
+queue with erasures, two retransmissions, backoff, a 500 ms control deadline,
+and explicit backup duration.  An M/M/1 unit test at 10 packet/s arrival and
+20 packet/s service reproduced the theoretical 100 ms mean latency with 0.269\%
+relative error.  Across 12,000 station stress cases, the original algebraic
+support proxy had Spearman correlation 0.860 but mean absolute error 0.243
+against the simulated on-time action fraction, which confirms that the proxy
+cannot replace packet dynamics.
+
+\input{table_packet_feedback}
+
+Equation~\eqref{eq:packet-derate} closes this evidence loop.  Under prespecified
+$2\times$ traffic and 1,024 paired uncertain-transition scenarios, 60 s backup
+raised the mean on-time action fraction to 0.938 and reduced central-PC cost
+by 10.54\% relative to no backup (difference CI $[-147.3,-126.8]$).  A 300 s
+backup raised the fraction to 0.969 and reduced cost by 18.83\% (difference CI
+$[-261.2,-227.7]$).  Before backup exhaustion, power threat caused no direct
+service-rate derating; the effect arose only after the coded depletion event.
+
+\input{table_route_aware_crew}
+
+In the integrated primary run, the four-crew route was not a diagnostic added
+after scoring.  The same work-order set was dispatched through packet delivery,
+and threat was updated only at its recorded completion hours.  Central PC
+completed 82.17\% of dispatched jobs versus 81.72\% for the forecast-matched
+baseline, reduced mean job completion time from 3.131 to 3.095 h, and reduced
+crew travel from 2.975 to 2.957 h per scenario.  Paired bootstrap intervals for
+the differences were $[0.0038,0.0051]$, $[-0.0417,-0.0300]$ h, and
+$[-0.0263,-0.0102]$ h, respectively.
+
+The route experiment used 36 jobs, integer fleets of 4, 12, and 24 crews,
+geocoded travel at 30 km/h with 1.25 circuity, and service-time multipliers
+0.5, 1, and 2.  Each repair completion causally removed that job's risk from
+the accumulated state.  The original PC priority lost its advantage in some
+integer routed cases.  Route-aware PC corrected this failure by selecting the
+lowest predicted-risk executable candidate rather than projecting a continuous
+priority after the decision.  In 128 independently seeded scenarios per cell,
+route-aware PC reduced mean integrated risk in all nine crew/service
+conditions by 0.31--1.08\%.  Six bootstrap intervals excluded zero and seven
+Holm-adjusted Wilcoxon tests were below 0.05.  The 4-crew/1.0, 12-crew/1.0, and
+24-crew/0.5 intervals included zero and remain visible in
+Table~\ref{tab:route-aware-crew}; the implementation gain is not declared
+uniformly significant.  The 24-crew/0.5 Holm-adjusted Wilcoxon value is below
+0.05 while its bootstrap interval crosses zero because the two procedures test
+different statistics: the interval targets the paired mean difference, whereas
+Wilcoxon ranks the nonzero paired differences and is affected differently by
+ties and skewness.  We therefore require the mean interval, not either test in
+isolation, for a mean-improvement claim.
+
+The integrated-loop sensitivity runs used another 1,024 paired scenarios per
+condition.  Central PC reduced cost relative to matched by 0.529\%, 0.421\%,
+and 0.668\% under $0.75M$, $1.25M$, and 0.15 coefficient noise, respectively.
+The robust-minus-central difference was $-0.470$ at $0.75M$ (95\% CI
+$[-1.034,0.028]$), but $+6.383$ at $1.25M$ (CI $[4.910,7.976]$) and $+2.272$
+under coefficient noise (CI $[1.547,3.069]$).  Thus the only favorable overall
+robust comparison was not statistically distinguishable from zero, whereas two
+misspecification settings favored central PC.  With 12 crews robust PC was
+0.075 cost units worse than central PC (CI $[0.005,0.165]$); with 24 crews its
+0.022-unit advantage was negligible and the interval crossed zero.
+
+\subsection{Implementation and proof checks}
+
+The source-to-theorem audit executed 11 independent checks.  Ten thousand
+random score/budget tests preserved each continuous budget (maximum numerical
+error $1.37\times10^{-4}$); 5,000 random largest-remainder tests preserved the
+integer crew count; all 8,117 nonzero 2023 test hours satisfied the analytical
+zero-service backlog bound; 100,000 steps at simultaneous upper uncertainty
+bounds remained inside $[0,0.98]^{3N}$; all 14,902 standalone SMART-DS
+projections, 147,456 primary online calls, and 36,864 stress online calls were
+feasible after projection; packet backup and action-derating assertions had
+zero logic error; every audited route visited each selected job once; all main
+crew counts matched completion-event logs with paired inputs; and all 2,592
+station-choice flows met capacity.  The machine-readable map links each
+property to its theorem, function, evidence file, and status.
+
+\section{Discussion}
+
+The revised evidence changes the interpretation of PC rollout.  The central
+advance is not a large average gain from adding another forecast module.  It is
+an auditable procedure that preserves a modest transition-aware benefit over a
+no-transition, information-matched ablation and that exposes how electrical,
+communication, station-choice, and integer-routing constraints change the
+action before it is credited.  The online primary and stress runs show this
+inside the same implementation rather than through independent post-hoc
+validators.  The strong backup-power effect is a design
+result of the packet/control loop, whereas the small nominal PC advantage shows
+that multi-step propagation is not valuable in every operating state.  Because
+central PC had 0.1708\% lower mean cost than robust PC and the robust extension
+did not improve CVaR or maximum cost, the evidence does not establish a
+worst-set protection benefit.
+
+Several alternative explanations were tested directly.  Forecast performance
+alone cannot explain the central-PC--forecast-matched comparison because those
+two policies receive the same forecast.  Separating SMART-DS from policy scoring
+substantially mitigates, but does not eliminate, circular validation: the
+independent solver enforces AC constraints before served energy updates
+backlog, yet the relative policy benefit is still estimated with the same
+service-loss primitives and a modeled transition environment.  Moreover, the
+measured-load AC gate was nonbinding for every raw primary action, so its role
+there was independent feasibility verification rather than a change in policy
+ranking; the $20\times$ stress experiment demonstrates feedback only when the
+constraint binds.  We therefore report evaluation-weight sensitivity and
+objective-external operational endpoints (AC feasibility, retained charging,
+crew completion time, and travel time) separately from total cost.  The crew
+result is not a continuous-effort artifact because repair occurs only at logged
+integer-route completion events.  Conversely, the failure of
+the graph predictor to dominate every RMSE and the original PC priority's loss
+under routing are retained as negative results; both motivated concrete model
+changes and constrain the claim.
+
+The remaining boundaries are data-specific rather than deferred substitutes
+for validation.  Boulder session energy is measured, but the intra-session
+hourly profile is reconstructed.  EAGLE-I is county-level and has ambiguous
+missing intervals, so it cannot identify station outages or causal crew times.
+SMART-DS is a realistic synthetic feeder, not the Boulder utility network.  The
+communication traffic and battery conditions are transparent stress inputs,
+not a field packet trace.  These boundaries prevent a utility-deployment claim,
+but they do not remove the measured demand test, held-out outage calibration,
+independent AC action loop, packet feedback, or executable routing evidence on
+which the stated benchmark conclusion rests.
+
+\section{Data and Code Availability}
+
+All data required for the reported results are present in the accompanying
+project.  The archive includes the unmodified Boulder CSV, all 17 EAGLE-I
+Figshare files, the selected SMART-DS OpenDSS feeder and documentation, source
+URLs, licenses, access dates, byte counts, and SHA-256 manifests.  Processed
+tables preserve data dictionaries, split boundaries, missing-value semantics,
+timezone decisions, and conservation checks.  Source code, pinned Python
+dependencies, random seeds, trained weights, scenario-level outputs, statistical
+tables, 20 station-to-SMART-DS mappings, hourly AC projection aggregates,
+integer route/completion logs, packet logs, proof checks, the integrated
+$20\times$ stress run, and one-command verification are
+included.  A standalone complete-parameter supplement and its machine-readable
+CSV avoid requiring reviewers to inspect the full archive merely to identify a
+setting.  A reviewer-minimal archive, including a smoke test and the
+scenario-level data needed to regenerate the principal statistics, accompanies
+this revision; no restricted data or HPC access is required.  The corresponding
+public repository is available at
+\url{https://github.com/ahshicr/TSG-01697-2026-reproducibility} (tagged release
+\texttt{v2026.09.01}).  The supplied files are versioned by a SHA-256 manifest
+and contain a self-checking minimal reproduction path.  Publicly reused datasets
+retain their original source URLs, licences, versions, and identifiers.  No
+separate repository DOI is required or claimed.
+
+
+\section{Conclusion}
+
+Transition-aware PC rollout combines measured charging demand, an
+action-dependent calibrated transition, and executable electrical,
+communication, and crew actions.  Across 4,096 paired scenarios central PC
+reduced mean cost by 0.6327\% over the information-matched no-transition
+ablation, with larger effects in cascade and OOD groups and the same direction
+under prespecified objective reweighting.  A 21-matrix worst-set extension was
+0.1708\% worse in mean cost and improved neither CVaR nor maximum cost; it is
+therefore a sensitivity variant rather than the principal method.  Every hourly primary action
+was processed by SMART-DS and integer crew completion events inside that same
+loop; a companion electrical stress test verified that binding AC constraints
+change served energy and backlog.  Packet, station-choice, and standalone route
+experiments further identified the constraints that materially change
+implementation.  Backup power produced a large control-loop
+benefit under communication stress, whereas mild-operation rollout gains were
+negligible and unseen-station errors remained metric-dependent.  The theory and
+property checks establish finite-horizon sensitivity for the continuous
+predictive operators, a conditional finite-portfolio regret bound, and separate
+constraint-preservation results for execution.  The evidence
+supports a reproducible public-data restoration benchmark; county-level outage
+context, a synthetic independent feeder, and constructed packet traffic do not
+support a claim of utility field deployment.
+
+\bibliographystyle{IEEEtran}
+\bibliography{references}
+
+\end{document}

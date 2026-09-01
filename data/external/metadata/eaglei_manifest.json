@@ -1,0 +1,150 @@
+{
+  "dataset": "The Environment for Analysis of Geo-Located Energy Information’s Recorded Electricity Outages 2014-2025",
+  "article_id": 24237376,
+  "doi": "10.6084/m9.figshare.24237376.v4",
+  "license": {
+    "value": 1,
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "source": "https://figshare.com/articles/dataset/24237376",
+  "retrieved_at_utc": "2026-08-25T14:27:04.979355+00:00",
+  "files": [
+    {
+      "name": "DQI.csv",
+      "path": "data/external/raw/eaglei/DQI.csv",
+      "bytes": 4338,
+      "md5": "fca42544e0c3ee4a191985d1c6c19bc4",
+      "sha256": "b9a027fd5c5e299e682b459e5ea8d63d7a77b508c2be13a35fbf84fb3da89bc8",
+      "status": "verified-existing"
+    },
+    {
+      "name": "DQI_processing.R",
+      "path": "data/external/raw/eaglei/DQI_processing.R",
+      "bytes": 7201,
+      "md5": "cc22f3bd05f8981d4127afd9dd356422",
+      "sha256": "0417f070f0bb4a1d05b6e492746f6c7d7a128fd748af672ca41eaaa9999d3909",
+      "status": "verified-existing"
+    },
+    {
+      "name": "MCC.csv",
+      "path": "data/external/raw/eaglei/MCC.csv",
+      "bytes": 40584,
+      "md5": "7e30d47d44cae46b3342cdabf7c84b7f",
+      "sha256": "d7fbe0d60ea71273f68bd744408059491fbc7f85b6254882d17783d7762bf65e",
+      "status": "verified-existing"
+    },
+    {
+      "name": "Uri_Map.R",
+      "path": "data/external/raw/eaglei/Uri_Map.R",
+      "bytes": 2249,
+      "md5": "14e10c98c9e18be117d7247031b62c98",
+      "sha256": "cf46075b4d62702d278ceb8eba9afc683624df250c71ecc48268a3762174e467",
+      "status": "verified-existing"
+    },
+    {
+      "name": "coverage_history.csv",
+      "path": "data/external/raw/eaglei/coverage_history.csv",
+      "bytes": 11965,
+      "md5": "33ef0c8549a95bcc1ef52b61c2463271",
+      "sha256": "a5f102ee31d7c8ea5676679ec8a89a1e786bbe482d48f85c9a058a388a593267",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2014.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2014.csv",
+      "bytes": 78056250,
+      "md5": "c7bfcf4b7fd26292f8d8801a26e8c52f",
+      "sha256": "f292a9f99066ac686df69767c535b218e70b4d4e748840ec620eda3340f914c9",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2015.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2015.csv",
+      "bytes": 598963737,
+      "md5": "774d837e6a0d4f20aab5c82448538d37",
+      "sha256": "49de89b3427d564efbd9c80183caf4e9777966f7e319d4b30d682c1c0d064505",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2016.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2016.csv",
+      "bytes": 619779314,
+      "md5": "8e4e85e81db474a708278aabef1198ec",
+      "sha256": "2c1b364a3b06aee56326174c4644750ea86ba9be4585c5e40eeb7835431bfc9c",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2017.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2017.csv",
+      "bytes": 698796929,
+      "md5": "4faaeeb3b3e8e2d13d0e9238617ce3ce",
+      "sha256": "47479c4fd645ec69685447f90baa51f08a85e776cedf612279b3e41c13147c8d",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2018.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2018.csv",
+      "bytes": 999210542,
+      "md5": "726543e4a392e220108b035ba4c52e43",
+      "sha256": "85e0a864aa272e75892e181f1da4754ed78f7bf0bef75a279d8ab381baa7db70",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2019.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2019.csv",
+      "bytes": 1102778792,
+      "md5": "0ff77af0106486eb7bdc6c5051bd916a",
+      "sha256": "4cc277a138b326bd0e1f203558539a9422b40dacdf439e3d5b58ee71d7462d27",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2020.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2020.csv",
+      "bytes": 1170699724,
+      "md5": "3b1e76e7ff0445da2b9a2fe4819c0e88",
+      "sha256": "2a20b62e5245b1b9d4fcedc1bdbaf691bb1e17f75094975c8c6cb854f52e721a",
+      "status": "downloaded"
+    },
+    {
+      "name": "eaglei_outages_2021.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2021.csv",
+      "bytes": 1141058232,
+      "md5": "b5a5912be793ca22dddcc73ca2c3379d",
+      "sha256": "e3e7ac40a40d92d92488501881ab381b8931833e486941424ac55ea20ffde319",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2022.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2022.csv",
+      "bytes": 1187596176,
+      "md5": "0cd04f23ac90ec4ec20ce3a63dcfa25a",
+      "sha256": "ff8b58ae30fcbaf290f820bcd4f1420e536994bc9f0a87bb80991130478461b0",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2023.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2023.csv",
+      "bytes": 1199752423,
+      "md5": "4ef3f9290884b4151a43333d28f67369",
+      "sha256": "c028f42dae8522ecfb787ad0b6461cfc809bb04856eef20cb389e486d5657f7e",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2024.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2024.csv",
+      "bytes": 1444846424,
+      "md5": "13183facf56c196c061a238303c87973",
+      "sha256": "d5d75ea4ef3943446aaf0623e9b451cb4e7796d20cc379de9cf497106ebab2e6",
+      "status": "verified-existing"
+    },
+    {
+      "name": "eaglei_outages_2025.csv",
+      "path": "data/external/raw/eaglei/eaglei_outages_2025.csv",
+      "bytes": 1402347695,
+      "md5": "cd2feb1282a42fb048cb6885398bc1cc",
+      "sha256": "4148a4a3b26e58024403cef98ccb324d1656f476613d6afff4451e33faf468c9",
+      "status": "verified-existing"
+    }
+  ]
+}

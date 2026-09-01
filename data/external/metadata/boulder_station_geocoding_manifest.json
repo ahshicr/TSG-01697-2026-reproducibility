@@ -1,0 +1,22 @@
+{
+  "source": "https://geocoding.geo.census.gov/geocoder/geographies/address",
+  "benchmark": "Public_AR_Current",
+  "vintage": "Current_Current",
+  "stations": 50,
+  "unique_address_queries": 24,
+  "matched": 49,
+  "street_fallback": 1,
+  "unmatched": 0,
+  "interpretation": "Address-range coordinates used for distance graphs and routing sensitivity; they are not charger-meter coordinates.",
+  "fallback_source": "OpenStreetMap Nominatim, ODbL 1.0; used only for unmatched addresses",
+  "files": {
+    "data/external/raw/census_geocoder/boulder_station_geocodes.json": {
+      "bytes": 530671,
+      "sha256": "e0304bbf4f0090dcc587b55d09e479056d0d3b507b77bd00f0993e9e5a21693f"
+    },
+    "data/external/processed/boulder_ev/boulder_ev_station_coordinates.csv": {
+      "bytes": 10004,
+      "sha256": "fae42f03a0e988b56d091cab96f98e797b8c1b69880b57eeb9b510a790ace374"
+    }
+  }
+}

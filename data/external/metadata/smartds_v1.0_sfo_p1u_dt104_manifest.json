@@ -1,0 +1,121 @@
+{
+  "dataset": "SMART-DS Synthetic Electrical Network Data, version 1.0",
+  "selected_network": "SFO P1U base-peak feeder p1uhs0_1247--p1udt104",
+  "selection_reason": "Complete OpenDSS feeder with coordinates and reference analysis; selected as an independent distribution-network validation case, not as a geographically co-located Boulder feeder.",
+  "source_bucket": "https://oedi-data-lake.s3.amazonaws.com",
+  "catalog": "https://data.openei.org/submissions/2981",
+  "license": "CC BY 4.0",
+  "retrieved_at_utc": "2026-08-25T13:50:11.640649+00:00",
+  "files": [
+    {
+      "key": "SMART-DS/v1.0/User_Guide/Readme.md",
+      "size": 60380,
+      "etag": "a3f8bd771399d9134e3a158cd65f9649",
+      "last_modified": "2021-07-10T14:32:35.000Z",
+      "path": "data/external/raw/smartds_v1.0/User_Guide/Readme.md",
+      "md5": "a3f8bd771399d9134e3a158cd65f9649",
+      "sha256": "a182d64d90a9186415e77ce55019fdb2b9e86d2ab668c46aaf1fde9ea4b2c151",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/User_Guide/Readme.pdf",
+      "size": 10512830,
+      "etag": "5d1ebbb9e982fa5e39165a5ccf6381ea-2",
+      "last_modified": "2021-07-10T14:32:35.000Z",
+      "path": "data/external/raw/smartds_v1.0/User_Guide/Readme.pdf",
+      "md5": "084d80f2814198570da60ba071b931c1",
+      "sha256": "1e33811a70cf7aafc6f5d1775590925e46ff03fc9546f6cc42285a6e9c5d06f2",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/geojson/p1uhs0_1247--p1udt104.json",
+      "size": 156811,
+      "etag": "090dfb7f5cdeb537a0cee075d080ede5",
+      "last_modified": "2021-08-25T14:53:35.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/geojson/p1uhs0_1247--p1udt104.json",
+      "md5": "090dfb7f5cdeb537a0cee075d080ede5",
+      "sha256": "78a349dc394977a23c80592061cd494453a66aecfe0339d1c1fbc8ae1ac4ff13",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/metrics.csv",
+      "size": 9112,
+      "etag": "2cc82e1f1c09eb7fbe961f340055c929",
+      "last_modified": "2021-07-10T18:30:17.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/metrics.csv",
+      "md5": "2cc82e1f1c09eb7fbe961f340055c929",
+      "sha256": "e4e411621d8f558a3dbe0a3d7738a10bd54b7997b734316dd1206e7312676779",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Buscoords.dss",
+      "size": 4010,
+      "etag": "fb18c103cb83586bfa4ce76b41c37dc9",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Buscoords.dss",
+      "md5": "fb18c103cb83586bfa4ce76b41c37dc9",
+      "sha256": "923fec6045a53599299bee72e57b5f912a3aa3d16971927d7aebf1fe6869fb5c",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Intermediates.txt",
+      "size": 17216,
+      "etag": "81f419f5d7fb181014f327277fc2ea76",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Intermediates.txt",
+      "md5": "81f419f5d7fb181014f327277fc2ea76",
+      "sha256": "a3ba1ad373657a1abe3275e271dd6ece0384f0542446fc731bf59152063f062f",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/LineCodes.dss",
+      "size": 5795,
+      "etag": "2093af59fc3456e974bdb25545a41917",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/LineCodes.dss",
+      "md5": "2093af59fc3456e974bdb25545a41917",
+      "sha256": "e856abd654ccbc9d4f9fcde2e17b908cc5ae8da198dfbf4997c70e31b0a9d201",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Lines.dss",
+      "size": 11573,
+      "etag": "7d902aeaf292b681f133cee25677cc8b",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Lines.dss",
+      "md5": "7d902aeaf292b681f133cee25677cc8b",
+      "sha256": "f7fc38ca49b0a3cba3aa29120162a14845135c61e86fcff638268c0b565f3b80",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Loads.dss",
+      "size": 3666,
+      "etag": "09077add2fd23acd04a43f3a52f50966",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Loads.dss",
+      "md5": "09077add2fd23acd04a43f3a52f50966",
+      "sha256": "59ccfff8d1675a6caf36c71f9770ac6668222dec0032eeb49dcb1c37b8fbe107",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Master.dss",
+      "size": 335,
+      "etag": "90892bf0343cbd6353a4ca27f0bc210b",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Master.dss",
+      "md5": "90892bf0343cbd6353a4ca27f0bc210b",
+      "sha256": "b13f0d86650d410c71e2df954fbc4fbe79b6d674381bafe79ca9ed5fdc3c9318",
+      "status": "downloaded"
+    },
+    {
+      "key": "SMART-DS/v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Transformers.dss",
+      "size": 3929,
+      "etag": "5db62037acc20387cd537c1a14a601ba",
+      "last_modified": "2021-07-10T18:30:22.000Z",
+      "path": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Transformers.dss",
+      "md5": "5db62037acc20387cd537c1a14a601ba",
+      "sha256": "28110a6a0c0132db65b7552d6dc2b2087ae9d1b136fad316951da41f49d1d207",
+      "status": "downloaded"
+    }
+  ]
+}

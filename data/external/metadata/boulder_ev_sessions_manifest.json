@@ -1,0 +1,12 @@
+{
+  "dataset": "City of Boulder Electric Vehicle Charging Station Data",
+  "source": "https://services.arcgis.com/ePKBjXrBZ2vEEgWd/arcgis/rest/services/Electric_Vehicle_Charging_Station_Data/FeatureServer/0",
+  "license": "CC0",
+  "retrieved_at_utc": "2026-08-25T13:39:59.580285+00:00",
+  "records": 148136,
+  "file": {
+    "path": "data/external/raw/boulder_ev_sessions.csv",
+    "bytes": 23276416,
+    "sha256": "38c665f89fcecea67a88d27a98241a892098ba493dcb7d6e45eb9d451b12d36b"
+  }
+}

@@ -1,0 +1,479 @@
+{
+  "files": [
+    {
+      "id": 62164877,
+      "name": "eaglei_outages_2025.csv",
+      "size": 1402347695,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/62164877",
+      "supplied_md5": "cd2feb1282a42fb048cb6885398bc1cc",
+      "computed_md5": "cd2feb1282a42fb048cb6885398bc1cc",
+      "mimetype": "text/csv"
+    },
+    {
+      "id": 42547705,
+      "name": "DQI.csv",
+      "size": 4338,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547705",
+      "supplied_md5": "fca42544e0c3ee4a191985d1c6c19bc4",
+      "computed_md5": "fca42544e0c3ee4a191985d1c6c19bc4",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547708,
+      "name": "MCC.csv",
+      "size": 40584,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547708",
+      "supplied_md5": "7e30d47d44cae46b3342cdabf7c84b7f",
+      "computed_md5": "7e30d47d44cae46b3342cdabf7c84b7f",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547714,
+      "name": "coverage_history.csv",
+      "size": 11965,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547714",
+      "supplied_md5": "33ef0c8549a95bcc1ef52b61c2463271",
+      "computed_md5": "33ef0c8549a95bcc1ef52b61c2463271",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547717,
+      "name": "eaglei_outages_2014.csv",
+      "size": 78056250,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547717",
+      "supplied_md5": "c7bfcf4b7fd26292f8d8801a26e8c52f",
+      "computed_md5": "c7bfcf4b7fd26292f8d8801a26e8c52f",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547822,
+      "name": "eaglei_outages_2015.csv",
+      "size": 598963737,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547822",
+      "supplied_md5": "774d837e6a0d4f20aab5c82448538d37",
+      "computed_md5": "774d837e6a0d4f20aab5c82448538d37",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547825,
+      "name": "eaglei_outages_2016.csv",
+      "size": 619779314,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547825",
+      "supplied_md5": "8e4e85e81db474a708278aabef1198ec",
+      "computed_md5": "8e4e85e81db474a708278aabef1198ec",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547828,
+      "name": "eaglei_outages_2017.csv",
+      "size": 698796929,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547828",
+      "supplied_md5": "4faaeeb3b3e8e2d13d0e9238617ce3ce",
+      "computed_md5": "4faaeeb3b3e8e2d13d0e9238617ce3ce",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547879,
+      "name": "eaglei_outages_2018.csv",
+      "size": 999210542,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547879",
+      "supplied_md5": "726543e4a392e220108b035ba4c52e43",
+      "computed_md5": "726543e4a392e220108b035ba4c52e43",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547885,
+      "name": "eaglei_outages_2019.csv",
+      "size": 1102778792,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547885",
+      "supplied_md5": "0ff77af0106486eb7bdc6c5051bd916a",
+      "computed_md5": "0ff77af0106486eb7bdc6c5051bd916a",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547894,
+      "name": "eaglei_outages_2020.csv",
+      "size": 1170699724,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547894",
+      "supplied_md5": "3b1e76e7ff0445da2b9a2fe4819c0e88",
+      "computed_md5": "3b1e76e7ff0445da2b9a2fe4819c0e88",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547891,
+      "name": "eaglei_outages_2021.csv",
+      "size": 1141058232,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547891",
+      "supplied_md5": "b5a5912be793ca22dddcc73ca2c3379d",
+      "computed_md5": "b5a5912be793ca22dddcc73ca2c3379d",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 42547897,
+      "name": "eaglei_outages_2022.csv",
+      "size": 1187596176,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/42547897",
+      "supplied_md5": "0cd04f23ac90ec4ec20ce3a63dcfa25a",
+      "computed_md5": "0cd04f23ac90ec4ec20ce3a63dcfa25a",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 44574907,
+      "name": "eaglei_outages_2023.csv",
+      "size": 1199752423,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/44574907",
+      "supplied_md5": "4ef3f9290884b4151a43333d28f67369",
+      "computed_md5": "4ef3f9290884b4151a43333d28f67369",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 44574910,
+      "name": "Uri_Map.R",
+      "size": 2249,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/44574910",
+      "supplied_md5": "14e10c98c9e18be117d7247031b62c98",
+      "computed_md5": "14e10c98c9e18be117d7247031b62c98",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 44574913,
+      "name": "DQI_processing.R",
+      "size": 7201,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/44574913",
+      "supplied_md5": "cc22f3bd05f8981d4127afd9dd356422",
+      "computed_md5": "cc22f3bd05f8981d4127afd9dd356422",
+      "mimetype": "text/plain"
+    },
+    {
+      "id": 53581661,
+      "name": "eaglei_outages_2024.csv",
+      "size": 1444846424,
+      "is_link_only": false,
+      "download_url": "https://ndownloader.figshare.com/files/53581661",
+      "supplied_md5": "13183facf56c196c061a238303c87973",
+      "computed_md5": "13183facf56c196c061a238303c87973",
+      "mimetype": "text/csv"
+    }
+  ],
+  "folder_structure": {},
+  "authors": [
+    {
+      "id": 9599777,
+      "full_name": "Christa Brelsford",
+      "first_name": "Christa",
+      "last_name": "Brelsford",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087317,
+      "full_name": "Sarah Tennille",
+      "first_name": "Sarah",
+      "last_name": "Tennille",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087486,
+      "full_name": "Aaron Myers",
+      "first_name": "Aaron",
+      "last_name": "Myers",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0003-2037-3827"
+    },
+    {
+      "id": 17087528,
+      "full_name": "Supriya Chinthavali",
+      "first_name": "Supriya",
+      "last_name": "Chinthavali",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0002-4611-1086"
+    },
+    {
+      "id": 17087632,
+      "full_name": "Varisara Tansakul",
+      "first_name": "Varisara",
+      "last_name": "Tansakul",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087664,
+      "full_name": "Matthew Denman",
+      "first_name": "Matthew",
+      "last_name": "Denman",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0001-7086-3416"
+    },
+    {
+      "id": 17087867,
+      "full_name": "Mark Coletti",
+      "first_name": "Mark",
+      "last_name": "Coletti",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0003-1020-531X"
+    },
+    {
+      "id": 3967928,
+      "full_name": "Joshua Grant",
+      "first_name": "Joshua",
+      "last_name": "Grant",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087870,
+      "full_name": "Sangkeun Lee",
+      "first_name": "Sangkeun",
+      "last_name": "Lee",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0002-1317-5112"
+    },
+    {
+      "id": 17087871,
+      "full_name": "Karl Allen",
+      "first_name": "Karl",
+      "last_name": "Allen",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 10071601,
+      "full_name": "Evelyn Johnson",
+      "first_name": "Evelyn",
+      "last_name": "Johnson",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087872,
+      "full_name": "Jonathan Huihui",
+      "first_name": "Jonathan",
+      "last_name": "Huihui",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0002-3120-2823"
+    },
+    {
+      "id": 17087873,
+      "full_name": "Alec Hamaker",
+      "first_name": "Alec",
+      "last_name": "Hamaker",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087874,
+      "full_name": "Scott Newby",
+      "first_name": "Scott",
+      "last_name": "Newby",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087875,
+      "full_name": "Kyle Medlen",
+      "first_name": "Kyle",
+      "last_name": "Medlen",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087877,
+      "full_name": "Dakotah Maguire",
+      "first_name": "Dakotah",
+      "last_name": "Maguire",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087880,
+      "full_name": "Chelsey Dunivan Stahl",
+      "first_name": "Chelsey",
+      "last_name": "Dunivan Stahl",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": "0000-0003-0765-9548"
+    },
+    {
+      "id": 11061324,
+      "full_name": "Jessica Moehl",
+      "first_name": "Jessica",
+      "last_name": "Moehl",
+      "is_active": true,
+      "url_name": "Jessica_Moehl",
+      "orcid_id": "0000-0001-9579-2562"
+    },
+    {
+      "id": 17087883,
+      "full_name": "Daniel P. Redmond",
+      "first_name": "Daniel P.",
+      "last_name": "Redmond",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 17087886,
+      "full_name": "Daniel Redmon",
+      "first_name": "Daniel",
+      "last_name": "Redmon",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 7393834,
+      "full_name": "Jibonananda Sanyal",
+      "first_name": "Jibonananda",
+      "last_name": "Sanyal",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    },
+    {
+      "id": 7393663,
+      "full_name": "Budhendra Bhaduri",
+      "first_name": "Budhendra",
+      "last_name": "Bhaduri",
+      "is_active": false,
+      "url_name": "_",
+      "orcid_id": ""
+    }
+  ],
+  "custom_fields": [],
+  "figshare_url": "https://figshare.com/articles/dataset/The_Environment_for_Analysis_of_Geo-Located_Energy_Information_s_Recorded_Electricity_Outages_2014-2022/24237376",
+  "download_disabled": false,
+  "description": "<p dir=\"ltr\">The core of the provided dataset includes eight years of power outage information at the county level from 2014 to 2025 at 15-minute intervals collected from utility’s public outage maps on their websites by the EAGLE-I program at ORNL. Three supplementary files are included to augment the power outage data files. The first file includes the customer coverage rate of each state from 2018-2022. The second file provides the modeled number of electric customers per county as of 2022. The third presents our Data Quality Index and the four sub-components by year by FEMA Region for 2018-2022. UPDATE 2/16/2023: Added 2023 outage data and Uri_Map.R and DQI_processing.R files have been added. They were used to create graphics in associated works.<br>UPDATE 4/10/2025: Added 2024 outage data.</p><p dir=\"ltr\">UPDATE 2/24/2026: Added 2025 outage data.</p>",
+  "funding": "Department  of  Energy  Office  of  Cybersecurity,  Energy Security, and Emergency Response (DOE CESER)",
+  "funding_list": [
+    {
+      "id": 23967445,
+      "title": "Department  of  Energy  Office  of  Cybersecurity,  Energy Security, and Emergency Response (DOE CESER)",
+      "grant_code": "",
+      "funder_name": null,
+      "is_user_defined": 1
+    }
+  ],
+  "version": 4,
+  "status": "public",
+  "size": 11643952575,
+  "created_date": "2026-02-25T18:52:23Z",
+  "modified_date": "2026-02-25T18:52:23Z",
+  "is_public": true,
+  "is_confidential": false,
+  "is_metadata_record": false,
+  "confidential_reason": "",
+  "metadata_reason": "",
+  "license": {
+    "value": 1,
+    "name": "CC BY 4.0",
+    "url": "https://creativecommons.org/licenses/by/4.0/"
+  },
+  "tags": [
+    "electricity outage",
+    "energy resilience",
+    "extreme weather"
+  ],
+  "keywords": [
+    "electricity outage",
+    "energy resilience",
+    "extreme weather"
+  ],
+  "categories": [
+    {
+      "id": 28948,
+      "title": "Information extraction and fusion",
+      "parent_id": 28927,
+      "path": "/28798/28927/28948",
+      "source_id": "460507",
+      "taxonomy_id": 100
+    },
+    {
+      "id": 28939,
+      "title": "Data quality",
+      "parent_id": 28927,
+      "path": "/28798/28927/28939",
+      "source_id": "460504",
+      "taxonomy_id": 100
+    },
+    {
+      "id": 28936,
+      "title": "Data models, storage and indexing",
+      "parent_id": 28927,
+      "path": "/28798/28927/28936",
+      "source_id": "460503",
+      "taxonomy_id": 100
+    },
+    {
+      "id": 28933,
+      "title": "Data mining and knowledge discovery",
+      "parent_id": 28927,
+      "path": "/28798/28927/28933",
+      "source_id": "460502",
+      "taxonomy_id": 100
+    }
+  ],
+  "references": [],
+  "has_linked_file": false,
+  "citation": "Brelsford, Christa; Tennille, Sarah; Myers, Aaron; Chinthavali, Supriya; Tansakul, Varisara; Denman, Matthew; et al. (2023). The Environment for Analysis of Geo-Located Energy Information’s Recorded Electricity Outages 2014-2025. figshare. Dataset. https://doi.org/10.6084/m9.figshare.24237376.v4",
+  "related_materials": [],
+  "is_embargoed": false,
+  "embargo_date": null,
+  "embargo_type": null,
+  "embargo_title": "",
+  "embargo_reason": "",
+  "embargo_options": [],
+  "id": 24237376,
+  "title": "The Environment for Analysis of Geo-Located Energy Information’s Recorded Electricity Outages 2014-2025",
+  "doi": "10.6084/m9.figshare.24237376.v4",
+  "handle": "",
+  "url": "https://api.figshare.com/v2/articles/24237376",
+  "published_date": "2026-02-25T18:52:23Z",
+  "thumb": "",
+  "defined_type": 3,
+  "defined_type_name": "dataset",
+  "group_id": null,
+  "url_private_api": "https://api.figshare.com/v2/account/articles/24237376",
+  "url_public_api": "https://api.figshare.com/v2/articles/24237376",
+  "url_private_html": "https://figshare.com/account/articles/24237376",
+  "url_public_html": "https://figshare.com/articles/dataset/The_Environment_for_Analysis_of_Geo-Located_Energy_Information_s_Recorded_Electricity_Outages_2014-2022/24237376",
+  "timeline": {
+    "posted": "2026-02-25T18:52:23",
+    "firstOnline": "2023-11-30"
+  },
+  "resource_title": null,
+  "resource_doi": null,
+  "retrieved_at_utc": "2026-08-25T14:14:42.014509+00:00"
+}

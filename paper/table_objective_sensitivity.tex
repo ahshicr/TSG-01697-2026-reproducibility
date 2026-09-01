@@ -1,0 +1,19 @@
+\begin{table}[t]
+\centering
+\caption{Central-PC evaluation-objective sensitivity relative to forecast-matched on the same 4,096 paired trajectories. Policies are not re-optimized under alternative weights.}
+\label{tab:objective-sensitivity}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{lrr}
+\toprule
+Evaluation weights & Reduction (\%) & Paired difference (95\% CI) \\
+\midrule
+Reference weights & 0.6327 & -6.2730 [-7.0372, -5.5195] \\
+$2\times$ mobility weight & 0.6375 & -6.3821 [-7.1811, -5.6118] \\
+$2\times$ unserved-energy weight & 0.4105 & -6.9247 [-7.7991, -6.0867] \\
+$2\times$ communication weight & 0.7978 & -8.9713 [-10.0243, -7.9314] \\
+$2\times$ power-service weight & 0.6411 & -6.5376 [-7.4521, -5.6625] \\
+$0.5\times$ cascade weight & 0.5380 & -4.9984 [-5.6519, -4.3621] \\
+\bottomrule
+\end{tabular}
+}
+\end{table}

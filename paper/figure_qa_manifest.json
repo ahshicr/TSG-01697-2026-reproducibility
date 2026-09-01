@@ -1,0 +1,65 @@
+{
+  "backend": "Python/matplotlib only",
+  "final_width_mm": 182.88,
+  "editable_text_required": true,
+  "fig_executable_system": {
+    "contract": {
+      "core_conclusion": "Requested transition-aware-PC actions are credited only after four execution adapters and feed the next observation.",
+      "archetype": "schematic-led composite"
+    },
+    "outputs": {
+      "svg": {
+        "path": "fig_executable_system.svg",
+        "bytes": 19460,
+        "editable_text_nodes": 29
+      },
+      "pdf": {
+        "path": "fig_executable_system.pdf",
+        "bytes": 50262
+      },
+      "tiff": {
+        "path": "fig_executable_system.tiff",
+        "bytes": 37679774
+      },
+      "png": {
+        "path": "fig_executable_system.png",
+        "bytes": 215310,
+        "pixels": [
+          2176,
+          1082
+        ]
+      }
+    }
+  },
+  "fig_operational_evidence": {
+    "contract": {
+      "core_conclusion": "Transition-aware rollout improves over the no-transition baseline, whereas execution constraints determine materially larger operational effects.",
+      "archetype": "quantitative grid"
+    },
+    "statistics": "paired bootstrap 95% intervals; Holm-corrected tests in manuscript tables; no significance stars",
+    "source_data": "fig_operational_evidence_source_data.csv",
+    "outputs": {
+      "svg": {
+        "path": "fig_operational_evidence.svg",
+        "bytes": 43192,
+        "editable_text_nodes": 78
+      },
+      "pdf": {
+        "path": "fig_operational_evidence.pdf",
+        "bytes": 60217
+      },
+      "tiff": {
+        "path": "fig_operational_evidence.tiff",
+        "bytes": 52857710
+      },
+      "png": {
+        "path": "fig_operational_evidence.png",
+        "bytes": 224879,
+        "pixels": [
+          2197,
+          1503
+        ]
+      }
+    }
+  }
+}

@@ -1,0 +1,120 @@
+\documentclass[9pt]{article}
+\usepackage[a4paper,margin=12mm]{geometry}
+\usepackage{booktabs,longtable,array,pdflscape,ragged2e}
+\usepackage[T1]{fontenc}
+\setlength{\parindent}{0pt}
+\setlength{\LTpre}{2pt}
+\setlength{\LTpost}{2pt}
+\setlength{\emergencystretch}{1em}
+\begin{document}
+\renewcommand{\thetable}{S\arabic{table}}
+\begin{landscape}
+\begin{center}
+{\Large Supplementary Parameter Ledger}\par
+\vspace{3pt}
+{\small Robust Closed-Loop Restoration for Mobility-Coupled Distribution Systems with Measured Charging and Executable Actions}
+\end{center}
+\textbf{Scope.} This ledger reports the implemented value, unit, role, provenance or calibration rule, selection data, and challenged range for every manuscript coefficient and major execution setting.  Dimensionless objective weights define a benchmark score, not monetary cost.  The CSV source is \texttt{config/full\_parameter\_ledger.csv}.
+\tiny
+\renewcommand{\arraystretch}{1.12}
+\begin{longtable}{>{\RaggedRight\arraybackslash}p{0.06\linewidth}>{\RaggedRight\arraybackslash}p{0.07\linewidth}>{\RaggedRight\arraybackslash}p{0.09\linewidth}>{\RaggedRight\arraybackslash}p{0.06\linewidth}>{\RaggedRight\arraybackslash}p{0.13\linewidth}>{\RaggedRight\arraybackslash}p{0.14\linewidth}>{\RaggedRight\arraybackslash}p{0.14\linewidth}>{\RaggedRight\arraybackslash}p{0.12\linewidth}}
+\caption{Complete parameter and hyperparameter ledger.}\label{tab:complete-parameters}\\
+\toprule
+Group & Symbol & Value & Unit & Role & Source / calibration & Selection data & Sensitivity / range \\
+\midrule
+\endfirsthead
+\multicolumn{8}{l}{\textit{Table S1 continued}}\\
+\toprule
+Group & Symbol & Value & Unit & Role & Source / calibration & Selection data & Sensitivity / range \\
+\midrule
+\endhead
+\midrule\multicolumn{8}{r}{\textit{Continued on next page}}\\
+\endfoot
+\bottomrule
+\endlastfoot
+forecast & L & 12 & h & observed history length & fixed training configuration & 2018-2022 Boulder EV data & not varied \\
+forecast & H & 6 & h & rollout and forecast horizon & fixed training configuration & 2018-2022 Boulder EV data & not varied \\
+forecast & hidden & 32 & units & graph-recurrent hidden width & validation configuration & 2022 Boulder validation & not varied \\
+forecast & epochs & 40 & epochs & maximum training epochs & validation configuration & 2022 Boulder validation & not varied \\
+forecast & batch & 256 & samples & training batch size & validation configuration & 2022 Boulder validation & not varied \\
+forecast & learning\_\allowbreak{}rate & 0.002 & none & Adam learning rate & validation configuration & 2022 Boulder validation & not varied \\
+forecast & weight\_\allowbreak{}decay & 0.0001 & none & L2 regularization & validation configuration & 2022 Boulder validation & not varied \\
+forecast & dropout & 0.1 & fraction & dropout probability & validation configuration & 2022 Boulder validation & not varied \\
+forecast & physics\_\allowbreak{}lambda & 0.08 & none & physics-guidance training weight & retained training configuration & 2022 Boulder validation & plain inference mode reported \\
+forecast & smooth\_\allowbreak{}lambda & 0.002 & none & temporal smoothness weight & retained training configuration & 2022 Boulder validation & plain inference mode reported \\
+objective & gamma & 1.0 & none & finite-horizon discount factor & undiscounted implementation & all scenarios & not varied \\
+objective & lambda\_\allowbreak{}m & 1.8 & relative weight & mobility-delay contribution & declared benchmark weight & fixed before paired evaluation & 3.6 in objective sensitivity \\
+objective & lambda\_\allowbreak{}e & 2.6 & relative weight & unserved-energy contribution & declared benchmark weight & fixed before paired evaluation & 5.2 in objective sensitivity \\
+objective & lambda\_\allowbreak{}c & 1.7 & relative weight & communication-loss contribution & declared benchmark weight & fixed before paired evaluation & 3.4 in objective sensitivity \\
+objective & lambda\_\allowbreak{}p & 1.2 & relative weight & power-service contribution & declared benchmark weight & fixed before paired evaluation & 2.4 in objective sensitivity \\
+objective & lambda\_\allowbreak{}z & 12.0 & relative weight & cross-domain exposure contribution & declared benchmark weight & fixed before paired evaluation & 6.0 in objective sensitivity \\
+service & beta\_\allowbreak{}m & 0.13 & relative load & mobility contribution to communication load & declared benchmark assumption & fixed before paired evaluation & not varied \\
+service & beta\_\allowbreak{}e & 0.19 & relative load & energy contribution to communication load & declared benchmark assumption & fixed before paired evaluation & not varied \\
+service & beta\_\allowbreak{}r & 6.0 & relative load & road-threat contribution to communication load & declared benchmark assumption & fixed before paired evaluation & not varied \\
+service & beta\_\allowbreak{}p & 3.5 & relative load & power-threat contribution to communication load & declared benchmark assumption & fixed before paired evaluation & not varied \\
+service & alpha\_\allowbreak{}c & 0.40 & none & direct communication-threat derating & declared benchmark assumption & fixed before paired evaluation & not varied \\
+service & alpha\_\allowbreak{}p & 1.0 & none & power-availability derating in service equation & normalized threat-state definition & fixed before paired evaluation & not varied \\
+service & rho\_\allowbreak{}c & 0.45 & none & communication shortfall to mobility delay & declared benchmark assumption & fixed before paired evaluation & not varied \\
+service & rho\_\allowbreak{}q & 0.22 & none & backlog carryover & declared benchmark assumption & fixed before paired evaluation & requires less than 1 \\
+allocator & kappa\_\allowbreak{}q & 1.0 & relative weight & backlog in charging score & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & kappa\_\allowbreak{}ch & 1.5 & relative weight & current threat in charging score & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & kappa\_\allowbreak{}E & 0.7 & relative weight & energy in communication score & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & kappa\_\allowbreak{}com & 1.5 & relative weight & current threat in communication score & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & omega\_\allowbreak{}p & 1.6 & relative weight & power threat in repair priority & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & omega\_\allowbreak{}c & 1.3 & relative weight & communication threat in repair priority & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & omega\_\allowbreak{}r & 1.1 & relative weight & road threat in repair priority & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & omega\_\allowbreak{}Gamma & 0.8 & relative weight & multi-step marginal benefit & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & eta\_\allowbreak{}service & 0.04 & fraction & uniform reserve for charging and communication & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & eta\_\allowbreak{}repair & 0.02 & fraction & uniform reserve for repair priority & declared benchmark assumption & fixed before paired evaluation & not varied \\
+allocator & epsilon & 1e-9 & score unit & square-root stabilizer & numerical implementation & fixed & positive by construction \\
+budget & B\_\allowbreak{}ch & 29.433750 & kWh per h & total hourly charging allocation & 1.22 times all-station historical mean hourly energy & all 2018-2023 Boulder sessions & stress uses 24.4 factor with 20 times demand \\
+budget & B\_\allowbreak{}com & 73.144081 & service unit & total communication allocation & 0.72 times supplied station capacity proxy & processed Boulder benchmark & not varied \\
+budget & B\_\allowbreak{}res & 10.0 & priority unit & total requested restoration priority & max of 10 and 0.018 times mean arrivals & processed Boulder benchmark & not varied \\
+transition & rho\_\allowbreak{}r & 0.72842984 & none & road-state persistence & nonnegative deficit regression & 2018-2021 Boulder station-hours & 0.54632238 to 0.91053730 \\
+transition & sigma & 0.23278108 & none & spatial propagation & nonnegative deficit regression & 2018-2021 Boulder station graph & 0.11639054 to 0.34917162 \\
+transition & rho\_\allowbreak{}p & 0.77180562 & none & power-state persistence & day-block bootstrap & aligned EAGLE-I Boulder observations & 0.75369266 to 0.78666740 \\
+transition & tau\_\allowbreak{}pr & 0.0 & none & power-to-mobility association & nonnegative observational regression & aligned EAGLE-I and Boulder EV deficits & 0.0 to 0.03180810 \\
+transition & tau\_\allowbreak{}pc & 0.16645075 & none & power-to-communication coupling & finite-buffer packet stress construction & packet scenarios & 0.01178179 to 0.27083775 \\
+transition & rho\_\allowbreak{}c\_\allowbreak{}state & 0.5 & none & communication-state persistence & sensitivity-only envelope & no longitudinal field packet trace & 0.3 to 0.8 \\
+transition & tau\_\allowbreak{}rc & 0.04 & none & road-to-communication coupling & sign-constrained envelope & no joint field trace & 0.0 to 0.08 \\
+transition & tau\_\allowbreak{}cr & 0.08 & none & communication-to-road coupling & sign-constrained envelope & no joint field trace & 0.0 to 0.16 \\
+transition & tau\_\allowbreak{}cp & 0.04 & none & communication-to-power-service coupling & sign-constrained envelope & no joint field trace & 0.0 to 0.08 \\
+repair & road\_\allowbreak{}effect & 0.08 & normalized state & predictive priority quantum effect & declared benchmark assumption & fixed before paired evaluation & continuous prediction layer only \\
+repair & power\_\allowbreak{}effect & 0.12 & normalized state & predictive priority quantum effect & declared benchmark assumption & fixed before paired evaluation & continuous prediction layer only \\
+repair & communication\_\allowbreak{}effect & 0.10 & normalized state & predictive priority quantum effect & declared benchmark assumption & fixed before paired evaluation & continuous prediction layer only \\
+crew & vehicles & 4 & integer & available repair crews & declared benchmark setting & all integrated scenarios & 12 and 24 in sensitivity \\
+crew & jobs & 36 & integer & requested outage work orders per scenario & declared benchmark setting & all integrated scenarios & not varied \\
+crew & speed & 30 & km per h & road travel speed & declared benchmark setting & Boulder station coordinates & not varied \\
+crew & circuity & 1.25 & ratio & road-to-great-circle distance multiplier & declared benchmark setting & Boulder station coordinates & not varied \\
+crew & service\_\allowbreak{}time & empirical & h & job service duration & EAGLE-I 50-customer post-peak half-recovery samples & 497 observable events clipped to 0.25-8 h & multiplied by 0.5 1.0 and 2.0 in routing study \\
+crew & solver & deterministic list & none & priority per incremental completion time with stable tie-break & implementation rule & common route portfolio & no wall-clock cutoff \\
+packet & duration & 120 & s & queue simulation window & declared stress setting & 20 selected 2023 hours & not varied \\
+packet & arrival\_\allowbreak{}rate & 8+0.8 activity & packet per s & station traffic arrival intensity & declared stress function & observed connected sessions and arrivals & traffic multipliers 0.5 1 2 and 4 \\
+packet & service\_\allowbreak{}rate & 30 & packet per s & nominal queue service rate & declared stress setting & packet stress simulator & power and communication threat derate it \\
+packet & buffer & 100 & packets & finite FCFS buffer & declared stress setting & packet stress simulator & not varied \\
+packet & control\_\allowbreak{}fraction & 0.05 & fraction & share of arrivals carrying control & declared stress setting & packet stress simulator & not varied \\
+packet & deadline & 500 & ms & on-time control deadline & declared stress setting & packet stress simulator & not varied \\
+packet & max\_\allowbreak{}retries & 2 & integer & retransmission limit & declared stress setting & packet stress simulator & not varied \\
+packet & backoff\_\allowbreak{}mean & 0.05 & s & exponential retry backoff mean & declared stress setting & packet stress simulator & not varied \\
+packet & erasure & min(0.25;0.002+0.08 z\_\allowbreak{}c) & probability & threat-dependent packet erasure & declared stress function & packet stress simulator & not varied \\
+packet & backup & 60 & s & primary backup duration & declared stress setting & packet stress simulator & 0 and 300 s comparisons \\
+grid & feeder & SMART-DS SFO P1U & case & independent AC execution model & public SMART-DS v1.0 complete feeder & selected before policy comparison & one feeder and 20 mappings \\
+grid & power\_\allowbreak{}factor & 0.98 & lagging & EV reactive-power assumption & declared execution setting & all online OpenDSS actions & not varied \\
+grid & load\_\allowbreak{}model & constant-PQ model 1 & OpenDSS model & balanced three-phase wye EV increment & released eligible load connection and model & 17 three-phase loads & not varied \\
+grid & voltage\_\allowbreak{}band & 0.95-1.05 & p.u. & accepted active-node voltage range & declared operational gate & all online OpenDSS actions & not varied \\
+grid & line\_\allowbreak{}limit & 1.0 & p.u. & accepted maximum branch loading & declared operational gate & all online OpenDSS actions & not varied \\
+grid & bisection\_\allowbreak{}iterations & 14 & integer & common-fraction AC projection tolerance & implementation setting & all infeasible raw actions & fraction resolution about 6.1e-5 \\
+grid & mappings & 20 & integer & seeded station-to-load embeddings & geographic rank and seeded assignment & Boulder stations to 17 eligible SMART-DS loads & scenario id modulo 20 \\
+grid & mapping\_\allowbreak{}seed & 20260825 & integer & station mapping random seed & prespecified seed & all mappings & not varied \\
+station\_\allowbreak{}flow & capacity & max(q0.995*1.2;7.2) & kWh per h & station service-capacity stress proxy & training-period empirical quantile & 2018-2021 Boulder energy & not a charger nameplate claim \\
+station\_\allowbreak{}flow & closure\_\allowbreak{}fraction & 0.1 0.2 0.3 & fraction & closed-station stress & declared validation grid & 24 selected 2023 hours & full factorial \\
+station\_\allowbreak{}flow & demand\_\allowbreak{}multiplier & 1 2 4 & ratio & demand stress & declared validation grid & 24 selected 2023 hours & full factorial \\
+station\_\allowbreak{}flow & distance\_\allowbreak{}beta & 0.5 1 2 & per km & routing distance penalty & declared validation grid & 24 selected 2023 hours & full factorial \\
+station\_\allowbreak{}flow & loyalty & 2.0 & cost unit & penalty for changing station & declared validation setting & 24 selected 2023 hours & not varied \\
+statistics & n\_\allowbreak{}primary & 4096 & paired scenarios & primary scenario count & prespecified four equal groups & seed 2026 & 1024 per threat class \\
+statistics & bootstrap & 20000 & resamples & paired mean-difference interval & prespecified inference & primary paired scenarios & percentile 95 percent interval \\
+statistics & holm\_\allowbreak{}family & 5 & tests & total-cost primary family & prespecified multiplicity family & overall plus four threat classes & paired t and Wilcoxon adjusted separately \\
+\end{longtable}
+\textbf{Execution note.} Continuous restoration values are requested priorities used for candidate scoring.  They do not reduce the realized threat state.  Packet delivery determines dispatched work orders; the deterministic integer route records completion events; only those events clear the corresponding realized threat state.
+\end{landscape}
+\end{document}

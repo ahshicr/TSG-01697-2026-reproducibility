@@ -1,0 +1,61 @@
+{
+  "simulator": "finite-buffer discrete-event FCFS packet queue with erasures and retransmission backoff",
+  "analytic_validation": {
+    "lambda_pps": 10.0,
+    "mu_pps": 20.0,
+    "theoretical_mean_ms": 100.0,
+    "relative_error": 0.002693282094964502,
+    "generated_packets": 40392,
+    "arrival_attempts_including_retries": 40392,
+    "delivered_packets": 40392,
+    "buffer_drops": 0,
+    "erasures": 0,
+    "control_generated": 40392,
+    "control_delivered": 40392,
+    "control_failed": 0,
+    "control_delivery_fraction": 1.0,
+    "control_on_time_fraction": 1.0,
+    "control_latency_mean_ms": 99.73067179050355,
+    "control_latency_p95_ms": 295.07382216435656,
+    "control_latency_p99_ms": 449.70124709022156,
+    "attempt_drop_fraction": 0.0
+  },
+  "packet_contract": {
+    "duration_s": 120.0,
+    "buffer_packets": 100,
+    "control_fraction": 0.05,
+    "deadline_ms": 500.0,
+    "max_retries": 2,
+    "base_arrival_pps": 8.0,
+    "ev_session_arrival_pps": 0.8,
+    "base_service_pps": 30.0,
+    "traffic_multipliers": [
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "backup_duration_s": [
+      0.0,
+      60.0,
+      300.0
+    ]
+  },
+  "backup_logic_check": "For service starts before backup_duration_s, service rate excludes power derating; after depletion, the power-threat factor is applied. A backup longer than the simulated outage window therefore prevents direct power-induced service-rate loss for that window.",
+  "interpretation": "Traffic rates are transparent stress assumptions linked to observed station activity, not captured utility packet traces. The effective action fraction is the share of control packets delivered within deadline and is used to derate executable rollout actions.",
+  "hourly_proxy_comparison": {
+    "spearman": 0.8598844945208198,
+    "mae": 0.24342922805574077
+  },
+  "rows": 12000,
+  "outputs": {
+    "packet_network_scenarios.csv": {
+      "bytes": 3211099,
+      "sha256": "e334406ee6991e8777f76b8579d9589c5ae13585f34cef80449eec955d6f8687"
+    },
+    "packet_network_summary.csv": {
+      "bytes": 73960,
+      "sha256": "6f83df353b107d8ada241a4b573e47624186f6de9368368c0b38b029e81a3331"
+    }
+  }
+}

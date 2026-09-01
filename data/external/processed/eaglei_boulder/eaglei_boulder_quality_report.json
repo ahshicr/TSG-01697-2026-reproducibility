@@ -1,0 +1,239 @@
+{
+  "source": {
+    "dataset": "EAGLE-I Recorded Electricity Outages 2014-2025",
+    "doi": "10.6084/m9.figshare.24237376.v4",
+    "license": "CC BY 4.0",
+    "annual_files": [
+      {
+        "name": "eaglei_outages_2014.csv",
+        "bytes": 78056250,
+        "sha256": "f292a9f99066ac686df69767c535b218e70b4d4e748840ec620eda3340f914c9"
+      },
+      {
+        "name": "eaglei_outages_2015.csv",
+        "bytes": 598963737,
+        "sha256": "49de89b3427d564efbd9c80183caf4e9777966f7e319d4b30d682c1c0d064505"
+      },
+      {
+        "name": "eaglei_outages_2016.csv",
+        "bytes": 619779314,
+        "sha256": "2c1b364a3b06aee56326174c4644750ea86ba9be4585c5e40eeb7835431bfc9c"
+      },
+      {
+        "name": "eaglei_outages_2017.csv",
+        "bytes": 698796929,
+        "sha256": "47479c4fd645ec69685447f90baa51f08a85e776cedf612279b3e41c13147c8d"
+      },
+      {
+        "name": "eaglei_outages_2018.csv",
+        "bytes": 999210542,
+        "sha256": "85e0a864aa272e75892e181f1da4754ed78f7bf0bef75a279d8ab381baa7db70"
+      },
+      {
+        "name": "eaglei_outages_2019.csv",
+        "bytes": 1102778792,
+        "sha256": "4cc277a138b326bd0e1f203558539a9422b40dacdf439e3d5b58ee71d7462d27"
+      },
+      {
+        "name": "eaglei_outages_2020.csv",
+        "bytes": 1170699724,
+        "sha256": "2a20b62e5245b1b9d4fcedc1bdbaf691bb1e17f75094975c8c6cb854f52e721a"
+      },
+      {
+        "name": "eaglei_outages_2021.csv",
+        "bytes": 1141058232,
+        "sha256": "e3e7ac40a40d92d92488501881ab381b8931833e486941424ac55ea20ffde319"
+      },
+      {
+        "name": "eaglei_outages_2022.csv",
+        "bytes": 1187596176,
+        "sha256": "ff8b58ae30fcbaf290f820bcd4f1420e536994bc9f0a87bb80991130478461b0"
+      },
+      {
+        "name": "eaglei_outages_2023.csv",
+        "bytes": 1199752423,
+        "sha256": "c028f42dae8522ecfb787ad0b6461cfc809bb04856eef20cb389e486d5657f7e"
+      },
+      {
+        "name": "eaglei_outages_2024.csv",
+        "bytes": 1444846424,
+        "sha256": "d5d75ea4ef3943446aaf0623e9b451cb4e7796d20cc379de9cf497106ebab2e6"
+      },
+      {
+        "name": "eaglei_outages_2025.csv",
+        "bytes": 1402347695,
+        "sha256": "4148a4a3b26e58024403cef98ccb324d1656f476613d6afff4451e33faf468c9"
+      }
+    ]
+  },
+  "scope": {
+    "target": "Boulder County and six directly adjacent Colorado counties",
+    "fips": {
+      "08013": "Boulder",
+      "08014": "Broomfield",
+      "08047": "Gilpin",
+      "08049": "Grand",
+      "08059": "Jefferson",
+      "08069": "Larimer",
+      "08123": "Weld"
+    },
+    "linkage_rule": "County-level disturbance context for City of Boulder EV transactions; no station-level outage label and no causal utility linkage are asserted."
+  },
+  "counts": {
+    "source_rows_scanned": 249316543,
+    "selected_rows_before_deduplication": 819528,
+    "duplicate_county_time_rows": 0,
+    "selected_rows_after_deduplication": 819528,
+    "boulder_observations": 171187
+  },
+  "source_schema_by_year": {
+    "eaglei_outages_2014.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2015.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2016.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2017.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2018.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2019.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2020.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2021.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2022.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ],
+    "eaglei_outages_2023.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "sum",
+      "run_start_time"
+    ],
+    "eaglei_outages_2024.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time",
+      "total_customers"
+    ],
+    "eaglei_outages_2025.csv": [
+      "fips_code",
+      "county",
+      "state",
+      "customers_out",
+      "run_start_time"
+    ]
+  },
+  "schema_harmonization": {
+    "eaglei_outages_2023.csv": {
+      "sum": "customers_out"
+    }
+  },
+  "time": {
+    "timezone": "UTC",
+    "first": "2014-11-01 04:00:00+00:00",
+    "last": "2025-12-31 23:30:00+00:00"
+  },
+  "missing_value_semantics": "The source omits zero-outage rows; a missing county-time entry can mean zero outages or a data-collection gap and is therefore retained as missing rather than silently imputed to zero.",
+  "event_definition": "A threshold event is a sequence of observations at or above the threshold with no gap above 45 min. Results are reported at 50, 100, and 500 customers to expose threshold sensitivity.",
+  "event_summary": {
+    "50": {
+      "events": 2535,
+      "duration_h_median": 1.75,
+      "duration_h_p90": 6.5,
+      "peak_customers_median": 150.0,
+      "peak_customers_p90": 1496.3999999999992,
+      "half_recovery_h_median": 0.75,
+      "half_recovery_observed_fraction": 0.19605522682445758
+    },
+    "100": {
+      "events": 1762,
+      "duration_h_median": 1.5,
+      "duration_h_p90": 6.25,
+      "peak_customers_median": 244.5,
+      "peak_customers_p90": 2163.4000000000005,
+      "half_recovery_h_median": 0.75,
+      "half_recovery_observed_fraction": 0.16458569807037457
+    },
+    "500": {
+      "events": 606,
+      "duration_h_median": 1.25,
+      "duration_h_p90": 5.375,
+      "peak_customers_median": 1245.5,
+      "peak_customers_p90": 4212.5,
+      "half_recovery_h_median": 0.75,
+      "half_recovery_observed_fraction": 0.12211221122112212
+    }
+  },
+  "outputs": {
+    "boulder_adjacent_counties_15min.csv.gz": {
+      "bytes": 3105914,
+      "sha256": "01792c58611151dda26bf26ca1ea9456358e7bfdd73f89d52e56b961894233ff"
+    },
+    "boulder_outage_events_threshold_sensitivity.csv": {
+      "bytes": 390648,
+      "sha256": "e8ec85943c0cb46d29f41221cc8af96fd882b16b202558986296b1c60bc34e93"
+    },
+    "county_coverage_summary.csv": {
+      "bytes": 791,
+      "sha256": "04f0459fa061830c288938946278401da01c03d4c079b10c0b01653a661a47cf"
+    },
+    "county_outage_level_spearman.csv": {
+      "bytes": 960,
+      "sha256": "6ad7df3194272d3d0768603360cbfc0bb6ee409dad2c8aa33f761f4637fb07b2"
+    },
+    "county_outage_change_spearman.csv": {
+      "bytes": 978,
+      "sha256": "2df487356fe8d27f83953d57a9189829ef872963a7e30fc7ab58fb204a50d32e"
+    }
+  }
+}

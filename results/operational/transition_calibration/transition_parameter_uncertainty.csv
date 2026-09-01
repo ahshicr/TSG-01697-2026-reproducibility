@@ -1,0 +1,10 @@
+parameter,central,lower,upper,evidence_class,source,interpretation
+threat_persistence,0.7284298414459285,0.5463223810844464,0.9105373018074105,estimated,"Boulder station-hour arrivals, 2018-2021",Nonnegative station deficit autoregression; interval is a conservative +/-25% envelope.
+spatial_spread,0.23278107734113337,0.11639053867056669,0.34917161601170005,estimated,Boulder spatial graph and station-hour arrivals,Neighbour-deficit coefficient; interval is a conservative +/-50% envelope.
+power_persistence,0.7718056156589982,0.7536926590743023,0.7866674013423922,estimated,EAGLE-I Boulder County hourly consecutive observations,"Predictive persistence of normalized county outage intensity, not component failure probability."
+pr_coupling,2.0570893161110102e-17,3.54246032992964e-20,0.031808098204459956,estimated-observational,UTC-aligned EAGLE-I Boulder outages and local Boulder EV arrival deficits,Predictive power-to-mobility association; not interpreted as a causal coefficient.
+pc_coupling,0.1664507536108788,0.011781785240195948,0.27083774963578205,constructed,Packet-level stress simulator with backup-power sensitivity,Unprotected power-threat contribution to missed-deadline control fraction.
+comm_persistence,0.5,0.3,0.8,sensitivity-only,finite-buffer communication-state envelope,No longitudinal field packet trace identifies hourly communication persistence.
+rc_coupling,0.04,0.0,0.08,sensitivity-only,sign-constrained mechanism envelope,No joint field trace identifies the road-to-communication direction; robust evaluation spans zero through the upper bound.
+cr_coupling,0.08,0.0,0.16,sensitivity-only,sign-constrained mechanism envelope,No joint field trace identifies the communication-to-road direction; robust evaluation spans zero through the upper bound.
+cp_coupling,0.04,0.0,0.08,sensitivity-only,sign-constrained mechanism envelope,No joint field trace identifies the communication-to-power-service direction; robust evaluation spans zero through the upper bound.

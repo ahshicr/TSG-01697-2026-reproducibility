@@ -1,0 +1,72 @@
+{
+  "source": {
+    "title": "Electric Vehicle Charging Station Data",
+    "publisher": "City of Boulder, Colorado",
+    "license": "CC0 1.0",
+    "raw_path": "data/external/raw/boulder_ev_sessions.csv",
+    "raw_bytes": 23276416,
+    "raw_sha256": "38c665f89fcecea67a88d27a98241a892098ba493dcb7d6e45eb9d451b12d36b"
+  },
+  "shape": {
+    "raw_rows": 148136,
+    "stations": 50,
+    "hourly_rows": 51924,
+    "start_local_min": "2018-01-01 17:49:00",
+    "start_local_max": "2023-11-30 23:27:00",
+    "hourly_end_exclusive": "2023-12-05 05:00:00"
+  },
+  "quality_flags": {
+    "missing_start": 0,
+    "missing_end": 4,
+    "duplicate_source_record_id": 0,
+    "duplicate_full_rows": 0,
+    "zero_energy_sessions": 16113,
+    "negative_energy_sessions": 0,
+    "invalid_energy_sessions": 16113,
+    "duration_inconsistent_sessions": 0,
+    "avg_charging_power_above_19_2_kw": 0
+  },
+  "conservation_checks": {
+    "measured_positive_energy_kwh": 1252719.654,
+    "transaction_start_energy_kwh": 1252719.6540292813,
+    "reconstructed_load_energy_kwh": 1252719.6538414839,
+    "arrival_records": 148136,
+    "hourly_arrivals": 148136
+  },
+  "representations": {
+    "arrivals": "Exact count of source transactions by local start hour and station.",
+    "transaction_start_energy_kwh": "Measured session energy assigned to its local start hour.",
+    "reconstructed_load_kwh": "Proxy only: measured session energy uniformly spread over reported charging duration.",
+    "connected_session_hours": "Fractional connection-hours reconstructed from reported total duration."
+  },
+  "timezone_note": "Times are retained as source local civil times. Source MDT/MST labels are stored in the clean table but not converted to UTC because the labels are not consistently aligned with calendar DST.",
+  "split": {
+    "strategy": "fixed chronological split; no random leakage across time",
+    "train": {
+      "start": "2018-01-01 00:00:00",
+      "end_exclusive": "2022-01-01 00:00:00"
+    },
+    "validation": {
+      "start": "2022-01-01 00:00:00",
+      "end_exclusive": "2023-01-01 00:00:00"
+    },
+    "test": {
+      "start": "2023-01-01 00:00:00",
+      "end_exclusive": "2023-12-06 00:00:00"
+    }
+  },
+  "outputs": {
+    "boulder_ev_sessions_clean.csv.gz": {
+      "bytes": 5206423,
+      "sha256": "9349f76131cd6043cb1dfe7ce8a4e538153013fb64c2ccbf5a6da2aeb621e64e"
+    },
+    "boulder_ev_stations.csv": {
+      "bytes": 4652,
+      "sha256": "6d388cb9fefec0ed1323b5de46b7e3431711385f98d880bbfad88fcdd6a73002"
+    },
+    "boulder_ev_hourly.npz": {
+      "bytes": 2198891,
+      "sha256": "ca471206dae10d6fae8f530a4ff8845f1b55831193f08e70857da43bf88b89ab"
+    }
+  }
+}
