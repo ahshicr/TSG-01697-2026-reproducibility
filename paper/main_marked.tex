@@ -1,7 +1,7 @@
 \documentclass[journal]{IEEEtran}
 %DIF LATEXDIFF DIFFERENCE FILE
 %DIF DEL D:\P5-TSG-Guo+Min+Li\revision\backup\main_submission.tex     Sat Jun 20 13:23:03 2026
-%DIF ADD D:\P5-TSG-Guo+Min+Li\adaptive_rollout_paper\paper\main.tex   Tue Sep  1 23:43:48 2026
+%DIF ADD D:\P5-TSG-Guo+Min+Li\adaptive_rollout_paper\paper\main.tex   Wed Sep  2 00:01:38 2026
 
 \usepackage{amsmath,amssymb,amsfonts}
 \usepackage{booktabs}
@@ -1327,17 +1327,16 @@ result of the packet/control loop, whereas the small nominal PC advantage shows
 that multi-step propagation is not valuable in every operating state.  Because
 central PC had 0.1708\% lower mean cost than robust PC and the robust extension
 did not improve CVaR or maximum cost, the evidence does not establish a
-worst-set protection benefit.
-}
+worst-set protection benefit}\DIFaddend .
 
-\DIFadd{Several alternative explanations were tested directly.  Forecast performance
+ \DIFaddbegin \DIFadd{Several alternative explanations were tested directly.  Forecast performance
 alone cannot explain the central-PC--forecast-matched comparison because those
 two policies receive the same forecast.  Separating SMART-DS from policy scoring
 substantially mitigates, but does not eliminate, circular validation: the
 independent solver enforces AC constraints before served energy updates
 backlog, yet the relative policy benefit is still estimated with the same
-service-loss primitives and a modeled transition environment.  Moreover, }\DIFaddend the
- \DIFaddbegin \DIFadd{measured-load AC gate was nonbinding for every raw primary action, so its role
+service-loss primitives and a modeled transition environment.  Moreover, the
+measured-load AC gate was nonbinding for every raw primary action, so its role
 there was independent feasibility verification rather than a change in policy
 ranking; the $20\times$ stress experiment demonstrates feedback only when the
 constraint binds.  We therefore report evaluation-weight sensitivity and
@@ -1348,28 +1347,31 @@ integer-route completion events.  Conversely, the failure of
 the graph predictor to dominate every RMSE and the original PC priority's loss
 under routing are retained as negative results; both motivated concrete model
 changes and constrain the claim.
-}
+}\DIFaddend 
 
-\DIFadd{The remaining boundaries are data-specific rather than deferred substitutes
+ \DIFaddbegin \DIFadd{The remaining boundaries are data-specific rather than deferred substitutes
 for validation.  Boulder session energy is measured, but the intra-session
 hourly profile is reconstructed.  EAGLE-I is county-level and has ambiguous
 missing intervals, so it cannot identify station outages or causal crew times.
 SMART-DS is a realistic synthetic feeder, not the Boulder utility network.  The
-}\DIFaddend communication  \DIFaddbegin \DIFadd{traffic and battery conditions are transparent stress inputs,
+communication traffic and battery conditions are transparent stress inputs,
 not a field packet trace.  These boundaries prevent a utility-deployment claim,
 but they do not remove the measured demand test, held-out outage calibration,
 independent AC action loop, packet feedback, or executable routing evidence on
-which the stated benchmark conclusion rests}\DIFaddend .
+which the stated benchmark conclusion rests.
+}\DIFaddend 
 
  \DIFaddbegin \section{\DIFadd{Data and Code Availability}}
 \DIFaddend 
 
- \DIFaddbegin \DIFadd{All data required for the reported results are present in }\DIFaddend the  \DIFaddbegin \DIFadd{accompanying
-project.  The archive includes the unmodified Boulder CSV, all 17 EAGLE-I
-Figshare files, the selected SMART-DS OpenDSS feeder }\DIFaddend and  \DIFaddbegin \DIFadd{documentation, source
-URLs, licenses, access dates, byte counts, and SHA-256 manifests.  Processed
-tables preserve data dictionaries, split boundaries, missing-value semantics,
-timezone decisions, and conservation checks.  Source code, pinned Python
+ \DIFaddbegin \DIFadd{The public repository and accompanying reviewer-minimal archive provide the
+code, processed inputs, scenario-level outputs, and selected SMART-DS/OpenDSS
+feeder needed to reproduce the reported principal statistics and executable
+checks.  The original Boulder CSV and 17 EAGLE-I files remain available from
+their public publishers and are not duplicated in the minimal archive; retained
+metadata record their source URLs, licenses, access dates, byte counts, and
+SHA-256 hashes.  Processed tables preserve data dictionaries, split boundaries,
+missing-value semantics, timezone decisions, and conservation checks.  Pinned Python
 dependencies, random seeds, trained weights, scenario-level outputs, statistical
 tables, 20 station-to-SMART-DS mappings, hourly AC projection aggregates,
 integer route/completion logs, packet logs, proof checks, the integrated
@@ -1387,7 +1389,7 @@ retain their original source URLs, licences, versions, and identifiers.  No
 separate repository DOI is required or claimed}\DIFaddend .
 
 
- \section{Conclusion}
+\section{Conclusion}
 
  \DIFaddbegin \DIFadd{Transition-aware }\DIFaddend PC rollout combines  \DIFaddbegin \DIFadd{measured charging demand, an
 action-dependent calibrated transition, and executable electrical,
