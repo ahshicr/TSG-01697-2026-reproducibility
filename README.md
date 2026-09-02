@@ -3,14 +3,14 @@
 This repository contains the code, processed inputs, scenario-level outputs,
 parameter ledger, manuscript source, and a self-checking reproduction path for:
 
-> **Transition-Aware Closed-Loop Restoration for Mobility-Coupled Distribution
-> Systems with Measured Charging and Executable Actions**
+> **Transition Based Closed Loop Restoration for Mobility Coupled Distribution
+> Systems with Executable Actions**
 
 Manuscript number: **TSG-01697-2026**.
 
 ## Main result and scientific positioning
 
-Across 4,096 paired scenarios, transition-aware central PC has 0.6327% lower
+Across 4,096 paired scenarios, central PC has 0.6327% lower
 mean dimensionless cost than the forecast-matched no-transition baseline
 (paired difference -6.2730; 20,000-resample bootstrap 95% interval
 [-7.0372, -5.5195]).
@@ -21,7 +21,7 @@ increases CVaR95 by 4.48 and CVaR99 by 3.19 cost units, and does not reduce the
 observed maximum cost. The manuscript therefore treats central PC as the main
 method and robust PC as a sensitivity extension.
 
-## What is included
+## Included materials
 
 - processed Boulder charging inputs and the fixed demand forecast;
 - the selected SMART-DS/OpenDSS feeder used inside the execution loop;
@@ -105,7 +105,7 @@ The full primary command and the evidence boundaries are documented in
 - All six policies pass through the same packet, OpenDSS, station-flow, and
   integer-crew execution gates within a paired scenario.
 
-## Version and identifier policy
+## Version
 
-The submission snapshot is tagged `v2026.09.01`. No separate repository DOI is
-required or claimed; reused public datasets retain their existing identifiers.
+The earlier submission snapshot is tagged `v2026.09.01`. Reused public datasets
+retain their existing identifiers and source records.

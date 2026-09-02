@@ -1,7 +1,7 @@
-# Reproducing the transition-aware-PC revision
+# Reproducing the central PC revision
 
-Run all commands from the repository root. The fastest audited route uses the
-released scenario-level rows; it does not require the 11.68 GB raw EAGLE-I
+Run all commands from the repository root. The shortest checked route uses the
+released scenario-level rows. It does not require the 11.68 GB raw EAGLE-I
 archive, a GPU, or HPC access.
 
 ## 1. Install the checked environment

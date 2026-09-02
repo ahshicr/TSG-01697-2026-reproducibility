@@ -1,6 +1,6 @@
 \begin{table*}[t]
 \centering
-\caption{Primary transition-aware comparison and all-policy cost summary under sampled transition uncertainty. Positive reduction denotes lower cost than forecast-matched; the oracle alone receives future demand and innovations.}
+\caption{Primary transition comparison and policy cost summary under sampled uncertainty. Positive reduction denotes lower cost than forecast matched. The oracle alone receives future demand and innovations.}
 \label{tab:robust-boulder}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -17,15 +17,15 @@ OOD compound & 1024 & 1604.49 & 1622.82 & 1.1296 & [-21.0397, -15.6852] \\
 \vspace{3pt}
 \begin{tabular}{lrr}
 \toprule
-\multicolumn{3}{l}{\textit{All-policy mean over the same 4,096 scenarios}} \\
+\multicolumn{3}{l}{\textit{Policy mean over the same 4,096 scenarios}} \\
 Policy & Mean cost & Reduction vs. matched (\%) \\
 \midrule
-Static & 1069.50 & -7.873 \\ 
-Greedy & 992.07 & -0.063 \\ 
-Forecast-matched & 991.44 & 0.000 \\ 
-Central PC & 985.17 & 0.633 \\ 
-Robust PC & 986.85 & 0.463 \\ 
-Oracle & 896.01 & 9.626 \\ 
+Static & 1069.50 & -7.873 \\
+Greedy & 992.07 & -0.063 \\
+Forecast matched & 991.44 & 0.000 \\
+Central PC & 985.17 & 0.633 \\
+Robust PC & 986.85 & 0.463 \\
+Oracle & 896.01 & 9.626 \\
 \bottomrule
 \end{tabular}
 \end{table*}

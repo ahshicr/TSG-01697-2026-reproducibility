@@ -2,7 +2,7 @@
 \centering
 \caption{Policy information and execution contract.  ``Current'' means the
 observation available at the decision hour.  The common route portfolio contains
-routes induced by static, greedy, forecast-matched, central-PC, robust-PC, and
+routes induced by static, greedy, forecast matched, central PC, robust PC, and
 uniform priorities.  Future innovations are never revealed to deployable
 policies.}
 \label{tab:policy-definitions}
@@ -10,13 +10,13 @@ policies.}
 \setlength{\tabcolsep}{2.4pt}
 \begin{tabular}{p{0.10\textwidth}p{0.10\textwidth}p{0.10\textwidth}p{0.09\textwidth}p{0.125\textwidth}p{0.085\textwidth}p{0.155\textwidth}p{0.125\textwidth}}
 \toprule
-Policy & Demand information & Threat/backlog & Multi-step transition rollout & Transition matrix used & Future innovations & Repair-route rule & Common execution gates \\
+Policy & Demand information & Threat and backlog & Multistep transition rollout & Transition matrix used & Future innovations & Repair route rule & Common execution gates \\
 \midrule
 Static & Historical station mean & Backlog only for charging & No & None & No & Direct route from static priority & Yes \\
-Greedy & Common forecast & Current threat and backlog & No & None & No & Direct route from current-threat priority & Yes \\
-Forecast-matched & Common forecast & Current threat and backlog & No & None & No & Current-exposure score over common portfolio & Yes \\
-Central PC & Common forecast & Current threat and backlog & Yes & Calibrated central $M$ & No & Central-transition score over common portfolio & Yes \\
-Robust PC (extension) & Common forecast & Current threat and backlog & Yes & Worst score over 21 declared matrices & No & Worst-transition score over common portfolio & Yes \\
+Greedy & Common forecast & Current threat and backlog & No & None & No & Direct route from current threat priority & Yes \\
+Forecast matched & Common forecast & Current threat and backlog & No & None & No & Current exposure score over common portfolio & Yes \\
+Central PC & Common forecast & Current threat and backlog & Yes & Calibrated central $M$ & No & Central transition score over common portfolio & Yes \\
+Robust PC (extension) & Common forecast & Current threat and backlog & Yes & Worst score over 21 declared matrices & No & Worst transition score over common portfolio & Yes \\
 Oracle & Realized future demand & Current threat and backlog & Yes & Central $M$ & Yes & Direct route from oracle priority & Yes \\
 \bottomrule
 \end{tabular}

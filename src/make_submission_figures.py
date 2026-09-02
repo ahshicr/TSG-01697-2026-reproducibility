@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Submission figures for the executable transition-aware-PC revision."""
+"""Submission figures for the executable PC revision."""
 
 from __future__ import annotations
 
@@ -138,19 +138,19 @@ def make_system_figure() -> tuple[plt.Figure, dict[str, object]]:
     box(ax, (0.235, 0.63), 0.17, 0.19, "Demand forecast\n+ observed state", BLUE_SOFT, BLUE, weight="bold")
     box(ax, (0.235, 0.37), 0.17, 0.19, "Calibrated\ntransition model", VIOLET_SOFT, VIOLET, weight="bold")
 
-    box(ax, (0.455, 0.47), 0.17, 0.25, "Transition-aware\nPC rollout", ORANGE_SOFT, ORANGE, fontsize=8, weight="bold", subtext="central propagation score")
+    box(ax, (0.455, 0.47), 0.17, 0.25, "Central PC\nrollout", ORANGE_SOFT, ORANGE, fontsize=8, weight="bold", subtext="finite horizon score")
     ax.text(0.54, 0.40, "requested actions", transform=ax.transAxes, ha="center", color=GREY, fontsize=6)
 
     execution = [
         ((0.68, 0.72), "AC action\nprojection", GREEN_SOFT, GREEN),
-        ((0.68, 0.53), "Packet-deadline\nenactment", TEAL_SOFT, TEAL),
-        ((0.68, 0.34), "Cross-station\nflow", BLUE_SOFT, BLUE2),
+        ((0.68, 0.53), "Packet deadline\nenactment", TEAL_SOFT, TEAL),
+        ((0.68, 0.34), "Station\nflow", BLUE_SOFT, BLUE2),
         ((0.68, 0.15), "Integer crew\nroutes", VIOLET_SOFT, VIOLET),
     ]
     for (x, y), label, face, edge in execution:
         box(ax, (x, y), 0.15, 0.12, label, face, edge, fontsize=6.4, weight="bold")
         arrow(ax, (0.625, 0.59), (x, y + 0.06), color=edge)
-    ax.text(0.755, 0.92, "Execution adapters", transform=ax.transAxes, ha="center", fontweight="bold", color=GREY)
+    ax.text(0.755, 0.92, "Execution conditions", transform=ax.transAxes, ha="center", fontweight="bold", color=GREY)
 
     box(ax, (0.875, 0.43), 0.11, 0.27, "Applied action\n+ next observed\nstate", GREY_SOFT, GREY, fontsize=7, weight="bold")
     for (_, y), _, _, edge in execution:
@@ -162,12 +162,12 @@ def make_system_figure() -> tuple[plt.Figure, dict[str, object]]:
     arrow(ax, (0.405, 0.72), (0.455, 0.63), color=BLUE)
     arrow(ax, (0.405, 0.47), (0.455, 0.56), color=VIOLET)
     arrow(ax, (0.93, 0.43), (0.32, 0.63), color=RED, connection="arc3,rad=-0.34", lw=1.2)
-    ax.text(0.65, 0.045, "hourly receding-horizon feedback", transform=ax.transAxes, ha="center", color=RED, fontsize=6.3)
-    ax.text(0.015, 0.04, "Evidence sources keep distinct roles; SMART-DS is not represented as the Boulder feeder.", transform=ax.transAxes, color=GREY, fontsize=5.7)
+    ax.text(0.65, 0.045, "hourly receding horizon feedback", transform=ax.transAxes, ha="center", color=RED, fontsize=6.3)
+    ax.text(0.015, 0.04, "Evidence sources enter through distinct model variables.", transform=ax.transAxes, color=GREY, fontsize=5.7)
     fig.subplots_adjust(left=0.01, right=0.99, top=0.98, bottom=0.02)
     return fig, {
-        "core_conclusion": "Requested transition-aware-PC actions are credited only after four execution adapters and feed the next observation.",
-        "archetype": "schematic-led composite",
+        "core_conclusion": "Requested PC actions affect the next state only after four execution gates.",
+        "archetype": "compact process schematic",
     }
 
 
@@ -219,24 +219,25 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
     y = np.arange(len(order))[::-1]
     x = view.reduction.to_numpy()
     xerr = np.vstack([x - view.reduction_low.to_numpy(), view.reduction_high.to_numpy() - x])
-    ax.errorbar(x, y, xerr=xerr, fmt="o", color=BLUE, ecolor=BLUE2, capsize=2.5, lw=1.2, ms=4)
-    ax.axvline(0, color=GREY, lw=0.8, ls="--")
+    ax.barh(y, x, xerr=xerr, color=BLUE_SOFT, edgecolor=BLUE, ecolor=BLUE, capsize=2.5, linewidth=0.9)
+    ax.axvline(0, color=GREY, lw=0.8)
     ax.set_yticks(y, labels)
-    ax.set_xlabel("Central-PC cost reduction vs matched baseline (%)")
+    ax.set_xlabel("Central PC cost reduction (%)")
     ax.set_xlim(-0.04, 1.25)
     ax.text(0.98, 0.97, "paired bootstrap 95% CI", transform=ax.transAxes, ha="right", va="top", color=GREY, fontsize=5.8)
-    ax.set_title("Transition-aware benefit vs. no-transition", loc="left", fontweight="bold", fontsize=8)
+    ax.set_title("Effect of transition evaluation", loc="left", fontweight="bold", fontsize=8)
 
     ax = axes[0, 1]
-    x = smart.penetration_multiplier.to_numpy()
-    ax.plot(x, 100 * smart.unconstrained_feasible, "o-", color=GREY, lw=1.4, ms=4, label="Raw feasible")
-    ax.plot(x, 100 * smart.feasible_fraction, "s-", color=GREEN, lw=1.4, ms=4, label="Action retained")
-    ax.axhline(100, color="#BFC3C8", lw=0.7, ls=":")
-    ax.set_xticks(x, [f"{int(v)}×" for v in x])
-    ax.set_ylim(15, 104)
+    multipliers = smart.penetration_multiplier.to_numpy()
+    x = np.arange(len(multipliers))
+    width = 0.36
+    ax.bar(x - width / 2, 100 * smart.unconstrained_feasible, width, color=GREY_SOFT, edgecolor=GREY, linewidth=0.8, label="Raw feasible")
+    ax.bar(x + width / 2, 100 * smart.feasible_fraction, width, color=GREEN_SOFT, edgecolor=GREEN, linewidth=0.8, label="Action retained")
+    ax.set_xticks(x, [f"{int(v)}×" for v in multipliers])
+    ax.set_ylim(15, 112)
     ax.set_ylabel("Scenario/action fraction (%)")
-    ax.set_xlabel("Measured EV-load multiplier")
-    ax.legend(loc="lower left", fontsize=6)
+    ax.set_xlabel("Measured EV load multiplier")
+    ax.legend(loc="upper center", ncol=2, fontsize=6)
     ax.set_title("SMART-DS AC action loop", loc="left", fontweight="bold", fontsize=8)
 
     ax = axes[1, 0]
@@ -245,24 +246,31 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
     ax.set_xlabel("Backup duration")
     ax.set_ylim(0, 31)
     for bar, reduction, fraction in zip(bars, packet_values.cost_reduction, packet_values.action_fraction):
-        ax.text(bar.get_x() + bar.get_width() / 2, reduction + 0.9, f"on-time {fraction:.3f}", ha="center", va="bottom", fontsize=5.8, color=GREY)
+        ax.text(bar.get_x() + bar.get_width() / 2, reduction + 0.9, f"timely {fraction:.3f}", ha="center", va="bottom", fontsize=5.8, color=GREY)
     ax.set_title("Packet feedback at 2× traffic", loc="left", fontweight="bold", fontsize=8)
 
     ax = axes[1, 1]
-    heat = crew.pivot(index="crews", columns="service_scale", values="relative_reduction_percent").loc[[4, 12, 24], [0.5, 1.0, 2.0]]
-    image = ax.imshow(heat.to_numpy(), cmap=mpl.colors.LinearSegmentedColormap.from_list("blue", ["#EEF4FA", BLUE]), vmin=0, vmax=1.15, aspect="auto")
-    for row in range(heat.shape[0]):
-        for col in range(heat.shape[1]):
-            value = heat.iloc[row, col]
-            ax.text(col, row, f"{value:.2f}%", ha="center", va="center", color="white" if value > 0.72 else "#20242A", fontsize=6.5, fontweight="bold")
-    ax.set_xticks(range(3), ["0.5×", "1×", "2×"])
-    ax.set_yticks(range(3), ["4", "12", "24"])
-    ax.set_xlabel("Service-time scale")
-    ax.set_ylabel("Integer crews")
-    ax.set_title("Route-aware integrated-risk reduction", loc="left", fontweight="bold", fontsize=8)
-    cbar = fig.colorbar(image, ax=ax, fraction=0.046, pad=0.03)
-    cbar.set_label("Reduction (%)", fontsize=6)
-    cbar.ax.tick_params(labelsize=5.5)
+    route = crew.pivot(index="crews", columns="service_scale", values="relative_reduction_percent").loc[[4, 12, 24], [0.5, 1.0, 2.0]]
+    group_x = np.arange(route.shape[0])
+    route_width = 0.24
+    route_colors = [BLUE_SOFT, TEAL_SOFT, VIOLET_SOFT]
+    route_edges = [BLUE, TEAL, VIOLET]
+    for j, scale in enumerate(route.columns):
+        ax.bar(
+            group_x + (j - 1) * route_width,
+            route[scale].to_numpy(),
+            route_width,
+            color=route_colors[j],
+            edgecolor=route_edges[j],
+            linewidth=0.8,
+            label=f"Scale {scale:g}",
+        )
+    ax.set_xticks(group_x, ["4", "12", "24"])
+    ax.set_xlabel("Integer crews")
+    ax.set_ylabel("Integrated risk reduction (%)")
+    ax.set_ylim(0, 1.2)
+    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.02), ncol=3, fontsize=5.6, columnspacing=0.8, handlelength=1.2)
+    ax.set_title("Executable route evaluation", loc="left", fontweight="bold", fontsize=8, pad=12)
 
     for label, ax in zip("abcd", axes.flat):
         ax.text(-0.15, 1.08, label, transform=ax.transAxes, fontsize=9, fontweight="bold", va="top")
@@ -280,7 +288,7 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
         sort=False,
     )
     return fig, source, {
-        "core_conclusion": "Transition-aware rollout improves over the no-transition baseline, whereas execution constraints determine materially larger operational effects.",
+        "core_conclusion": "Central transition evaluation improves the matched baseline, while execution constraints determine larger operational effects.",
         "archetype": "quantitative grid",
     }
 

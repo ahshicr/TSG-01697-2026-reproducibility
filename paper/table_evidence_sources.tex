@@ -1,0 +1,15 @@
+\begin{table*}[t]
+\centering
+\caption{Independent evidence sources and their distinct roles}
+\label{tab:evidence-sources}
+\begin{tabular}{p{0.17\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.35\textwidth}}
+\toprule
+Source & Scale & Observed fields & Role in this study \\
+\midrule
+City of Boulder EV sessions & 148,136 transactions from 50 stations between 2018 and 2023 & Arrival time, charging duration, energy (kWh), station and address & Measured charging demand with calendar periods for training, selection, and testing \\
+EAGLE-I & 249,316,543 national rows with 819,528 retained in Boulder and six adjacent counties between 2014 and 2025 & County, UTC timestamp, customers out & Power state persistence, event and recovery distributions, and uncertainty bounds with missing rows preserved \\
+SMART-DS SFO P1U feeder & 80 buses, 219 nodes, 27 loads, 67 lines, 13 transformers & OpenDSS circuit, equipment and peak load operating point & Online projection for all primary policy hours and the integrated electrical stress test \\
+Packet and route models & 12,000 packet stress rows and 4,096 paired main scenarios with up to 36 jobs and four crews & Queue events, retries, deadlines, backup, integer crews, travel, service and completion times & Requested controls and threat updates after a recorded repair completion event \\
+\bottomrule
+\end{tabular}
+\end{table*}

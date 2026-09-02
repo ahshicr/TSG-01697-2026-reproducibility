@@ -4,18 +4,18 @@
   "editable_text_required": true,
   "fig_executable_system": {
     "contract": {
-      "core_conclusion": "Requested transition-aware-PC actions are credited only after four execution adapters and feed the next observation.",
-      "archetype": "schematic-led composite"
+      "core_conclusion": "Requested PC actions affect the next state only after four execution gates.",
+      "archetype": "compact process schematic"
     },
     "outputs": {
       "svg": {
         "path": "fig_executable_system.svg",
-        "bytes": 19460,
+        "bytes": 19410,
         "editable_text_nodes": 29
       },
       "pdf": {
         "path": "fig_executable_system.pdf",
-        "bytes": 50262
+        "bytes": 48238
       },
       "tiff": {
         "path": "fig_executable_system.tiff",
@@ -23,7 +23,7 @@
       },
       "png": {
         "path": "fig_executable_system.png",
-        "bytes": 215310,
+        "bytes": 204400,
         "pixels": [
           2176,
           1082
@@ -33,7 +33,7 @@
   },
   "fig_operational_evidence": {
     "contract": {
-      "core_conclusion": "Transition-aware rollout improves over the no-transition baseline, whereas execution constraints determine materially larger operational effects.",
+      "core_conclusion": "Central transition evaluation improves the matched baseline, while execution constraints determine larger operational effects.",
       "archetype": "quantitative grid"
     },
     "statistics": "paired bootstrap 95% intervals; Holm-corrected tests in manuscript tables; no significance stars",
@@ -41,22 +41,22 @@
     "outputs": {
       "svg": {
         "path": "fig_operational_evidence.svg",
-        "bytes": 43192,
-        "editable_text_nodes": 78
+        "bytes": 39002,
+        "editable_text_nodes": 65
       },
       "pdf": {
         "path": "fig_operational_evidence.pdf",
-        "bytes": 60217
+        "bytes": 53626
       },
       "tiff": {
         "path": "fig_operational_evidence.tiff",
-        "bytes": 52857710
+        "bytes": 50633270
       },
       "png": {
         "path": "fig_operational_evidence.png",
-        "bytes": 224879,
+        "bytes": 168053,
         "pixels": [
-          2197,
+          2106,
           1503
         ]
       }

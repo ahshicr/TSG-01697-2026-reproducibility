@@ -3,3 +3,7 @@ __pycache__/
 .venv/
 .pytest_cache/
 results/reviewer_smoke_local/
+paper/*.aux
+paper/*.bbl
+paper/*.blg
+paper/*.log

@@ -1,0 +1,16 @@
+\begin{table}[t]
+\centering
+\caption{Calendar split test performance on measured Boulder charging sessions in 2023}
+\label{tab:real-ev-forecast}
+\begin{tabular}{lrrrr}
+\toprule
+Method & \multicolumn{2}{c}{Arrivals} & \multicolumn{2}{c}{Energy (kWh)} \\
+ & MAE & RMSE & MAE & RMSE \\
+\midrule
+Historical mean & 0.137 & 0.517 & 1.101 & 3.026 \\
+Weekly seasonal & 0.156 & 0.637 & 1.130 & 3.299 \\
+Persistence & 0.175 & 0.678 & 1.059 & 3.186 \\
+Graph recurrent forecaster & 0.110 & 0.527 & 0.945 & 3.113 \\
+\bottomrule
+\end{tabular}
+\end{table}

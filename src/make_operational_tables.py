@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Generate manuscript tables only from audited revision outputs."""
+"""Generate manuscript tables from the reported numerical results."""
 
 from __future__ import annotations
 
@@ -20,7 +20,7 @@ def forecast_table() -> None:
     frame = pd.read_csv(ROOT / "results/real_ev/forecast_table.csv")
     rows = []
     for _, row in frame.iterrows():
-        label = str(row.method).replace("STGNN rollout predictor", "Graph-recurrent forecaster")
+        label = str(row.method).replace("STGNN rollout predictor", "Graph recurrent forecaster")
         rows.append(
             f"{label} & {row.mae_demand:.3f} & {row.rmse_demand:.3f} & "
             f"{row.mae_energy:.3f} & {row.rmse_energy:.3f} \\\\"
@@ -30,7 +30,7 @@ def forecast_table() -> None:
         r"""
 \begin{table}[t]
 \centering
-\caption{Fixed-split 2023 test performance on measured Boulder charging sessions}
+\caption{Calendar split test performance on measured Boulder charging sessions in 2023}
 \label{tab:real-ev-forecast}
 \begin{tabular}{lrrrr}
 \toprule
@@ -51,16 +51,16 @@ def data_table() -> None:
         r"""
 \begin{table*}[t]
 \centering
-\caption{Independent evidence sources and their non-interchangeable roles}
+\caption{Independent evidence sources and their distinct roles}
 \label{tab:evidence-sources}
 \begin{tabular}{p{0.17\textwidth}p{0.18\textwidth}p{0.20\textwidth}p{0.35\textwidth}}
 \toprule
 Source & Scale & Observed fields & Role in this study \\
 \midrule
-City of Boulder EV sessions & 148,136 transactions; 50 station records; 2018--2023 & Arrival time, charging duration, energy (kWh), station/address & Primary measured charging demand; fixed 2018--2021/2022/2023 train/validation/test split \\
-EAGLE-I & 249,316,543 national rows streamed; 819,528 retained in Boulder and six adjacent counties; 2014--2025 & County, UTC timestamp, customers out & Power-state persistence, event/recovery distributions, and uncertainty bounds; missing rows are not silently coded as zero \\
-    SMART-DS SFO P1U feeder & 80 buses, 219 nodes, 27 loads, 67 lines, 13 transformers & OpenDSS circuit, equipment and peak-load operating point & Online projection in all 147,456 primary policy-hours plus an integrated stress test; not used to train or score the policy \\
-    Packet/route modules & 12,000 packet stress rows; 4,096 paired main scenarios; up to 36 jobs and four crews per scenario & Queue events, retries, deadlines, backup; integer crews, travel, service and completion times & Gates requested controls and updates threat state only after a routed repair-completion event \\
+City of Boulder EV sessions & 148,136 transactions from 50 stations between 2018 and 2023 & Arrival time, charging duration, energy (kWh), station and address & Measured charging demand with calendar periods for training, selection, and testing \\
+EAGLE-I & 249,316,543 national rows with 819,528 retained in Boulder and six adjacent counties between 2014 and 2025 & County, UTC timestamp, customers out & Power state persistence, event and recovery distributions, and uncertainty bounds with missing rows preserved \\
+SMART-DS SFO P1U feeder & 80 buses, 219 nodes, 27 loads, 67 lines, 13 transformers & OpenDSS circuit, equipment and peak load operating point & Online projection for all primary policy hours and the integrated electrical stress test \\
+Packet and route models & 12,000 packet stress rows and 4,096 paired main scenarios with up to 36 jobs and four crews & Queue events, retries, deadlines, backup, integer crews, travel, service and completion times & Requested controls and threat updates after a recorded repair completion event \\
 \bottomrule
 \end{tabular}
 \end{table*}
@@ -129,7 +129,7 @@ def primary_policy_table() -> None:
     policy_labels = {
         "static": "Static",
         "greedy": "Greedy",
-        "forecast_matched": "Forecast-matched",
+        "forecast_matched": "Forecast matched",
         "pc_rollout": "Central PC",
         "robust_pc_rollout": "Robust PC",
         "oracle": "Oracle",
@@ -146,7 +146,7 @@ def primary_policy_table() -> None:
         r"""
 \begin{table*}[t]
 \centering
-\caption{Primary transition-aware comparison and all-policy cost summary under sampled transition uncertainty. Positive reduction denotes lower cost than forecast-matched; the oracle alone receives future demand and innovations.}
+\caption{Primary transition comparison and policy cost summary under sampled uncertainty. Positive reduction denotes lower cost than forecast matched. The oracle alone receives future demand and innovations.}
 \label{tab:robust-boulder}
 \begin{tabular}{lrrrrr}
 \toprule
@@ -159,7 +159,7 @@ Threat group & Pairs & Central PC & Matched baseline & Reduction (\%) & Differen
 \vspace{3pt}
 \begin{tabular}{lrr}
 \toprule
-\multicolumn{3}{l}{\textit{All-policy mean over the same 4,096 scenarios}} \\
+\multicolumn{3}{l}{\textit{Policy mean over the same 4,096 scenarios}} \\
 Policy & Mean cost & Reduction vs. matched (\%) \\
 \midrule
 """ + "\n".join(policy_rows) + r"""
@@ -178,9 +178,9 @@ def objective_sensitivity_table() -> None:
     labels = {
         "reference": "Reference weights",
         "mobility_x2": r"$2\times$ mobility weight",
-        "energy_x2": r"$2\times$ unserved-energy weight",
+        "energy_x2": r"$2\times$ unserved energy weight",
         "communication_x2": r"$2\times$ communication weight",
-        "power_service_x2": r"$2\times$ power-service weight",
+        "power_service_x2": r"$2\times$ power service weight",
         "cascade_half": r"$0.5\times$ cascade weight",
     }
     rows = []
@@ -195,7 +195,7 @@ def objective_sensitivity_table() -> None:
         r"""
 \begin{table}[t]
 \centering
-\caption{Central-PC evaluation-objective sensitivity relative to forecast-matched on the same 4,096 paired trajectories. Policies are not re-optimized under alternative weights.}
+\caption{Objective sensitivity of central PC relative to forecast matched on the same 4,096 paired trajectories. Policies retain their original actions under alternative weights.}
 \label{tab:objective-sensitivity}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrr}
@@ -244,7 +244,7 @@ EV load & Raw feasible (\%) & Action retained (\%) & Raw $V_{\min}$ & Raw line p
 def integrated_execution_table() -> None:
     frame = pd.read_csv(ROOT / "results/operational/integrated_execution_summary.csv")
     labels = {
-        "measured_load_primary": r"Measured-load primary",
+        "measured_load_primary": r"Measured load primary",
         "20x_ev_execution_stress": r"$20\times$ EV execution stress",
     }
     rows = []
@@ -260,7 +260,7 @@ def integrated_execution_table() -> None:
         r"""
 \begin{table*}[t]
 \centering
-\caption{SMART-DS projection and routed crew events inside the closed-loop evaluation}
+\caption{SMART-DS projection and routed crew events inside the closed loop evaluation}
 \label{tab:integrated-execution}
 \begin{tabular}{lrrrrrr}
 \toprule
@@ -295,12 +295,12 @@ def packet_table() -> None:
         r"""
 \begin{table}[t]
 \centering
-\caption{Backup-power effect with packet feedback at $2\times$ traffic ($n=1024$ paired scenarios)}
+\caption{Backup power effect with packet feedback at $2\times$ traffic with $n=1024$ paired scenarios}
 \label{tab:packet-feedback}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{lrrrr}
 \toprule
-Backup & On-time action & Restoration enacted & Cost reduction (\%) & Difference 95\% CI \\
+Backup & Timely action & Restoration enacted & Cost reduction (\%) & Difference 95\% CI \\
 \midrule
 """ + "\n".join(rows) + r"""
 \bottomrule
@@ -338,7 +338,7 @@ def station_choice_table() -> None:
         r"""
 \begin{table}[t]
 \centering
-\caption{Cross-station choice under measured demand (24 peak hours)}
+\caption{Station choice under measured demand for 24 peak hours}
 \label{tab:station-choice}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{rrrrrr}
@@ -368,12 +368,12 @@ def crew_table() -> None:
             f"{float(row.holm_wilcoxon_p):.3g} \\\\"
         )
     write(
-        "table_route_aware_crew.tex",
+        "table_route_crew.tex",
         r"""
 \begin{table}[t]
 \centering
-\caption{Route-aware PC versus matched routing baseline}
-\label{tab:route-aware-crew}
+\caption{Route evaluated PC compared with matched routing}
+\label{tab:route-crew}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{rrrrr}
 \toprule
