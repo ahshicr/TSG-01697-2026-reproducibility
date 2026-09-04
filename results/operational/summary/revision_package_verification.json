@@ -1,10 +1,10 @@
 {
   "status": "PASS",
-  "verified_at_utc": "2026-08-31T18:23:25.696028+00:00",
+  "verified_at_utc": "2026-09-04T10:26:53.616658+00:00",
   "project_root": "D:\\P5-TSG-Guo+Min+Li\\adaptive_rollout_paper",
-  "full_raw_hash": true,
+  "full_raw_hash": false,
   "raw_data": {
-    "mode": "full_sha256",
+    "mode": "exact_bytes",
     "files": 29,
     "bytes": 11678014648,
     "dataset_file_counts": {
@@ -30,12 +30,6 @@
       "id": "raw_file_size_manifest",
       "status": "PASS",
       "detail": "files=29; failures=0",
-      "artifact": "data/external/metadata"
-    },
-    {
-      "id": "raw_file_sha256_manifest",
-      "status": "PASS",
-      "detail": "files_hashed=29; failures=0",
       "artifact": "data/external/metadata"
     },
     {
@@ -123,16 +117,34 @@
       "artifact": "results/operational/boulder_integrated_execution_stress/rollout_scenarios.csv"
     },
     {
+      "id": "central_paired_statistics",
+      "status": "PASS",
+      "detail": "exists=True; bytes=77614",
+      "artifact": "results/operational/boulder_robust_rollout/paired_statistics_central.csv"
+    },
+    {
       "id": "robust_paired_statistics",
       "status": "PASS",
       "detail": "exists=True; bytes=87480",
       "artifact": "results/operational/boulder_robust_rollout/paired_statistics_robust.csv"
     },
     {
+      "id": "robust_central_risk_audit",
+      "status": "PASS",
+      "detail": "exists=True; bytes=7574",
+      "artifact": "results/operational/boulder_robust_rollout/robust_vs_central_risk.csv"
+    },
+    {
+      "id": "central_objective_sensitivity",
+      "status": "PASS",
+      "detail": "exists=True; bytes=1293",
+      "artifact": "results/operational/boulder_robust_rollout/objective_weight_sensitivity_central.csv"
+    },
+    {
       "id": "packet_feedback_statistics",
       "status": "PASS",
-      "detail": "exists=True; bytes=4138",
-      "artifact": "results/operational/packet_feedback_statistics.csv"
+      "detail": "exists=True; bytes=4143",
+      "artifact": "results/operational/packet_feedback_statistics_central.csv"
     },
     {
       "id": "integrated_execution_summary",
@@ -189,63 +201,51 @@
       "artifact": "results/real_ev_spatial_holdout_inductive/spatial_holdout_metrics.csv"
     },
     {
-      "id": "figure_system_pdf",
+      "id": "figure_system_png",
       "status": "PASS",
-      "detail": "exists=True; bytes=51047",
-      "artifact": "paper/fig_executable_system.pdf"
-    },
-    {
-      "id": "figure_system_svg",
-      "status": "PASS",
-      "detail": "exists=True; bytes=19312",
-      "artifact": "paper/fig_executable_system.svg"
-    },
-    {
-      "id": "figure_system_tiff",
-      "status": "PASS",
-      "detail": "exists=True; bytes=37679774",
-      "artifact": "paper/fig_executable_system.tiff"
+      "detail": "exists=True; bytes=1443879",
+      "artifact": "paper/fig_executable_system.png"
     },
     {
       "id": "figure_evidence_pdf",
       "status": "PASS",
-      "detail": "exists=True; bytes=59732",
+      "detail": "exists=True; bytes=53626",
       "artifact": "paper/fig_operational_evidence.pdf"
     },
     {
       "id": "figure_evidence_svg",
       "status": "PASS",
-      "detail": "exists=True; bytes=43611",
+      "detail": "exists=True; bytes=39002",
       "artifact": "paper/fig_operational_evidence.svg"
     },
     {
       "id": "figure_evidence_tiff",
       "status": "PASS",
-      "detail": "exists=True; bytes=52857710",
+      "detail": "exists=True; bytes=50633270",
       "artifact": "paper/fig_operational_evidence.tiff"
     },
     {
       "id": "figure_source_data",
       "status": "PASS",
-      "detail": "exists=True; bytes=2011",
+      "detail": "exists=True; bytes=2013",
       "artifact": "paper/fig_operational_evidence_source_data.csv"
     },
     {
       "id": "compiled_manuscript",
       "status": "PASS",
-      "detail": "exists=True; bytes=459147",
+      "detail": "exists=True; bytes=1797057",
       "artifact": "paper/main.pdf"
     },
     {
       "id": "compiled_marked_manuscript",
       "status": "PASS",
-      "detail": "exists=True; bytes=481362",
+      "detail": "exists=True; bytes=1973061",
       "artifact": "paper/main_marked.pdf"
     },
     {
       "id": "revision_reproducibility_guide",
       "status": "PASS",
-      "detail": "exists=True; bytes=7613",
+      "detail": "exists=True; bytes=8121",
       "artifact": "REVISION_REPRODUCIBILITY.md"
     },
     {
@@ -257,25 +257,25 @@
     {
       "id": "response_pdf",
       "status": "PASS",
-      "detail": "exists=True; bytes=156843",
+      "detail": "exists=True; bytes=132069",
       "artifact": "../revision/response_to_reviewers.pdf"
     },
     {
       "id": "response_docx",
       "status": "PASS",
-      "detail": "exists=True; bytes=57133",
+      "detail": "exists=True; bytes=53991",
       "artifact": "../revision/response_to_reviewers.docx"
     },
     {
       "id": "chinese_assessment_pdf",
       "status": "PASS",
-      "detail": "exists=True; bytes=1225024",
+      "detail": "exists=True; bytes=2364803",
       "artifact": "../revision/assess.pdf"
     },
     {
       "id": "revision_cover_letter_pdf",
       "status": "PASS",
-      "detail": "exists=True; bytes=71377",
+      "detail": "exists=True; bytes=52867",
       "artifact": "../revision/revision_cover_letter.pdf"
     },
     {

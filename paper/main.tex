@@ -1034,12 +1034,13 @@ of each source.
 
 \begin{figure*}[t]
 \centering
-\includegraphics[width=\textwidth]{fig_executable_system.pdf}
+\includegraphics[width=\textwidth]{fig_executable_system.png}
 \caption{Executable PC closed loop.  Boulder charging sessions supply measured
 demand and forecasts.  EAGLE-I supplies county level outage calibration.
 SMART-DS independently constrains feeder action.  PC rollout issues requested
 actions, while service and threat states change only after distribution system
-projection, packet deadline enactment, station flow, and integer crew routing.
+packet deadline enactment, distribution system projection, station flow, and
+integer crew routing.
 The next observation restarts the hourly horizon.  The three public sources
 serve distinct model roles.}
 \label{fig:executable-system}
@@ -1201,8 +1202,8 @@ reference rather than evidence of near optimality.
 Table~\ref{tab:objective-sensitivity} shows that changing one objective
 weight at a time did not reverse the central PC
 comparison with forecast matched.  The reduction ranged from 0.4105\% to
-0.7978\%, and every paired bootstrap interval remained below zero.  These fixed-
-trajectory tests assess evaluation weight dependence.  They do not claim that a
+0.7978\%, and every paired bootstrap interval remained below zero.  These tests
+on fixed trajectories assess evaluation weight dependence.  They do not claim that a
 policy optimized again for each alternative objective would select the same route.
 
 \begin{figure*}[t]
@@ -1266,7 +1267,7 @@ and 43.7\% of energy.  Nearest, logit, and coordinated reassignment all served
 100\% in these cases.  The coordinated solution required only 0.32, 0.50, and
 0.97 km energy weighted extra distance.  Under $4\times$ demand, total
 constructed capacity, rather than the choice model, became the limiting factor.
-this stress result prevents the rerouting mechanism from creating fictitious
+This stress result prevents the rerouting mechanism from creating fictitious
 capacity.
 
 \subsection{Communication and crew execution}
@@ -1293,7 +1294,7 @@ service rate derating.  The effect arose only after the coded depletion event.
 
 \input{table_route_crew}
 
-In the integrated primary run, the four crew route was not a diagnostic added
+In the integrated primary run, the route generated for four crews was not a diagnostic added
 after scoring.  The same work order set was dispatched through packet delivery,
 and threat was updated only at its recorded completion hours.  Central PC
 completed 82.17\% of dispatched jobs versus 81.72\% for the forecast matched
@@ -1339,8 +1340,8 @@ misspecification settings favored central PC.  With 12 crews robust PC was
 
 Eleven independent checks connected the mathematical statements to the
 numerical calculations.  Ten thousand
-random score/budget tests preserved each continuous budget (maximum numerical
-error $1.37\times10^{-4}$.  Another 5,000 largest remainder tests preserved the
+random score and budget tests preserved each continuous budget, with a maximum numerical
+error of $1.37\times10^{-4}$.  Another 5,000 largest remainder tests preserved the
 integer crew count.  All 8,117 nonzero 2023 test hours satisfied the analytical
 zero service backlog bound.  A further 100,000 steps at simultaneous upper
 uncertainty bounds remained inside $[0,0.98]^{3N}$.  All 14,902 standalone SMART-DS

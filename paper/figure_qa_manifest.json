@@ -1,32 +1,20 @@
 {
-  "backend": "Python/matplotlib only",
+  "backend": "GPT Image 2 for the system schematic and Python/matplotlib for quantitative panels",
   "final_width_mm": 182.88,
   "editable_text_required": true,
   "fig_executable_system": {
     "contract": {
-      "core_conclusion": "Requested PC actions affect the next state only after four execution gates.",
-      "archetype": "compact process schematic"
+      "core_conclusion": "Requested PC actions affect the next state only after the execution conditions are satisfied.",
+      "archetype": "continuous infrastructure schematic",
+      "generation": "GPT Image 2 with manuscript-specific labels and subsequent visual inspection"
     },
     "outputs": {
-      "svg": {
-        "path": "fig_executable_system.svg",
-        "bytes": 19410,
-        "editable_text_nodes": 29
-      },
-      "pdf": {
-        "path": "fig_executable_system.pdf",
-        "bytes": 48238
-      },
-      "tiff": {
-        "path": "fig_executable_system.tiff",
-        "bytes": 37679774
-      },
       "png": {
         "path": "fig_executable_system.png",
-        "bytes": 204400,
+        "bytes": 1443879,
         "pixels": [
-          2176,
-          1082
+          1774,
+          887
         ]
       }
     }

@@ -244,8 +244,8 @@ EV load & Raw feasible (\%) & Action retained (\%) & Raw $V_{\min}$ & Raw line p
 def integrated_execution_table() -> None:
     frame = pd.read_csv(ROOT / "results/operational/integrated_execution_summary.csv")
     labels = {
-        "measured_load_primary": r"Measured load primary",
-        "20x_ev_execution_stress": r"$20\times$ EV execution stress",
+        "measured_load_primary": r"Measured load",
+        "20x_ev_execution_stress": r"$20\times$ EV stress",
     }
     rows = []
     for _, row in frame.iterrows():
@@ -258,18 +258,33 @@ def integrated_execution_table() -> None:
     write(
         "table_integrated_execution.tex",
         r"""
-\begin{table*}[t]
+\begin{table}[t]
 \centering
 \caption{SMART-DS projection and routed crew events inside the closed loop evaluation}
 \label{tab:integrated-execution}
-\begin{tabular}{lrrrrrr}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\begin{tabular}{lrrrr}
 \toprule
-Condition & Pairs & Online AC hours & Raw infeasible & Projected infeasible & Action retained (\%) & Crew completed (\%) \\
+Condition & Pairs & AC hours & Raw infeas. & After proj. \\
 \midrule
-""" + "\n".join(rows) + r"""
+""" + "\n".join(row.rsplit(" & ", 2)[0] + r" \\" for row in rows) + r"""
 \bottomrule
 \end{tabular}
-\end{table*}
+\vspace{2pt}
+
+\begin{tabular}{lrr}
+\toprule
+Condition & Action retained (\%) & Crew completed (\%) \\
+\midrule
+""" + "\n".join(
+            f"{labels[row.condition]} & "
+            f"{100*row.mean_projection_fraction:.2f} & {100*row.mean_crew_completion_fraction:.2f} \\\\"
+            for _, row in frame.iterrows()
+        ) + r"""
+\bottomrule
+\end{tabular}
+\end{table}
 """,
     )
 

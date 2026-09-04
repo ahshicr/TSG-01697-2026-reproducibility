@@ -294,9 +294,24 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
 
 
 def main() -> int:
-    system, system_contract = make_system_figure()
-    system_outputs = export(system, "fig_executable_system")
-    plt.close(system)
+    system_path = PAPER / "fig_executable_system.png"
+    if not system_path.exists():
+        raise FileNotFoundError(
+            "The GPT Image system schematic is missing from paper/fig_executable_system.png"
+        )
+    with Image.open(system_path) as system_image:
+        system_outputs = {
+            "png": {
+                "path": system_path.name,
+                "bytes": system_path.stat().st_size,
+                "pixels": list(system_image.size),
+            }
+        }
+    system_contract = {
+        "core_conclusion": "Requested PC actions affect the next state only after the execution conditions are satisfied.",
+        "archetype": "continuous infrastructure schematic",
+        "generation": "GPT Image 2 with manuscript-specific labels and subsequent visual inspection",
+    }
 
     evidence, source, evidence_contract = make_evidence_figure()
     evidence_outputs = export(evidence, "fig_operational_evidence")
@@ -305,7 +320,7 @@ def main() -> int:
     source.to_csv(source_path, index=False)
 
     qa = {
-        "backend": "Python/matplotlib only",
+        "backend": "GPT Image 2 for the system schematic and Python/matplotlib for quantitative panels",
         "final_width_mm": 182.88,
         "editable_text_required": True,
         "fig_executable_system": {"contract": system_contract, "outputs": system_outputs},
