@@ -122,7 +122,7 @@ def primary_policy_table() -> None:
     for group in order:
         row = view[view.group == group].iloc[0]
         rows.append(
-            f"{labels[group]} & {int(row.n_pairs)} & {row.policy_mean:.2f} & {row.comparator_mean:.2f} & "
+            f"{labels[group]} & {int(row.n_pairs)} & {row.policy_mean:.2f}/{row.comparator_mean:.2f} & "
             f"{row.relative_reduction_percent:.4f} & "
             f"[{row.mean_difference_bootstrap_ci95_low:.4f}, {row.mean_difference_bootstrap_ci95_high:.4f}] \\\\"
         )
@@ -144,28 +144,33 @@ def primary_policy_table() -> None:
     write(
         "table_robust_boulder.tex",
         r"""
-\begin{table*}[t]
+\begin{table}[t]
 \centering
-\caption{Primary transition comparison and policy cost summary under sampled uncertainty. Positive reduction denotes lower cost than forecast matched. The oracle alone receives future demand and innovations.}
+\caption{Primary transition comparison and policy cost summary under sampled uncertainty. Positive reduction denotes lower cost than forecast matched. C/M gives the central PC and matched mean costs. The oracle alone receives future demand and innovations.}
 \label{tab:robust-boulder}
-\begin{tabular}{lrrrrr}
+\scriptsize
+\setlength{\tabcolsep}{1.1pt}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
 \toprule
-Threat group & Pairs & Central PC & Matched baseline & Reduction (\%) & Difference 95\% CI \\
+Threat group & Pairs & C/M cost & Reduction (\%) & $\Delta$ 95\% CI \\
 \midrule
 """ + "\n".join(rows) + r"""
 \bottomrule
 \end{tabular}
+}
 
 \vspace{3pt}
-\begin{tabular}{lrr}
+\setlength{\tabcolsep}{3.0pt}
+\begin{tabular}{@{}lrr@{}}
 \toprule
 \multicolumn{3}{l}{\textit{Policy mean over the same 4,096 scenarios}} \\
-Policy & Mean cost & Reduction vs. matched (\%) \\
+Policy & Mean cost & Reduction (\%) \\
 \midrule
 """ + "\n".join(policy_rows) + r"""
 \bottomrule
 \end{tabular}
-\end{table*}
+\end{table}
 """,
     )
 
