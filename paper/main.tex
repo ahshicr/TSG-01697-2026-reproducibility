@@ -30,8 +30,10 @@ communication, and repair decisions that remain feasible after network and
 crew constraints are applied.  This paper develops a physically constrained
 coupled rollout that evaluates finite horizon threat propagation through a
 calibrated central transition model.  A requested decision passes through
-packet delivery, distribution system feasibility, station capacity, and
-integer crew routing before it can alter service or threat states.  Measured
+packet delivery and distribution system feasibility before it changes realized
+service.  Repair work orders pass through packet dispatch and integer crew
+routing before a completion event changes a threat state.  Station capacity is
+examined in a separate assignment model.  Measured
 electric vehicle charging records, public outage observations, and an
 independent distribution feeder support the empirical study.  Paired
 comparisons show that central PC lowers operating cost relative to a forecast
@@ -121,8 +123,9 @@ The paper makes the following theoretical and algorithmic contributions.
 which a calibrated transition model assigns marginal value to the first repair
 decision while the next observation closes the receding horizon calculation.
 \item It constructs an executable action algorithm that distinguishes requested
-service, packet delivery, distribution system projection, station reassignment,
-dispatched work orders, and integer repair completion.
+service, packet delivery, distribution system projection, dispatched work
+orders, and integer repair completion.  A capacity constrained assignment model
+treats station reassignment separately.
 \item It establishes finite horizon sensitivity for the continuous prediction
 and allocation layer, a conditional regret bound for a finite route portfolio,
 and feasibility and invariance results for executed actions.
@@ -130,9 +133,8 @@ and feasibility and invariance results for executed actions.
 
 The rest of this paper is organized as follows.  Section II reviews related
 work.  Section III presents the system model, decision rule, and mathematical
-results.  Section IV describes the empirical study and its results.  Section V
-interprets the evidence and states data availability.  Section VI concludes the
-paper.
+results.  Section IV presents the empirical study, interprets the evidence, and
+states data availability.  Section V concludes the paper.
 
 \section{Related Work}
 
@@ -1035,14 +1037,13 @@ of each source.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_executable_system.png}
-\caption{Executable PC closed loop.  Boulder charging sessions supply measured
-demand and forecasts.  EAGLE-I supplies county level outage calibration.
-SMART-DS independently constrains feeder action.  PC rollout issues requested
-actions, while service and threat states change only after distribution system
-packet deadline enactment, distribution system projection, station flow, and
-integer crew routing.
-The next observation restarts the hourly horizon.  The three public sources
-serve distinct model roles.}
+\caption{Executable PC closed loop.  Boulder charging demand and EAGLE-I outage
+states inform central PC.  Requested service actions pass through packet
+delivery and SMART-DS/OpenDSS projection.  Repair work orders pass through
+packet dispatch, integer routing, and recorded completion events.  Realized
+service and threat updates form the next observed state.  The dashed path
+denotes the separate station capacity experiment and is not part of the primary
+4,096-scenario loop.}
 \label{fig:executable-system}
 \end{figure*}
 
@@ -1352,9 +1353,7 @@ crew counts matched completion event logs with paired inputs.  All 2,592
 station choice flows met capacity.  The supporting map links each
 property to its theorem, function, evidence file, and status.
 
-\section{Interpretation and Reproducibility}
-
-\subsection{Result interpretation}
+\subsection{Interpretation and reproducibility}
 
 The paired comparison identifies the value of transition evaluation rather
 than the value of an additional demand forecast.  Central PC and the forecast
@@ -1393,9 +1392,8 @@ Communication traffic and backup duration define controlled operating
 conditions.  This arrangement forms a public data service restoration study
 with a fixed feeder topology and explicit execution rules.
 
-\subsection{Data and code availability}
-
-A public repository provides the code, processed inputs, scenario level
+The materials supporting these results are available in a public repository.
+The repository provides the code, processed inputs, scenario level
 outputs, trained model parameters, statistical results, distribution feeder,
 route completion records, and packet records used in this study.  Source
 metadata record the public origin, license, access date, byte count, and SHA256
@@ -1417,8 +1415,9 @@ current state without threat propagation.  The paired results show a consistent
 cost reduction for central PC, with the clearest effect under cascade and
 compound conditions.  The worst set extension does not improve the reported
 mean or tail measures and is therefore retained as a sensitivity variant.
-Packet delivery, distribution system projection, station capacity, and integer
-crew completion determine whether a request changes the realized state.  The
+Packet delivery, distribution system projection, and integer crew completion
+determine whether a main loop request changes the realized state.  A separate
+capacity constrained assignment evaluates station reassignment.  The
 mathematical results establish finite horizon sensitivity for the continuous
 decision layer, a conditional bound for route selection, and feasibility
 properties for executed actions.  The resulting closed loop model provides an

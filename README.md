@@ -102,10 +102,12 @@ The full primary command and the evidence boundaries are documented in
 - **Robust PC** scores the same portfolio by worst predicted loss over the
   declared 21-matrix set.
 - Only the oracle receives realized future demand and transition innovations.
-- All six policies pass through the same packet, OpenDSS, station-flow, and
-  integer-crew execution gates within a paired scenario.
+- All six policies pass through the same packet, OpenDSS, and integer-crew
+  execution gates within a paired scenario. Station reassignment is evaluated
+  in a separate capacity-constrained experiment.
 
 ## Version
 
-The earlier submission snapshot is tagged `v2026.09.01`. Reused public datasets
-retain their existing identifiers and source records.
+The current revision snapshot is tagged `v2026.09.05`. The earlier submission
+snapshot is tagged `v2026.09.01`. Reused public datasets retain their existing
+identifiers and source records.

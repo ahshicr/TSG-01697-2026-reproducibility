@@ -150,8 +150,10 @@ efficiency is preserved.  Parallel computation supports repeated closed loop eva
 crew constraints are applied.  This paper develops a physically constrained
 coupled rollout that evaluates finite horizon threat propagation through a
 calibrated central transition model.  A requested decision passes through
-packet delivery, distribution system feasibility, station capacity, and
-integer crew routing before it can alter service or threat states.  Measured
+packet delivery and distribution system feasibility before it changes realized
+service.  Repair work orders pass through packet dispatch and integer crew
+routing before a completion event changes a threat state.  Station capacity is
+examined in a separate assignment model.  Measured
 electric vehicle charging records, public outage observations, and an
 independent distribution feeder support the empirical study.  Paired
 comparisons show that central PC lowers operating cost relative to a forecast
@@ -293,8 +295,9 @@ decision while the next observation closes the receding horizon calculation}\DIF
 \item It \DIFdelbegin \DIFdel{introduces a cascade envelope that summarizes future power, communication, and mobility threat exposure over the rollout horizon and
 converts this envelope into a concave restoration allocation rule with explicit
 feasibility and regularity properties}\DIFdelend \DIFaddbegin \DIFadd{constructs an executable action algorithm that distinguishes requested
-service, packet delivery, distribution system projection, station reassignment,
-dispatched work orders, and integer repair completion}\DIFaddend .
+service, packet delivery, distribution system projection, dispatched work
+orders, and integer repair completion.  A capacity constrained assignment model
+treats station reassignment separately}\DIFaddend .
 \item It \DIFdelbegin \DIFdel{derives a finite horizon risk bound for both fixed action evaluation
 and the closed loop PC rollout policy.  The bound relates rollout loss error to
 the spectral growth of the threat propagation operator,
@@ -305,11 +308,14 @@ and feasibility and invariance results for executed actions}\DIFaddend .
 \end{itemize}
 
 The rest of this paper is organized as follows.  Section II reviews \DIFdelbegin \DIFdel{the related
-literature}\DIFdelend \DIFaddbegin \DIFadd{related
-work}\DIFaddend .  Section III \DIFdelbegin \DIFdel{gives the coupled decision model.  Section IV presents the propagation model, the rollout policy, and the proof.  Section V describes the implementation, experimental design, and empirical }\DIFdelend \DIFaddbegin \DIFadd{presents the system model, decision rule, and mathematical
-results.  Section IV describes the empirical study and its }\DIFaddend results.  Section \DIFaddbegin \DIFadd{V
-interprets the evidence and states data availability.  Section }\DIFaddend VI concludes the
-paper.
+literature}\DIFdelend \DIFaddbegin \DIFadd{related work}\DIFaddend .
+\DIFdelbegin \DIFdel{Section III gives the coupled decision model.  Section IV presents
+the propagation model, the rollout policy, and the proof.  Section V describes
+the implementation, experimental design, and empirical results.  Section VI
+concludes the paper.}\DIFdelend
+\DIFaddbegin \DIFadd{Section III presents the system model, decision rule, and mathematical
+results.  Section IV presents the empirical study, interprets the evidence, and
+states data availability.  Section V concludes the paper.}\DIFaddend
 
 \section{Related \DIFdelbegin \DIFdel{Literature}\DIFdelend \DIFaddbegin \DIFadd{Work}\DIFaddend }
 
@@ -1569,14 +1575,13 @@ of each source.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_executable_system.png}
-\caption{\DIFaddFL{Executable PC closed loop.  Boulder charging sessions supply measured
-demand and forecasts.  EAGLE-I supplies county level outage calibration.
-SMART-DS independently constrains feeder action.  PC rollout issues requested
-actions, while service and threat states change only after distribution system
-packet deadline enactment, distribution system projection, station flow, and
-integer crew routing.
-The next observation restarts the hourly horizon.  The three public sources
-serve distinct model roles.}}
+\caption{\DIFaddFL{Executable PC closed loop.  Boulder charging demand and EAGLE-I outage
+states inform central PC.  Requested service actions pass through packet
+delivery and SMART-DS/OpenDSS projection.  Repair work orders pass through
+packet dispatch, integer routing, and recorded completion events.  Realized
+service and threat updates form the next observed state.  The dashed path
+denotes the separate station capacity experiment and is not part of the primary
+4,096-scenario loop.}}
 \label{fig:executable-system}
 \end{figure*}
 
@@ -2226,10 +2231,10 @@ interpreting the result.  Restoration can reduce propagation through the communi
 by the stress setting.  The coupling cases give the complementary view.  Stronger
 power to communication and communication to mobility coupling raises total cost,
 while the PC rollout gain remains present because the envelope still shifts
-restoration toward zones likely to transmit disturbance across domains.  }\DIFdelend \DIFaddbegin \section{\DIFadd{Interpretation and Reproducibility}}
+restoration toward zones likely to transmit disturbance across domains.  }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Interpretation and reproducibility}}
 \DIFaddend 
 
-\DIFdelbegin \DIFdel{Changing the restoration budget }\DIFdelend \DIFaddbegin \subsection{\DIFadd{Result interpretation}}
+\DIFdelbegin \DIFdel{Changing the restoration budget }\DIFdelend \DIFaddbegin
 
 \DIFadd{The paired comparison identifies the value of transition evaluation rather
 than the value of an additional demand forecast.  Central PC and the forecast
@@ -2281,9 +2286,8 @@ conditions.  This arrangement forms a public data service restoration study
 with a fixed feeder topology and explicit execution rules.
 }
 
-\subsection{\DIFadd{Data and code availability}}
-
-\DIFadd{A public repository provides the code, processed inputs, scenario level
+\DIFadd{The materials supporting these results are available in a public repository.
+The repository provides the code, processed inputs, scenario level
 outputs, trained model parameters, statistical results, distribution feeder,
 route completion records, and packet records used in this study.  Source
 metadata record the public origin, license, access date, byte count, and SHA256
@@ -2311,8 +2315,9 @@ current state without threat propagation}\DIFaddend .  \DIFaddbegin \DIFadd{The 
 cost reduction for central PC, with the clearest effect under cascade and
 compound conditions.  The worst set extension does not improve the reported
 mean or tail measures and is therefore retained as a sensitivity variant.
-Packet delivery, distribution system projection, station capacity, and integer
-crew completion determine whether a request changes the realized state.  The
+Packet delivery, distribution system projection, and integer crew completion
+determine whether a main loop request changes the realized state.  A separate
+capacity constrained assignment evaluates station reassignment.  The
 mathematical results establish finite horizon sensitivity for the continuous
 decision layer, a conditional bound for route selection, and feasibility
 properties for executed actions.  The resulting closed loop model provides an
