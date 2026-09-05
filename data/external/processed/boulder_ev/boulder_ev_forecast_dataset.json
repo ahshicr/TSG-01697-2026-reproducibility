@@ -1,0 +1,55 @@
+{
+  "purpose": "Independent real-EV forecasting and rollout validation dataset",
+  "features": {
+    "pickup": "Exact transaction-start count per station-hour.",
+    "energy": "Reconstructed load proxy in kWh per hour; not metered hourly power.",
+    "transaction_start_energy_kwh": "Measured session energy assigned to start hour."
+  },
+  "rollout_service_proxies": {
+    "status": "constructed; not measured utility capacities",
+    "base_power": "6 MW SMART-DS feeder base allocated across stations by smoothed training energy share",
+    "feeder_limit": "base power plus 1.5 x training 99.5th-percentile station EV load headroom",
+    "comm_capacity": "dimensionless hourly service proxy; packet validation is reported separately",
+    "rule": "No electrical or packet conclusion may rely on these proxies; use OpenDSS and packet outputs."
+  },
+  "graph": {
+    "type": "symmetric four-nearest-address graph with Gaussian distance weights and row normalization",
+    "coordinate_precision": "49 station records use Census address-range coordinates; one uses an explicitly marked OpenStreetMap road-level fallback. Multiple ports at one address may share coordinates.",
+    "row_sum_max_abs_error": 1.1920928955078125e-07,
+    "nonzero_directed_entries": 332,
+    "distance_km_max": 11.059184074401855
+  },
+  "split": {
+    "train": {
+      "start": "2018-01-01T17:00",
+      "end_exclusive": "2022-01-01T00:00"
+    },
+    "validation": {
+      "start": "2022-01-01T00:00",
+      "end_exclusive": "2023-01-01T00:00"
+    },
+    "test": {
+      "start": "2023-01-01T00:00",
+      "end_exclusive": "2023-12-05T05:00"
+    },
+    "train_end_index": 35047,
+    "validation_end_index": 43807
+  },
+  "shape": {
+    "hours": 51924,
+    "stations": 50,
+    "features": 2
+  },
+  "outputs": {
+    "boulder_ev_forecast_dataset.npz": {
+      "path": "data/external/processed/boulder_ev/boulder_ev_forecast_dataset.npz",
+      "bytes": 2215351,
+      "sha256": "8e319dd6dead3381cdbb6507d767f86ef10549e6e9cc47e43d6c9b22e64ce110"
+    },
+    "boulder_ev_rollout_dataset.npz": {
+      "path": "data/external/processed/boulder_ev/boulder_ev_rollout_dataset.npz",
+      "bytes": 1055852,
+      "sha256": "285df84bfc3ef0e7ae8b08b55b39ea1d9b4bd263c9d377daa6b48b298b98e371"
+    }
+  }
+}

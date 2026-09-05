@@ -1,0 +1,2 @@
+condition,scenarios,horizon,workers,seconds,policies,source_sha256,normalization_train_end,total_charge,total_comm,total_restore
+primary,4096,6,16,546.3082678318024,static greedy forecast_matched pc_rollout robust_pc_rollout oracle,a1b8822cd0442e1e9efcc1449264e94a0ac7b483917725fe17c358f4c4b34cfe,35047,18.48320960998535,73.14408111572266,10.0

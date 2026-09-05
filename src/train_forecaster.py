@@ -59,8 +59,8 @@ def split_indices(
             f"Invalid chronological split: history={history}, train_end={train_end}, "
             f"val_end={val_end}, total_hours={total_hours}, horizon={horizon}"
         )
-    train = starts[starts < train_end]
-    val = starts[(starts >= train_end) & (starts < val_end)]
+    train = starts[starts + horizon <= train_end]
+    val = starts[(starts >= train_end) & (starts + horizon <= val_end)]
     test = starts[starts >= val_end]
     return train, val, test
 
@@ -140,13 +140,13 @@ def train_one(args, data, mode: str, seed: int, device: torch.device):
     opt = torch.optim.AdamW(model.parameters(), lr=args.lr, weight_decay=args.weight_decay)
     mean = torch.as_tensor(mean_np, dtype=torch.float32, device=device)
     std = torch.as_tensor(std_np, dtype=torch.float32, device=device)
-    demand_total = np.maximum(data["pickup"].sum(axis=0), 1.0)
-    alpha_np = data["energy"].sum(axis=0) / demand_total
+    demand_total = np.maximum(data["pickup"][:normalization_end].sum(axis=0), 1.0)
+    alpha_np = data["energy"][:normalization_end].sum(axis=0) / demand_total
     active = demand_total > np.percentile(demand_total, 10)
     cap = np.percentile(alpha_np[active], 95) if np.any(active) else np.percentile(alpha_np, 95)
     alpha_np = np.clip(alpha_np, 0.01, cap).astype(np.float32)
     alpha = torch.as_tensor(alpha_np, dtype=torch.float32, device=device)
-    energy_scale = torch.as_tensor(np.maximum(data["energy"].std(), 1.0), dtype=torch.float32, device=device)
+    energy_scale = torch.as_tensor(np.maximum(data["energy"][:normalization_end].std(), 1.0), dtype=torch.float32, device=device)
 
     best_val = float("inf")
     best_state = None
@@ -204,6 +204,13 @@ def train_one(args, data, mode: str, seed: int, device: torch.device):
 
     if best_state is not None:
         model.load_state_dict(best_state)
+    validation_metrics = evaluate(model, val_loader, device, mean, std)
+    np.savez_compressed(
+        args.out / f"validation_forecast_{mode}_seed{seed}.npz",
+        indices=validation_metrics["indices"],
+        pred=validation_metrics["pred"],
+        truth=validation_metrics["truth"],
+    )
     test_metrics = evaluate(model, test_loader, device, mean, std)
     model_dir = args.out / "models"
     model_dir.mkdir(parents=True, exist_ok=True)

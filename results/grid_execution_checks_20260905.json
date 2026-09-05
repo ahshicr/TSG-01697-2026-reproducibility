@@ -1,0 +1,76 @@
+{
+  "cases": [
+    {
+      "request_scale": 0.0,
+      "accepted_fraction": 1.0,
+      "raw_feasible": true,
+      "returned_and_solved_actions_match": true,
+      "repeat_solve_feasible": true,
+      "collapse_detected": true,
+      "old_fraction_preserved": true,
+      "voltage_replay_difference": 0.0,
+      "loading_replay_difference": 0.0
+    },
+    {
+      "request_scale": 1.0,
+      "accepted_fraction": 1.0,
+      "raw_feasible": true,
+      "returned_and_solved_actions_match": true,
+      "repeat_solve_feasible": true,
+      "collapse_detected": true,
+      "old_fraction_preserved": true,
+      "voltage_replay_difference": 0.0,
+      "loading_replay_difference": 0.0
+    },
+    {
+      "request_scale": 20.0,
+      "accepted_fraction": 1.0,
+      "raw_feasible": true,
+      "returned_and_solved_actions_match": true,
+      "repeat_solve_feasible": true,
+      "collapse_detected": true,
+      "old_fraction_preserved": true,
+      "voltage_replay_difference": 0.0,
+      "loading_replay_difference": 0.0
+    },
+    {
+      "request_scale": 50.0,
+      "accepted_fraction": 0.74346923828125,
+      "raw_feasible": false,
+      "returned_and_solved_actions_match": true,
+      "repeat_solve_feasible": true,
+      "collapse_detected": true,
+      "old_fraction_preserved": true,
+      "voltage_replay_difference": 7.443246574645457e-09,
+      "loading_replay_difference": -5.2089394797505406e-08
+    },
+    {
+      "request_scale": 100.0,
+      "accepted_fraction": 0.335693359375,
+      "raw_feasible": false,
+      "returned_and_solved_actions_match": true,
+      "repeat_solve_feasible": true,
+      "collapse_detected": true,
+      "old_fraction_preserved": true,
+      "voltage_replay_difference": -7.062764384446751e-08,
+      "loading_replay_difference": 5.120082320342334e-07
+    },
+    {
+      "request_scale": 500.0,
+      "accepted_fraction": 0.068115234375,
+      "raw_feasible": false,
+      "returned_and_solved_actions_match": true,
+      "repeat_solve_feasible": true,
+      "collapse_detected": true,
+      "old_fraction_preserved": true,
+      "voltage_replay_difference": -4.4919129105203126e-07,
+      "loading_replay_difference": 2.45138667909206e-06
+    }
+  ],
+  "all_checks_pass": true,
+  "scope": "Deterministic operator tests, including infeasible requests and a mocked voltage collapse.",
+  "source_sha256": {
+    "verify_grid_execution.py": "6ca14623473b9bebfc42eb9917cc5bc60a1f25f965fc6020b1697f110c44d090",
+    "smartds_ev_feasibility.py": "cf9b49a48efcf84f756090f6f976c9e2e5b0c5509fe187a9b93162b95934c6e1"
+  }
+}

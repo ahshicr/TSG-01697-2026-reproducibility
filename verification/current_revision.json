@@ -1,0 +1,39 @@
+{
+  "date": "2026-09-05",
+  "status": "PASS_FOR_RECORDED_REPRODUCTION_CHECKS",
+  "input_manifest_sha256": "179615dda46a5164f367d70a649475365d4dc078ce9cbbd8888f1795eaea554e",
+  "input_manifest_files": 306,
+  "statistical_conditions": 23,
+  "recomputed_statistical_comparisons": 72,
+  "primary_released_rows": 32768,
+  "fresh_execution": {
+    "scenarios": 16,
+    "policies_per_scenario": 8,
+    "rows": 128,
+    "cost_service_route_completion_mismatches": 0
+  },
+  "fresh_electrical_measurement": {
+    "paired_scenarios": 32,
+    "workers": 2,
+    "policy_order_reversed": true,
+    "maximum_loss_difference_mwh": 3.096589629159041e-8,
+    "accepted_actions_unchanged": true
+  },
+  "checkpoint_replay": {
+    "trained_models": 3,
+    "validation_windows_per_model": 8755,
+    "test_windows_per_model": 8111,
+    "all_stored_predictions_and_truths_checked": true,
+    "maximum_prediction_difference": 1.9073486328125e-5,
+    "absolute_tolerance": 2e-5,
+    "relative_tolerance": 2e-6,
+    "models_retrained_in_this_check": false
+  },
+  "independent_regeneration": {
+    "all_manuscript_input_tables_identical": true,
+    "parameter_and_statistical_appendix_identical": true,
+    "figure_2_source_data_identical": true,
+    "figure_2_png_identical": true
+  },
+  "scope": "Independent local copies with no HPC dependency. These checks do not establish field validity, uniform mathematical bounds, or editorial acceptance. Historical records and original coarse electrical diagnostics are retained."
+}

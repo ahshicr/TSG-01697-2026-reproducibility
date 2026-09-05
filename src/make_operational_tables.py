@@ -16,8 +16,8 @@ def write(name: str, value: str) -> None:
     (PAPER / name).write_text(value.strip() + "\n", encoding="utf-8")
 
 
-def forecast_table() -> None:
-    frame = pd.read_csv(ROOT / "results/real_ev/forecast_table.csv")
+def forecast_table(source: Path | None = None) -> None:
+    frame = pd.read_csv(source or ROOT / "results/real_ev_strict_20260905/forecast_table.csv")
     rows = []
     for _, row in frame.iterrows():
         label = str(row.method).replace("STGNN rollout predictor", "Graph recurrent forecaster")
@@ -68,8 +68,8 @@ Packet and route models & 12,000 packet stress rows and 4,096 paired main scenar
     )
 
 
-def calibration_table() -> None:
-    frame = pd.read_csv(ROOT / "results/operational/transition_calibration/transition_parameter_uncertainty.csv")
+def calibration_table(source: Path | None = None) -> None:
+    frame = pd.read_csv(source or ROOT / "results/calibration_strict_20260905/transition_parameter_uncertainty.csv")
     names = {
         "threat_persistence": r"$\rho_r$",
         "spatial_spread": r"$\sigma$",
@@ -217,7 +217,7 @@ Evaluation weights & Reduction (\%) & Paired difference (95\% CI) \\
 
 
 def smartds_table() -> None:
-    frame = pd.read_csv(ROOT / "results/operational/smartds_ev/smartds_ev_summary.csv")
+    frame = pd.read_csv(ROOT / "results/standalone_smartds_strict_20260905/stress/smartds_ev_summary.csv")
     pivot = frame.pivot(index="penetration_multiplier", columns="metric", values="mapping_level_mean")
     rows = []
     for penetration, row in pivot.iterrows():
@@ -409,14 +409,14 @@ Crews & Service scale & Risk reduction (\%) & Difference 95\% CI & Holm $p$ \\
 
 
 def main() -> int:
+    from make_frozen_service_tables import build
+    # Refuse a final build while any declared frozen experiment is unfinished.
+    # The old exposure-study renderers above remain historical helpers only.
+    build()
     data_table()
     forecast_table()
     calibration_table()
-    primary_policy_table()
-    objective_sensitivity_table()
-    integrated_execution_table()
     smartds_table()
-    packet_table()
     station_choice_table()
     crew_table()
     return 0

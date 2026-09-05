@@ -1,3 +1,2 @@
-# SHA256SUMS.csv verifies exact released bytes; disable checkout conversion.
+# Preserve exact released bytes for SHA256SUMS.csv on every operating system.
 * -text
-*.tex text eol=lf

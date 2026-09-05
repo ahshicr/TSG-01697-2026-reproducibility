@@ -1,0 +1,17 @@
+{
+  "selection": "minimum validation score, not test error",
+  "selected_model": "forecast_plain_seed0.npz",
+  "selected_validation_score": 0.28828930854797363,
+  "common_test_windows": 8111,
+  "history": 12,
+  "horizon": 6,
+  "training_end_exclusive": 35047,
+  "first_test_hour": 43807,
+  "last_test_hour": 51917,
+  "source_sha256": {
+    "forecast_baselines.py": "22e661f504932c8614cd2513d0cb06cc24ea588fe8db94a9bcff3e15e22bbad0",
+    "boulder_ev_forecast_dataset.npz": "8e319dd6dead3381cdbb6507d767f86ef10549e6e9cc47e43d6c9b22e64ce110",
+    "prediction_metrics.csv": "a2a75f19625a27949be89811db209dd543926ecbe7125aff0a6fc7710e991697",
+    "forecast_plain_seed0.npz": "ff8f7718142074712f5deba7b2a3568270ae5cc263b017373f001cc3448f03d4"
+  }
+}

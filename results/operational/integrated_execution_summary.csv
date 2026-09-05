@@ -1,3 +1,0 @@
-condition,load_multiplier,paired_scenarios,policy_scenario_rows,online_smartds_policy_hours,raw_infeasible_policy_hours,projected_infeasible_policy_hours,mean_projection_fraction,minimum_policy_scenario_projection_fraction,curtailed_energy_kwh,mean_crew_jobs,mean_crew_jobs_dispatched,mean_crew_jobs_completed_within_horizon,mean_crew_completion_fraction,mean_crew_completion_h,mean_crew_travel_h
-measured_load_primary,1.0,4096,24576,147456,0,0,1.0,1.0,0.0,30.5517578125,28.937255859375,24.406087239583332,0.8185712592902012,3.1274002606673132,2.972081841362847
-20x_ev_execution_stress,20.0,1024,6144,36864,1089,0,0.9925720940033594,0.3794352213541667,69664.8168361783,30.4658203125,28.8251953125,24.349934895833332,0.8191720188446788,3.116146227489118,2.9579182942708333

@@ -1,0 +1,18 @@
+{
+  "exhaustive_scenarios": 64,
+  "portfolio_scenarios": 128,
+  "candidate_evaluations": 3678,
+  "all_bounds_pass": true,
+  "source_sha256": {
+    "validate_route_score_error.py": "22ef02b538a8217af748a57be08082dfdc4aeca1244758b21eccc4ef87ed13ce",
+    "simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8",
+    "service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae",
+    "smartds_ev_feasibility.py": "cf9b49a48efcf84f756090f6f976c9e2e5b0c5509fe187a9b93162b95934c6e1",
+    "transition_parameter_uncertainty.csv": "00c23cbf9796f3a512efec7032a3c484d826a6899bd36f2dd1e9983111c4a8d2",
+    "packet_network_scenarios.csv": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47",
+    "forecast_plain_seed0.npz": "ff8f7718142074712f5deba7b2a3568270ae5cc263b017373f001cc3448f03d4"
+  },
+  "seconds": 26.75313711166382,
+  "interpretation": "Observed finite-instance error and regret, not a population uniform guarantee.",
+  "enumeration": "All ordered assignments of at most four dispatched jobs to two interchangeable crews."
+}

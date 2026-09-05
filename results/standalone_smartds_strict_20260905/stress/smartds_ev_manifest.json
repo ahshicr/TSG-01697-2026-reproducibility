@@ -1,0 +1,57 @@
+{
+  "feeder": {
+    "master": "data/external/raw/smartds_v1.0/peak/SFO/P1U/scenarios/base_peak/opendss_no_loadshapes/p1uhs0_1247/p1uhs0_1247--p1udt104/Master.dss",
+    "sha256": "b13f0d86650d410c71e2df954fbc4fbe79b6d674381bafe79ca9ed5fdc3c9318",
+    "buses": 80,
+    "nodes": 219,
+    "loads": 27,
+    "lines": 67,
+    "transformers": 13,
+    "baseline": {
+      "converged": true,
+      "v_min_pu": 0.9892977362743917,
+      "v_max_pu": 1.029999527915352,
+      "nodes_below_0_95": 0,
+      "nodes_above_1_05": 0,
+      "deenergized_nodes": 18,
+      "max_line_loading_pu": 0.9124836426160574,
+      "limiting_line": "recloser_disswitch(r:p1udt228-p1udt62)p1u_12237",
+      "losses_kw": 139.94320625786003,
+      "source_kw": 6161.933730811287
+    }
+  },
+  "contract": {
+    "voltage_pu": [
+      0.95,
+      1.05
+    ],
+    "line_loading_pu_max": 1.0,
+    "projection": "largest scalar fraction of candidate EV action satisfying full OpenDSS solve",
+    "iterations": 14
+  },
+  "embedding": "Randomized address-group-to-three-phase-load embeddings; Boulder and SMART-DS are not geographically co-located. Shared station addresses stay on one feeder load within each mapping. Single-phase 120 V loads are excluded as implausible connection points for the aggregate public Level-2 station loads.",
+  "eligible_three_phase_loads": 17,
+  "sampling": {
+    "hours": 24,
+    "all_nonzero_2023_hours": false,
+    "half_peak_half_random": true,
+    "mappings": 20,
+    "penetration_multipliers": [
+      1.0,
+      3.0,
+      5.0,
+      10.0
+    ],
+    "scenario_rows": 1920
+  },
+  "outputs": {
+    "smartds_ev_scenarios.csv": {
+      "bytes": 764348,
+      "sha256": "2d6528eb2d87a59105812b8d85fe03eebd55feeba7c691258c79672f1fd9f81a"
+    },
+    "smartds_ev_summary.csv": {
+      "bytes": 1661,
+      "sha256": "ffa27325f372a0fe01a5ec39e88a022a8d870d7d96cb3ca80c67f4665e60d11b"
+    }
+  }
+}

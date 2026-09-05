@@ -186,6 +186,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=ROOT / "results" / "operational" / "packet_network")
     parser.add_argument("--hours", type=int, default=20)
+    parser.add_argument("--period", choices=["training", "test"], default="test")
     parser.add_argument("--traffic-multiplier", nargs="+", type=float, default=[0.5, 1.0, 2.0, 4.0])
     parser.add_argument("--duration-s", type=float, default=120.0)
     parser.add_argument("--base-arrival-pps", type=float, default=8.0)
@@ -204,7 +205,9 @@ def main() -> None:
     timestamps = data["timestamp_local"]
     connected = data["connected_session_hours"].astype(float)
     arrivals = data["pickup"].astype(float)
-    test = np.flatnonzero(timestamps >= np.datetime64("2023-01-01"))
+    period_mask = (timestamps < np.datetime64("2022-01-01")) if args.period == "training" else (
+        timestamps >= np.datetime64("2023-01-01"))
+    test = np.flatnonzero(period_mask)
     total_activity = connected.sum(axis=1) + arrivals.sum(axis=1)
     n_peak = args.hours // 2
     peak = test[np.argsort(total_activity[test])[-n_peak:]]
@@ -215,6 +218,8 @@ def main() -> None:
 
     events = pd.read_csv(EVENTS)
     events = events.loc[events["threshold_customers"].eq(50)]
+    if args.period == "training":
+        events = events.loc[pd.to_datetime(events["end_exclusive"]) < pd.Timestamp("2022-01-01")]
     peak_outages = events["peak_customers_out"].to_numpy(dtype=float)
     p99 = max(float(np.quantile(peak_outages, 0.99)), 1.0)
     severity_samples = np.clip(np.log1p(peak_outages) / np.log1p(p99), 0.0, 1.0)
@@ -337,6 +342,9 @@ def main() -> None:
         ),
         "hourly_proxy_comparison": {"spearman": proxy_correlation, "mae": proxy_mae},
         "rows": len(rows),
+        "period": args.period,
+        "selected_hours": [int(value) for value in chosen_hours],
+        "outage_event_prior_cutoff": "2022-01-01" if args.period == "training" else "full evaluation context",
         "outputs": {
             scenarios_path.name: {"bytes": scenarios_path.stat().st_size, "sha256": sha256(scenarios_path)},
             summary_path.name: {"bytes": summary_path.stat().st_size, "sha256": sha256(summary_path)},

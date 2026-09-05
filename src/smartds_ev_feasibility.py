@@ -42,6 +42,8 @@ MASTER = (
 )
 EV_DATA = ROOT / "data" / "external" / "processed" / "boulder_ev" / "boulder_ev_forecast_dataset.npz"
 COORDS = ROOT / "data" / "external" / "processed" / "boulder_ev" / "boulder_ev_station_coordinates.csv"
+BASE_NODE_NAMES: tuple[str, ...] | None = None
+BASE_ACTIVE_NODES: np.ndarray | None = None
 
 
 def sha256(path: Path) -> str:
@@ -53,10 +55,15 @@ def sha256(path: Path) -> str:
 
 
 def compile_feeder(master: Path) -> tuple[list[str], np.ndarray, np.ndarray, np.ndarray]:
+    global BASE_NODE_NAMES, BASE_ACTIVE_NODES
     dss.Text.Command(f'Redirect "{master.resolve()}"')
     dss.Solution.Solve()
     if not dss.Solution.Converged():
         raise RuntimeError("SMART-DS base case did not converge")
+    BASE_NODE_NAMES = tuple(dss.Circuit.AllNodeNames())
+    BASE_ACTIVE_NODES = np.asarray(dss.Circuit.AllBusMagPu(), dtype=float) > 0.1
+    if not np.any(BASE_ACTIVE_NODES):
+        raise RuntimeError("SMART-DS base case has no energized nodes")
     names = list(dss.Loads.AllNames())
     kw, kvar, phases = [], [], []
     for name in names:
@@ -87,7 +94,11 @@ def circuit_metrics() -> dict[str, float | int | bool | str]:
     dss.Solution.Solve()
     converged = bool(dss.Solution.Converged())
     voltage = np.asarray(dss.Circuit.AllBusMagPu(), dtype=float)
-    active_voltage = voltage[voltage > 0.1]
+    if BASE_NODE_NAMES != tuple(dss.Circuit.AllNodeNames()) or BASE_ACTIVE_NODES is None:
+        raise RuntimeError("Feeder node identity changed without compiling a new base case")
+    # Only nodes already deenergized in the released base case are excluded.
+    # A voltage collapse under an EV action must remain a violation.
+    active_voltage = voltage[BASE_ACTIVE_NODES]
     line_records = []
     for name in dss.Lines.AllNames():
         dss.Lines.Name(name)
@@ -147,10 +158,17 @@ def solve_alpha(
             lower, best = middle, metrics
         else:
             upper = middle
-    if best is None:
-        apply_ev_load(load_names, base_kw, base_kvar, ev_by_load_kw, 0.0, power_factor)
-        best = circuit_metrics()
-    return lower, unconstrained, best
+    # Reapply the accepted endpoint. The last trial in bisection may instead
+    # have left the solver at an infeasible upper endpoint.
+    for attempt in range(iterations + 2):
+        apply_ev_load(load_names, base_kw, base_kvar, ev_by_load_kw, lower, power_factor)
+        accepted = circuit_metrics()
+        if feasible(accepted, voltage_low, voltage_high, line_limit):
+            return lower, unconstrained, accepted
+        if lower == 0.0:
+            raise RuntimeError("The zero-EV base operating point is not feasible")
+        lower = lower / 2.0 if attempt < iterations else 0.0
+    raise RuntimeError("Could not restore a verified feasible feeder state")
 
 
 def mapping_for_seed(coords: pd.DataFrame, eligible_loads: np.ndarray, seed: int) -> np.ndarray:

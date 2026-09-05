@@ -1,0 +1,83 @@
+{
+  "condition": "primary",
+  "changes": {
+    "scenarios": 4096
+  },
+  "scenario_count": 4096,
+  "source_sha256": {
+    "run_submission_validation.py": "7eafd6bbb6f279fe0de9f23d0cd5f29011335d4fd617bd1b7a8717ea803f5377",
+    "simulate_rollout_revised.py": "a1b8822cd0442e1e9efcc1449264e94a0ac7b483917725fe17c358f4c4b34cfe"
+  },
+  "policies": [
+    "static",
+    "greedy",
+    "forecast_matched",
+    "pc_rollout",
+    "robust_pc_rollout",
+    "oracle"
+  ],
+  "normalization_rule": "station means and resource budgets use only the forecasting training period",
+  "normalization_train_end": 35047,
+  "crew_prior_cutoff": "2022-01-01 00:00:00",
+  "crew_prior_events": 1467,
+  "random_state": 2026,
+  "horizon": 6,
+  "central_policy_coefficients": {
+    "road_persistence": 0.7284298414459285,
+    "power_persistence": 0.7718056156589982,
+    "comm_persistence": 0.5,
+    "spatial_spread": 0.23278107734113337,
+    "pr_coupling": 2.0570893161110102e-17,
+    "pc_coupling": 0.1664507536108788,
+    "rc_coupling": 0.04,
+    "cr_coupling": 0.08,
+    "cp_coupling": 0.04
+  },
+  "realized_reference_bounds": {
+    "road_persistence": [
+      0.5463223810844464,
+      0.9105373018074105
+    ],
+    "spatial_spread": [
+      0.11639053867056669,
+      0.34917161601170005
+    ],
+    "power_persistence": [
+      0.7536926590743023,
+      0.7866674013423922
+    ],
+    "pr_coupling": [
+      3.54246032992964e-20,
+      0.031808098204459956
+    ],
+    "pc_coupling": [
+      0.011781785240195948,
+      0.27083774963578205
+    ],
+    "comm_persistence": [
+      0.3,
+      0.8
+    ],
+    "rc_coupling": [
+      0.0,
+      0.08
+    ],
+    "cr_coupling": [
+      0.0,
+      0.16
+    ],
+    "cp_coupling": [
+      0.0,
+      0.08
+    ]
+  },
+  "budgets": {
+    "total_charge": 18.48320960998535,
+    "total_comm": 73.14408111572266,
+    "total_restore": 10.0
+  },
+  "started_unix": 1788565055.137987,
+  "elapsed_s": 546.3088736534119,
+  "scenario_sha256": "de19f5efcffe2892244bbe9c1367e6af865f7146f9746ce5b93c9959539d0488",
+  "rows": 24576
+}

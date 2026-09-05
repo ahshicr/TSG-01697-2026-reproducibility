@@ -97,6 +97,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", type=Path, default=ROOT / "results" / "operational" / "transition_calibration")
     parser.add_argument("--bootstrap", type=int, default=300)
+    parser.add_argument("--packets", type=Path, default=PACKETS)
     parser.add_argument("--seed", type=int, default=20260825)
     args = parser.parse_args()
     args.out.mkdir(parents=True, exist_ok=True)
@@ -161,7 +162,9 @@ def main() -> None:
     aligned = aligned.loc[(aligned["next_time"] - aligned.index.to_series()).eq(pd.Timedelta(hours=1))].dropna()
     aligned["date"] = aligned.index.date
     aligned["intercept"] = 1.0
-    train = aligned.loc[aligned.index < timestamps[train_end]].copy()
+    train = aligned.loc[(aligned.index < timestamps[train_end])
+                        & (aligned["next_time"] < timestamps[train_end])].copy()
+    assert train["next_time"].max() < timestamps[train_end]
     test = aligned.loc[(aligned.index >= timestamps[val_end]) & (aligned.index < timestamps[-1])].copy()
     x_columns = ["road_threat", "power_threat", "intercept"]
     road_fit = bounded_fit(train[x_columns].to_numpy(float), train["road_next"].to_numpy(float))
@@ -183,7 +186,7 @@ def main() -> None:
     }
 
     # Packet simulator maps power loss and congestion to missed control actions.
-    packets = pd.read_csv(PACKETS)
+    packets = pd.read_csv(args.packets)
     packets["unprotected_power"] = packets["power_threat"] * np.clip(
         1.0 - packets["backup_duration_s"] / 120.0, 0.0, 1.0
     )
@@ -323,7 +326,7 @@ def main() -> None:
         "inputs": {
             EV_DATA.relative_to(ROOT).as_posix(): sha256(EV_DATA),
             OUTAGE_PANEL.relative_to(ROOT).as_posix(): sha256(OUTAGE_PANEL),
-            PACKETS.relative_to(ROOT).as_posix(): sha256(PACKETS),
+            args.packets.resolve().relative_to(ROOT).as_posix(): sha256(args.packets),
         },
     }
     manifest_path = args.out / "transition_calibration_manifest.json"

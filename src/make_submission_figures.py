@@ -4,6 +4,7 @@
 from __future__ import annotations
 
 import json
+import argparse
 from pathlib import Path
 
 import matplotlib as mpl
@@ -56,7 +57,7 @@ def export(fig: plt.Figure, stem: str) -> dict[str, object]:
         ("png", {"dpi": 300}),
     ):
         path = PAPER / f"{stem}.{suffix}"
-        fig.savefig(path, bbox_inches="tight", facecolor="white", **kwargs)
+        fig.savefig(path, facecolor="white", **kwargs)
         outputs[suffix] = {"path": path.name, "bytes": path.stat().st_size}
     png = PAPER / f"{stem}.png"
     with Image.open(png) as image:
@@ -172,46 +173,55 @@ def make_system_figure() -> tuple[plt.Figure, dict[str, object]]:
 
 
 def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]:
-    central = pd.read_csv(ROOT / "results/operational/boulder_robust_rollout/paired_statistics_central.csv")
-    central = central[(central.comparator == "forecast_matched") & (central.metric == "cost")].copy()
-    central["reduction"] = central.relative_reduction_percent
-    central["reduction_low"] = -100 * central.mean_difference_bootstrap_ci95_high / central.comparator_mean
-    central["reduction_high"] = -100 * central.mean_difference_bootstrap_ci95_low / central.comparator_mean
+    inference = ROOT / 'results/submission_service_20260905/inference'
+    statistics = pd.read_csv(inference/'paired_comparisons.csv')
+    central = statistics[(statistics.condition == 'primary') & (statistics.policy == 'pc_rollout')
+                         & (statistics.comparator == 'forecast_matched') & (statistics.metric == 'cost')].copy()
+    assert len(central) == 5
+    central["reduction"] = central.reduction_percent
+    central["reduction_low"] = -100 * central.ci95_high / central.comparator_mean
+    central["reduction_high"] = -100 * central.ci95_low / central.comparator_mean
     central["panel"] = "a"
 
-    smart = pd.read_csv(ROOT / "results/operational/smartds_ev/smartds_ev_summary.csv")
-    smart = smart.pivot(index="penetration_multiplier", columns="metric", values="mapping_level_mean").reset_index()
+    smart_summary = pd.read_csv(ROOT / "results/standalone_smartds_strict_20260905/stress/smartds_ev_summary.csv")
+    smart = smart_summary.pivot(index="penetration_multiplier", columns="metric", values="mapping_level_mean").reset_index()
+    for metric in ['unconstrained_feasible','feasible_fraction']:
+        part=smart_summary[smart_summary.metric.eq(metric)].set_index('penetration_multiplier')
+        for endpoint in ['ci95_low','ci95_high']:
+            smart[f'{metric}_{endpoint}']=smart.penetration_multiplier.map(part[endpoint])
     smart["panel"] = "b"
 
     packet_raw = {}
     for label, directory in (
-        ("0 s", "boulder_packet_feedback_no_backup"),
-        ("60 s", "boulder_packet_feedback_backup_60s"),
-        ("300 s", "boulder_packet_feedback_backup_300s"),
+        ("0 s", "backup_0"),
+        ("60 s", "backup_60"),
+        ("300 s", "backup_300"),
     ):
-        frame = pd.read_csv(ROOT / f"results/operational/{directory}/rollout_scenarios.csv")
+        frame = pd.read_csv(ROOT / f"results/submission_service_20260905/{directory}/rollout_scenarios.csv")
         frame = frame[frame.policy == "pc_rollout"]
         packet_raw[label] = float(frame.mean_control_action_fraction.mean())
-    packet_stats = pd.read_csv(ROOT / "results/operational/packet_feedback_statistics_central.csv")
-    packet_cmp = packet_stats[(packet_stats.row_type == "paired_comparison") & (packet_stats.group == "all")]
+    packet_cmp = statistics[statistics.family.eq('backup_effect_2')].set_index('condition')
+    assert len(packet_cmp) == 2
     packet_values = pd.DataFrame(
         {
             "backup": ["0 s", "60 s", "300 s"],
             "cost_reduction": [
                 0.0,
-                float(packet_cmp[packet_cmp.condition == "backup_60s"].relative_cost_reduction_percent.iloc[0]),
-                float(packet_cmp[packet_cmp.condition == "backup_300s"].relative_cost_reduction_percent.iloc[0]),
+                float(packet_cmp.loc['backup_60'].reduction_percent),
+                float(packet_cmp.loc['backup_300'].reduction_percent),
             ],
             "action_fraction": [packet_raw["0 s"], packet_raw["60 s"], packet_raw["300 s"]],
         }
     )
+    packet_values['ci95_low'] = [0.] + [-100*packet_cmp.loc[c].ci95_high/packet_cmp.loc[c].comparator_mean for c in ['backup_60','backup_300']]
+    packet_values['ci95_high'] = [0.] + [-100*packet_cmp.loc[c].ci95_low/packet_cmp.loc[c].comparator_mean for c in ['backup_60','backup_300']]
     packet_values["panel"] = "c"
 
     crew = pd.read_csv(ROOT / "results/operational/crew_routing_128/crew_routing_paired_statistics.csv")
     crew = crew[crew.comparison == "route_aware_pc_minus_forecast_matched"].copy()
     crew["panel"] = "d"
 
-    fig, axes = plt.subplots(2, 2, figsize=(7.2, 5.15))
+    fig, axes = plt.subplots(2, 2, figsize=(7.16, 5.55))
     ax = axes[0, 0]
     order = ["all", "nominal", "single_domain", "cascade", "ood"]
     labels = ["All", "Nominal", "Single domain", "Cascade", "OOD compound"]
@@ -223,31 +233,42 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
     ax.axvline(0, color=GREY, lw=0.8)
     ax.set_yticks(y, labels)
     ax.set_xlabel("Central PC cost reduction (%)")
-    ax.set_xlim(-0.04, 1.25)
-    ax.text(0.98, 0.97, "paired bootstrap 95% CI", transform=ax.transAxes, ha="right", va="top", color=GREY, fontsize=5.8)
-    ax.set_title("Effect of transition evaluation", loc="left", fontweight="bold", fontsize=8)
+    ax.set_xlim(-0.10, 0.30)
+    ax.set_ylim(-.5, 4.5)
+    ax.set_title("Effect of transition evaluation", loc="left", fontweight="bold", fontsize=8, pad=24)
+    ax.text(.5,1.04,'Paired mean and 95% interval',transform=ax.transAxes,ha='center',fontsize=6.5,color=GREY)
 
     ax = axes[0, 1]
     multipliers = smart.penetration_multiplier.to_numpy()
     x = np.arange(len(multipliers))
     width = 0.36
-    ax.bar(x - width / 2, 100 * smart.unconstrained_feasible, width, color=GREY_SOFT, edgecolor=GREY, linewidth=0.8, label="Raw feasible")
-    ax.bar(x + width / 2, 100 * smart.feasible_fraction, width, color=GREEN_SOFT, edgecolor=GREEN, linewidth=0.8, label="Action retained")
+    for metric,offset,face,edge,label in [('unconstrained_feasible',-width/2,GREY_SOFT,GREY,'Raw feasible'),
+                                        ('feasible_fraction',width/2,GREEN_SOFT,GREEN,'Action retained')]:
+        values=smart[metric].to_numpy()
+        errors=100*np.vstack([values-smart[f'{metric}_ci95_low'].to_numpy(),
+                              smart[f'{metric}_ci95_high'].to_numpy()-values])
+        ax.bar(x+offset,100*values,width,yerr=errors,capsize=2,ecolor=edge,
+               color=face,edgecolor=edge,linewidth=.8,label=label)
     ax.set_xticks(x, [f"{int(v)}×" for v in multipliers])
-    ax.set_ylim(15, 112)
+    ax.set_ylim(0, 106)
     ax.set_ylabel("Scenario/action fraction (%)")
     ax.set_xlabel("Measured EV load multiplier")
-    ax.legend(loc="upper center", ncol=2, fontsize=6)
-    ax.set_title("SMART-DS AC action loop", loc="left", fontweight="bold", fontsize=8)
+    ax.legend(loc="lower center", bbox_to_anchor=(.5,1.01), ncol=2, fontsize=6.5)
+    ax.set_title("Independent AC projection", loc="left", fontweight="bold", fontsize=8, pad=24)
 
     ax = axes[1, 0]
-    bars = ax.bar(packet_values.backup, packet_values.cost_reduction, color=[GREY_SOFT, TEAL, BLUE], edgecolor=[GREY, TEAL, BLUE], linewidth=0.8)
+    packet_error=np.vstack([packet_values.cost_reduction-packet_values.ci95_low,
+                            packet_values.ci95_high-packet_values.cost_reduction])
+    bars = ax.bar(packet_values.backup, packet_values.cost_reduction, yerr=packet_error,
+                  capsize=2.5, ecolor=GREY, color=[GREY_SOFT, TEAL, BLUE],
+                  edgecolor=[GREY, TEAL, BLUE], linewidth=0.8)
     ax.set_ylabel("Cost reduction vs no backup (%)")
     ax.set_xlabel("Backup duration")
     ax.set_ylim(0, 31)
-    for bar, reduction, fraction in zip(bars, packet_values.cost_reduction, packet_values.action_fraction):
-        ax.text(bar.get_x() + bar.get_width() / 2, reduction + 0.9, f"timely {fraction:.3f}", ha="center", va="bottom", fontsize=5.8, color=GREY)
-    ax.set_title("Packet feedback at 2× traffic", loc="left", fontweight="bold", fontsize=8)
+    for bar, upper, fraction in zip(bars, packet_values.ci95_high, packet_values.action_fraction):
+        ax.text(bar.get_x() + bar.get_width() / 2, upper + 1.0, f"timely {fraction:.3f}", ha="center", va="bottom", fontsize=6.5, color=GREY)
+    ax.set_title("Packet feedback at 2× traffic", loc="left", fontweight="bold", fontsize=8, pad=24)
+    ax.text(.5,1.04,'Paired mean and 95% interval',transform=ax.transAxes,ha='center',fontsize=6.5,color=GREY)
 
     ax = axes[1, 1]
     route = crew.pivot(index="crews", columns="service_scale", values="relative_reduction_percent").loc[[4, 12, 24], [0.5, 1.0, 2.0]]
@@ -256,31 +277,44 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
     route_colors = [BLUE_SOFT, TEAL_SOFT, VIOLET_SOFT]
     route_edges = [BLUE, TEAL, VIOLET]
     for j, scale in enumerate(route.columns):
+        part=crew[crew.service_scale.eq(scale)].set_index('crews').loc[[4,12,24]]
+        lower=-100*part.bootstrap_ci95_high/part.comparator_mean
+        upper=-100*part.bootstrap_ci95_low/part.comparator_mean
+        errors=np.vstack([route[scale].to_numpy()-lower.to_numpy(),upper.to_numpy()-route[scale].to_numpy()])
         ax.bar(
             group_x + (j - 1) * route_width,
             route[scale].to_numpy(),
             route_width,
             color=route_colors[j],
             edgecolor=route_edges[j],
+            hatch=['','//','..'][j],
+            yerr=errors,
+            capsize=2,
+            ecolor=route_edges[j],
             linewidth=0.8,
             label=f"Scale {scale:g}",
         )
     ax.set_xticks(group_x, ["4", "12", "24"])
     ax.set_xlabel("Integer crews")
     ax.set_ylabel("Integrated risk reduction (%)")
-    ax.set_ylim(0, 1.2)
-    ax.legend(loc="upper center", bbox_to_anchor=(0.5, 1.02), ncol=3, fontsize=5.6, columnspacing=0.8, handlelength=1.2)
-    ax.set_title("Executable route evaluation", loc="left", fontweight="bold", fontsize=8, pad=12)
+    ax.axhline(0,color=GREY,lw=.7)
+    ax.set_ylim(-.25, 2.05)
+    ax.legend(loc="lower center", bbox_to_anchor=(0.5, 1.01), ncol=3, fontsize=6.5, columnspacing=0.8, handlelength=1.2)
+    ax.set_title("Separate route comparison", loc="left", fontweight="bold", fontsize=8, pad=24)
 
     for label, ax in zip("abcd", axes.flat):
-        ax.text(-0.15, 1.08, label, transform=ax.transAxes, fontsize=9, fontweight="bold", va="top")
-        ax.tick_params(labelsize=6)
-    fig.subplots_adjust(left=0.11, right=0.96, top=0.94, bottom=0.10, hspace=0.48, wspace=0.38)
+        ax.tick_params(labelsize=6.5)
+    fig.subplots_adjust(left=0.14, right=0.98, top=0.87, bottom=0.09, hspace=0.75, wspace=0.43)
+    for label,ax in zip('abcd',axes.flat):
+        pos=ax.get_position()
+        fig.text(pos.x0-.075,pos.y1+.08,f'({label})',fontsize=9,fontweight='bold',va='top')
 
     source = pd.concat(
         [
             central[["panel", "group", "n_pairs", "reduction", "reduction_low", "reduction_high"]],
-            smart[["panel", "penetration_multiplier", "unconstrained_feasible", "feasible_fraction"]],
+            smart[["panel", "penetration_multiplier", "unconstrained_feasible", "feasible_fraction",
+                   'unconstrained_feasible_ci95_low','unconstrained_feasible_ci95_high',
+                   'feasible_fraction_ci95_low','feasible_fraction_ci95_high']],
             packet_values,
             crew[["panel", "crews", "service_scale", "n_pairs", "relative_reduction_percent", "bootstrap_ci95_low", "bootstrap_ci95_high", "holm_wilcoxon_p"]],
         ],
@@ -288,12 +322,15 @@ def make_evidence_figure() -> tuple[plt.Figure, pd.DataFrame, dict[str, object]]
         sort=False,
     )
     return fig, source, {
-        "core_conclusion": "Central transition evaluation improves the matched baseline, while execution constraints determine larger operational effects.",
+        "core_conclusion": "Central propagation gives a small average service-cost gain, while classwise intervals and separate execution effects retain their stated scope.",
         "archetype": "quantitative grid",
     }
 
 
 def main() -> int:
+    parser=argparse.ArgumentParser()
+    parser.add_argument('--preview-only',action='store_true')
+    args=parser.parse_args()
     system_path = PAPER / "fig_executable_system.png"
     if not system_path.exists():
         raise FileNotFoundError(
@@ -310,23 +347,29 @@ def main() -> int:
     system_contract = {
         "core_conclusion": "Requested PC actions affect the next state only after the execution conditions are satisfied.",
         "archetype": "continuous infrastructure schematic",
-        "generation": "GPT Image 2 with manuscript-specific labels and subsequent visual inspection",
+        "generation": "OpenAI native image generation and editing with manuscript-specific labels. The final edit used the native image tool after the local GPT Image CLI reported a missing key. The native model version was not supplied.",
     }
 
     evidence, source, evidence_contract = make_evidence_figure()
+    if args.preview_only:
+        evidence.savefig(PAPER/'fig_operational_evidence_preview.png',dpi=180,facecolor='white')
+        with Image.open(PAPER/'fig_operational_evidence_preview.png') as preview:
+            preview.convert('L').save(PAPER/'fig_operational_evidence_grayscale.png')
+        plt.close(evidence)
+        return 0
     evidence_outputs = export(evidence, "fig_operational_evidence")
     plt.close(evidence)
     source_path = PAPER / "fig_operational_evidence_source_data.csv"
     source.to_csv(source_path, index=False)
 
     qa = {
-        "backend": "GPT Image 2 for the system schematic and Python/matplotlib for quantitative panels",
-        "final_width_mm": 182.88,
-        "editable_text_required": True,
-        "fig_executable_system": {"contract": system_contract, "outputs": system_outputs},
+        "backend": "OpenAI image generation and editing for the system schematic and Python/matplotlib for quantitative panels",
+        "final_width_mm": 181.864,
+        "fig_executable_system": {"contract": system_contract, "outputs": system_outputs, "editable_text": False},
         "fig_operational_evidence": {
             "contract": evidence_contract,
-            "statistics": "paired bootstrap 95% intervals; Holm-corrected tests in manuscript tables; no significance stars",
+            "editable_text": True,
+            "statistics": "Panels a c d use paired bootstrap 95% intervals. Panel b uses normal approximation intervals across 20 mappings. Holm corrected tests remain in tables. No significance stars.",
             "source_data": source_path.name,
             "outputs": evidence_outputs,
         },

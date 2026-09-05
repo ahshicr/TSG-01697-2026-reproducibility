@@ -1,36 +1,35 @@
 \begin{table}[t]
 \centering
-\caption{Primary transition comparison and policy cost summary under sampled uncertainty. Positive reduction denotes lower cost than forecast matched. C/M gives the central PC and matched mean costs. The oracle alone receives future demand and innovations.}
+\caption{Central PC compared with the same service score without threat propagation, followed by all policy means. Positive reduction denotes lower cost than forecast matched. $\Delta$ is central minus matched cost. Intervals are paired marginal intervals. All policies share 4,096 scenarios and the oracle alone observes future demand and innovations.}
 \label{tab:robust-boulder}
-\scriptsize
-\setlength{\tabcolsep}{1.1pt}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \resizebox{\columnwidth}{!}{%
 \begin{tabular}{@{}lrrrr@{}}
 \toprule
-Threat group & Pairs & C/M cost & Reduction (\%) & $\Delta$ 95\% CI \\
+Group & Pairs & Reduction (\%) & $\Delta$ & $\Delta$ 95\% CI \\
 \midrule
-All & 4096 & 985.17/991.44 & 0.6327 & [-7.0372, -5.5195] \\
-Nominal & 1024 & 661.82/661.83 & 0.0020 & [-0.0233, -0.0053] \\
-Single domain & 1024 & 689.06/689.35 & 0.0433 & [-0.4778, -0.1179] \\
-Cascade & 1024 & 985.30/991.75 & 0.6502 & [-7.5902, -5.3153] \\
-OOD compound & 1024 & 1604.49/1622.82 & 1.1296 & [-21.0397, -15.6852] \\
+All & 4096 & 0.1027 & -1.1436 & [-1.5257, -0.7704] \\
+Nominal & 1024 & -0.0002 & 0.0013 & [-0.0042, 0.0075] \\
+Single domain & 1024 & 0.0132 & -0.1021 & [-0.2602, 0.0510] \\
+Cascade & 1024 & 0.0741 & -0.7946 & [-1.7624, 0.1327] \\
+OOD compound & 1024 & 0.1979 & -3.6789 & [-4.8554, -2.5890] \\
 \bottomrule
 \end{tabular}
 }
-
 \vspace{3pt}
-\setlength{\tabcolsep}{3.0pt}
 \begin{tabular}{@{}lrr@{}}
 \toprule
-\multicolumn{3}{l}{\textit{Policy mean over the same 4,096 scenarios}} \\
 Policy & Mean cost & Reduction (\%) \\
 \midrule
-Static & 1069.50 & -7.873 \\ 
-Greedy & 992.07 & -0.063 \\ 
-Forecast matched & 991.44 & 0.000 \\ 
-Central PC & 985.17 & 0.633 \\ 
-Robust PC & 986.85 & 0.463 \\ 
-Oracle & 896.01 & 9.626 \\ 
+Forecast matched & 1113.68 & 0.0000 \\
+Central PC & 1112.54 & 0.1027 \\
+Robust PC & 1112.90 & 0.0697 \\
+Exposure matched & 1120.23 & -0.5885 \\
+Exposure central & 1124.63 & -0.9832 \\
+Static & 1202.74 & -7.9970 \\
+Greedy & 1122.54 & -0.7960 \\
+Oracle & 1053.67 & 5.3887 \\
 \bottomrule
 \end{tabular}
 \end{table}

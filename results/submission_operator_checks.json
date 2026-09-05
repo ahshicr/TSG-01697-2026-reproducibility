@@ -1,0 +1,25 @@
+{
+  "neutral_execution_matches_continuous_cost": true,
+  "neutral_execution_cases": 24,
+  "maximum_absolute_cost_roundoff": 0.000244140625,
+  "future_raw_not_read_by_score": true,
+  "missing_forecast_is_past_only": true,
+  "training_target_windows_disjoint": true,
+  "validation_target_windows_disjoint": true,
+  "central_transition_spectral_radius": 1.0619983612192978,
+  "central_transition_euclidean_norm": 1.1757363660926745,
+  "layernorm_jacobian_bound_checks": [
+    0.9669423365375742,
+    0.9669423365375263,
+    0.9654438392214223,
+    0.00349315478169732,
+    4.395442019100884e-05
+  ],
+  "gelu_max_sampled_derivative": 1.1289040670158232,
+  "scope": "Finite numerical checks of real-arithmetic operator formulas, not a global proof.",
+  "source_sha256": {
+    "verify_continuous_operators.py": "7d4eed469e9dbc7ee26fb010d1a8bd32083f1152e83dc8ef01d20ccf813aeb34",
+    "service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae",
+    "simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8"
+  }
+}

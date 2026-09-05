@@ -1,0 +1,28 @@
+{
+  "device": "cpu",
+  "torch": "2.9.0+cpu",
+  "args": {
+    "data": "data\\external\\processed\\boulder_ev\\boulder_ev_forecast_dataset.npz",
+    "out": "results\\real_ev_strict_20260905",
+    "history": 12,
+    "horizon": 6,
+    "hidden": 32,
+    "epochs": 40,
+    "batch_size": 256,
+    "workers": 0,
+    "lr": 0.002,
+    "weight_decay": 0.0001,
+    "dropout": 0.1,
+    "physics_lambda": 0.08,
+    "smooth_lambda": 0.002,
+    "seeds": [
+      0,
+      1,
+      2
+    ],
+    "modes": [
+      "plain"
+    ],
+    "log_every": 5
+  }
+}

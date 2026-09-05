@@ -1,0 +1,14 @@
+{
+  "ledger_entries": 113,
+  "appendix_entries": 104,
+  "unchanged_statistical_rows": 77,
+  "transition_table_entries": 9,
+  "grouped_rows": [
+    19,
+    19,
+    6
+  ],
+  "ledger_sha256": "347d3eff750b56838ed7bf3b25f8b07b0ff927650f1c440f202658ee960b05e6",
+  "statistical_source_sha256": "4505993c7116ba611033e3a9be7acb168ce911c24d7d7402f30458b5f7119a67",
+  "output_sha256": "b892f70aaf2718d590f426afed546f990bada711931494e97bea96cd40fe5ae9"
+}

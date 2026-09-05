@@ -1,51 +1,52 @@
 {
-  "backend": "GPT Image 2 for the system schematic and Python/matplotlib for quantitative panels",
-  "final_width_mm": 182.88,
-  "editable_text_required": true,
+  "backend": "OpenAI image generation and editing for the system schematic and Python/matplotlib for quantitative panels",
+  "final_width_mm": 181.864,
   "fig_executable_system": {
     "contract": {
       "core_conclusion": "Requested PC actions affect the next state only after the execution conditions are satisfied.",
       "archetype": "continuous infrastructure schematic",
-      "generation": "GPT Image 2 with manuscript-specific labels and subsequent visual inspection"
+      "generation": "OpenAI native image generation and editing with manuscript-specific labels. The final edit used the native image tool after the local GPT Image CLI reported a missing key. The native model version was not supplied."
     },
     "outputs": {
       "png": {
         "path": "fig_executable_system.png",
-        "bytes": 1443879,
+        "bytes": 1121369,
         "pixels": [
           1774,
           887
         ]
       }
-    }
+    },
+    "editable_text": false
   },
   "fig_operational_evidence": {
     "contract": {
-      "core_conclusion": "Central transition evaluation improves the matched baseline, while execution constraints determine larger operational effects.",
+      "core_conclusion": "Central propagation gives a small average service-cost gain, while classwise intervals and separate execution effects retain their stated scope.",
       "archetype": "quantitative grid"
     },
-    "statistics": "paired bootstrap 95% intervals; Holm-corrected tests in manuscript tables; no significance stars",
+    "editable_text": true,
+    "statistics": "Panels a c d use paired bootstrap 95% intervals. Panel b uses normal approximation intervals across 20 mappings. Holm corrected tests remain in tables. No significance stars.",
     "source_data": "fig_operational_evidence_source_data.csv",
     "outputs": {
       "svg": {
         "path": "fig_operational_evidence.svg",
-        "bytes": 39002,
-        "editable_text_nodes": 65
+        "bytes": 119284,
+        "editable_text_nodes": 67
       },
       "pdf": {
         "path": "fig_operational_evidence.pdf",
-        "bytes": 53626
+        "bytes": 66316
       },
       "tiff": {
         "path": "fig_operational_evidence.tiff",
-        "bytes": 50633270
+        "bytes": 57222926
       },
       "png": {
         "path": "fig_operational_evidence.png",
-        "bytes": 168053,
+        "bytes": 190553,
         "pixels": [
-          2106,
-          1503
+          2148,
+          1665
         ]
       }
     }

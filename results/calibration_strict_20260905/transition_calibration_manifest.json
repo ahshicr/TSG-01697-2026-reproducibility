@@ -1,0 +1,22 @@
+{
+  "outputs": {
+    "transition_parameter_uncertainty.csv": {
+      "bytes": 2001,
+      "sha256": "00c23cbf9796f3a512efec7032a3c484d826a6899bd36f2dd1e9983111c4a8d2"
+    },
+    "boulder_aligned_hourly_transition_data.csv": {
+      "bytes": 1742482,
+      "sha256": "686cb534015973f184492ed8fd069a63a936b0ec3a14cfb457a36b698099ac34"
+    },
+    "transition_diagnostics.json": {
+      "bytes": 1501,
+      "sha256": "6e2367bac693e11231970b9e355bb9ebb53cf66a69a9846043081ab097154c0e"
+    }
+  },
+  "bootstrap_day_blocks": 300,
+  "inputs": {
+    "data/external/processed/boulder_ev/boulder_ev_forecast_dataset.npz": "8e319dd6dead3381cdbb6507d767f86ef10549e6e9cc47e43d6c9b22e64ce110",
+    "data/external/processed/eaglei_boulder/boulder_adjacent_counties_15min.csv.gz": "01792c58611151dda26bf26ca1ea9456358e7bfdd73f89d52e56b961894233ff",
+    "results/packet_training_20260905/packet_network_scenarios.csv": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47"
+  }
+}

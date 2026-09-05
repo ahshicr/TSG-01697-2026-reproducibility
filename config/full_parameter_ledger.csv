@@ -1,27 +1,29 @@
 group,symbol,value,unit,role,source_or_calibration,selection_data,sensitivity_or_range
-forecast,L,12,h,observed history length,fixed training configuration,2018-2022 Boulder EV data,not varied
-forecast,H,6,h,rollout and forecast horizon,fixed training configuration,2018-2022 Boulder EV data,not varied
-forecast,hidden,32,units,graph-recurrent hidden width,validation configuration,2022 Boulder validation,not varied
-forecast,epochs,40,epochs,maximum training epochs,validation configuration,2022 Boulder validation,not varied
-forecast,batch,256,samples,training batch size,validation configuration,2022 Boulder validation,not varied
-forecast,learning_rate,0.002,none,Adam learning rate,validation configuration,2022 Boulder validation,not varied
-forecast,weight_decay,0.0001,none,L2 regularization,validation configuration,2022 Boulder validation,not varied
-forecast,dropout,0.1,fraction,dropout probability,validation configuration,2022 Boulder validation,not varied
-forecast,physics_lambda,0.08,none,physics-guidance training weight,retained training configuration,2022 Boulder validation,plain inference mode reported
-forecast,smooth_lambda,0.002,none,temporal smoothness weight,retained training configuration,2022 Boulder validation,plain inference mode reported
+forecast,L,12,h,observed history length,fixed training configuration,unchanged in strict chronological rerun,not varied
+forecast,H,6,h,rollout and forecast horizon,fixed training configuration,unchanged in strict chronological rerun,not varied
+forecast,hidden,32,units,graph-recurrent hidden width,fixed architecture,unchanged in strict chronological rerun,not varied
+forecast,epochs,40,epochs,maximum training epochs,fixed training limit,validation selects the checkpoint within this limit,not varied
+forecast,batch,256,samples,training batch size,fixed optimization setting,unchanged in strict chronological rerun,not varied
+forecast,learning_rate,0.002,none,AdamW learning rate,fixed training configuration,unchanged in strict chronological rerun,not varied
+forecast,weight_decay,0.0001,none,AdamW decoupled weight decay,fixed training configuration,unchanged in strict chronological rerun,not varied
+forecast,dropout,0.1,fraction,dropout probability,fixed regularization setting,unchanged in strict chronological rerun,not varied
+forecast,epsilon_LN,1e-5,variance unit,LayerNorm denominator stabilizer,torch LayerNorm configuration,all three trained models,not varied
+forecast,Huber_delta,1.0,normalized unit,Huber loss transition point,loss evaluated in normalized logarithmic coordinates,2018-2021 training targets only,not varied
+forecast,gradient_clip,2.0,Euclidean norm,gradient clipping threshold,fixed training configuration,all training updates,not varied
+forecast,training_runs,3,integer,independent model fits,fixed repetitions,selected by 2022 validation MAE arrivals plus 0.25 times energy MAE,never selected by test error
+forecast,graph_neighbours,4,stations,symmetric geographical nearest-neighbour graph,Gaussian distance weighting with self edges and row normalization,station coordinates only,not an observed origin-destination graph
 objective,gamma,1.0,none,finite-horizon discount factor,undiscounted implementation,all scenarios,not varied
-objective,lambda_m,1.8,relative weight,mobility-delay contribution,declared benchmark weight,fixed before paired evaluation,3.6 in objective sensitivity
-objective,lambda_e,2.6,relative weight,unserved-energy contribution,declared benchmark weight,fixed before paired evaluation,5.2 in objective sensitivity
-objective,lambda_c,1.7,relative weight,communication-loss contribution,declared benchmark weight,fixed before paired evaluation,3.4 in objective sensitivity
-objective,lambda_p,1.2,relative weight,power-service contribution,declared benchmark weight,fixed before paired evaluation,2.4 in objective sensitivity
-objective,lambda_z,12.0,relative weight,cross-domain exposure contribution,declared benchmark weight,fixed before paired evaluation,6.0 in objective sensitivity
+objective,lambda_m,1.8,per trip equivalent,mobility-loss contribution,declared benchmark weight,fixed before paired evaluation,3.6 in objective sensitivity
+objective,lambda_e,2.6,per kWh,unserved-energy contribution,declared benchmark weight,fixed before paired evaluation,5.2 in objective sensitivity
+objective,lambda_c,1.7,per workload unit,communication-loss contribution,declared benchmark weight,fixed before paired evaluation,3.4 in objective sensitivity
+objective,lambda_p,1.2,per kWh,power-service contribution,declared benchmark weight,fixed before paired evaluation,2.4 in objective sensitivity
+objective,lambda_z,12.0,dimensionless,cross-domain exposure contribution,declared benchmark weight,fixed before paired evaluation,6.0 in objective sensitivity
 service,beta_m,0.13,relative load,mobility contribution to communication load,declared benchmark assumption,fixed before paired evaluation,not varied
 service,beta_e,0.19,relative load,energy contribution to communication load,declared benchmark assumption,fixed before paired evaluation,not varied
 service,beta_r,6.0,relative load,road-threat contribution to communication load,declared benchmark assumption,fixed before paired evaluation,not varied
 service,beta_p,3.5,relative load,power-threat contribution to communication load,declared benchmark assumption,fixed before paired evaluation,not varied
 service,alpha_c,0.40,none,direct communication-threat derating,declared benchmark assumption,fixed before paired evaluation,not varied
-service,alpha_p,1.0,none,power-availability derating in service equation,normalized threat-state definition,fixed before paired evaluation,not varied
-service,rho_c,0.45,none,communication shortfall to mobility delay,declared benchmark assumption,fixed before paired evaluation,not varied
+service,beta_mc,0.45,none,communication shortfall to mobility delay,declared benchmark assumption,fixed before paired evaluation,not varied
 service,rho_q,0.22,none,backlog carryover,declared benchmark assumption,fixed before paired evaluation,requires less than 1
 allocator,kappa_q,1.0,relative weight,backlog in charging score,declared benchmark assumption,fixed before paired evaluation,not varied
 allocator,kappa_ch,1.5,relative weight,current threat in charging score,declared benchmark assumption,fixed before paired evaluation,not varied
@@ -34,15 +36,15 @@ allocator,omega_Gamma,0.8,relative weight,multi-step marginal benefit,declared b
 allocator,eta_service,0.04,fraction,uniform reserve for charging and communication,declared benchmark assumption,fixed before paired evaluation,not varied
 allocator,eta_repair,0.02,fraction,uniform reserve for repair priority,declared benchmark assumption,fixed before paired evaluation,not varied
 allocator,epsilon,1e-9,score unit,square-root stabilizer,numerical implementation,fixed,positive by construction
-budget,B_ch,29.433750,kWh per h,total hourly charging allocation,1.22 times all-station historical mean hourly energy,all 2018-2023 Boulder sessions,stress uses 24.4 factor with 20 times demand
-budget,B_com,73.144081,service unit,total communication allocation,0.72 times supplied station capacity proxy,processed Boulder benchmark,not varied
-budget,B_res,10.0,priority unit,total requested restoration priority,max of 10 and 0.018 times mean arrivals,processed Boulder benchmark,not varied
+budget,B_ch,18.48320960998535,kWh per h,total hourly charging allocation,1.22 times summed station mean hourly energy,2018-2021 Boulder sessions only,stress uses factor 24.4 with 20 times demand
+budget,B_com,73.14408111572266,service unit,total communication allocation,0.72 times summed station capacity proxy,proxy uses 2018-2021 arrivals and connected session hours,not varied
+budget,B_res,10.0,priority unit,total requested restoration priority,max of 10 and 0.018 times summed mean arrivals,2018-2021 Boulder sessions only,not varied
 transition,rho_r,0.72842984,none,road-state persistence,nonnegative deficit regression,2018-2021 Boulder station-hours,0.54632238 to 0.91053730
 transition,sigma,0.23278108,none,spatial propagation,nonnegative deficit regression,2018-2021 Boulder station graph,0.11639054 to 0.34917162
 transition,rho_p,0.77180562,none,power-state persistence,day-block bootstrap,aligned EAGLE-I Boulder observations,0.75369266 to 0.78666740
 transition,tau_pr,0.0,none,power-to-mobility association,nonnegative observational regression,aligned EAGLE-I and Boulder EV deficits,0.0 to 0.03180810
-transition,tau_pc,0.16645075,none,power-to-communication coupling,finite-buffer packet stress construction,packet scenarios,0.01178179 to 0.27083775
-transition,rho_c_state,0.5,none,communication-state persistence,sensitivity-only envelope,no longitudinal field packet trace,0.3 to 0.8
+transition,tau_pc,0.42695230962085035,none,power-to-communication coupling,finite-buffer packet construction with hour-block bootstrap,12000 scenarios using training-period station activity,0.16883429340994127 to 0.5513775065208045
+transition,rho_c,0.5,none,communication-state persistence,sensitivity-only envelope,no longitudinal field packet trace,0.3 to 0.8
 transition,tau_rc,0.04,none,road-to-communication coupling,sign-constrained envelope,no joint field trace,0.0 to 0.08
 transition,tau_cr,0.08,none,communication-to-road coupling,sign-constrained envelope,no joint field trace,0.0 to 0.16
 transition,tau_cp,0.04,none,communication-to-power-service coupling,sign-constrained envelope,no joint field trace,0.0 to 0.08
@@ -50,12 +52,12 @@ repair,road_effect,0.08,normalized state,predictive priority quantum effect,decl
 repair,power_effect,0.12,normalized state,predictive priority quantum effect,declared benchmark assumption,fixed before paired evaluation,continuous prediction layer only
 repair,communication_effect,0.10,normalized state,predictive priority quantum effect,declared benchmark assumption,fixed before paired evaluation,continuous prediction layer only
 crew,vehicles,4,integer,available repair crews,declared benchmark setting,all integrated scenarios,12 and 24 in sensitivity
-crew,jobs,36,integer,requested outage work orders per scenario,declared benchmark setting,all integrated scenarios,not varied
+crew,jobs,36,integer,maximum requested work orders per scenario,declared benchmark setting,all integrated scenarios,actual job count depends on the initial threat
 crew,speed,30,km per h,road travel speed,declared benchmark setting,Boulder station coordinates,not varied
 crew,circuity,1.25,ratio,road-to-great-circle distance multiplier,declared benchmark setting,Boulder station coordinates,not varied
-crew,service_time,empirical,h,job service duration,EAGLE-I 50-customer post-peak half-recovery samples,497 observable events clipped to 0.25-8 h,multiplied by 0.5 1.0 and 2.0 in routing study
+crew,service_time,empirical,h,job service duration,EAGLE-I 50-customer post-peak half-recovery prior,255 observed times among 1467 events ending before 2022 clipped to 0.25-8 h,county recovery prior rather than measured crew work duration
 crew,solver,deterministic list,none,priority per incremental completion time with stable tie-break,implementation rule,common route portfolio,no wall-clock cutoff
-packet,duration,120,s,queue simulation window,declared stress setting,20 selected 2023 hours,not varied
+packet,duration,120,s,queue simulation window,declared stress setting,20 training-period hours for calibration and main execution response,2023 packet stress reported separately
 packet,arrival_rate,8+0.8 activity,packet per s,station traffic arrival intensity,declared stress function,observed connected sessions and arrivals,traffic multipliers 0.5 1 2 and 4
 packet,service_rate,30,packet per s,nominal queue service rate,declared stress setting,packet stress simulator,power and communication threat derate it
 packet,buffer,100,packets,finite FCFS buffer,declared stress setting,packet stress simulator,not varied
@@ -71,6 +73,9 @@ grid,load_model,constant-PQ model 1,OpenDSS model,balanced three-phase wye EV in
 grid,voltage_band,0.95-1.05,p.u.,accepted active-node voltage range,declared operational gate,all online OpenDSS actions,not varied
 grid,line_limit,1.0,p.u.,accepted maximum branch loading,declared operational gate,all online OpenDSS actions,not varied
 grid,bisection_iterations,14,integer,common-fraction AC projection tolerance,implementation setting,all infeasible raw actions,fraction resolution about 6.1e-5
+grid,execution_convergence_tolerance,1e-4,OpenDSS criterion,original execution solver convergence,unchanged frozen OpenDSS default,all primary and sensitivity execution,independent measurements checked separately
+grid,measurement_convergence_tolerance,1e-10,OpenDSS criterion,independent electrical loss and voltage measurement,separate contexts applied to identical accepted loads,all 4096 central and matched pairs,comparison tolerance 1e-8
+grid,measurement_max_iterations,100,integer,independent measurement iteration limit,precision replay setting,all independent primary measurements,not an algorithm parameter
 grid,mappings,20,integer,seeded station-to-load embeddings,geographic rank and seeded assignment,Boulder stations to 17 eligible SMART-DS loads,scenario id modulo 20
 grid,mapping_seed,20260825,integer,station mapping random seed,prespecified seed,all mappings,not varied
 station_flow,capacity,max(q0.995*1.2;7.2),kWh per h,station service-capacity stress proxy,training-period empirical quantile,2018-2021 Boulder energy,not a charger nameplate claim
@@ -80,4 +85,30 @@ station_flow,distance_beta,0.5 1 2,per km,routing distance penalty,declared vali
 station_flow,loyalty,2.0,cost unit,penalty for changing station,declared validation setting,24 selected 2023 hours,not varied
 statistics,n_primary,4096,paired scenarios,primary scenario count,prespecified four equal groups,seed 2026,1024 per threat class
 statistics,bootstrap,20000,resamples,paired mean-difference interval,prespecified inference,primary paired scenarios,percentile 95 percent interval
-statistics,holm_family,5,tests,total-cost primary family,prespecified multiplicity family,overall plus four threat classes,paired t and Wilcoxon adjusted separately
+statistics,holm_family,15,tests,total-cost primary family,three declared comparators and five groups,overall plus four threat classes,paired t and Wilcoxon adjusted separately
+statistics,physical_family,9,tests,secondary service and physical comparisons,separate multiplicity family,central PC versus forecast matched,paired t and Wilcoxon adjusted separately
+packet,power_lookup_scale,0.75,normalized availability,distance scale for packet response lookup,declared nearest response rule,training-period packet simulations,not varied
+packet,communication_lookup_scale,0.375,normalized resource,distance scale for packet response lookup,declared nearest response rule,training-period packet simulations,not varied
+packet,communication_rate_derating,0.70,none,communication threat reduces the protected service rate,base rate multiplied by 1 minus 0.70 times communication threat,training-period packet construction,not varied
+packet,power_rate_derating,0.75,none,power threat further reduces service after backup expires,protected rate multiplied by 1 minus 0.75 times power threat,training-period packet construction,not varied
+packet,minimum_service_rate,0.5,packets per s,positive queue service floor,applied to protected and degraded rates,all packet simulations,not varied
+packet,context_ratio,0.5,none,communication threat relative to power threat in packet construction,constructed context rather than field measurement,training-period packet simulations,not varied
+service,communication_loss_clip,0.90,fraction,maximum communication shortfall fraction in charging support,clip of communication loss divided by one plus load,continuous score and realized service,not varied
+repair,normalized_priority_cap,3.0,none,maximum predictive repair quantum,requested allocation divided by per-zone reference then clipped,continuous priority prediction only,not varied
+forecast,exposure_weights,0.25 0.25,relative weights,forecast arrival and energy contributions to exposure,training mean normalization,shared forecast and training means,not varied
+forecast,exposure_bounds,1 to 6,none,exposure clipping range,declared priority scoring range,all priority forecasts,not varied
+forecast,training_mean_floor,1e-6,arrival or kWh,positive floor for exposure normalization,applied to fixed station training means,2018-2021 observations only,not varied
+crew,job_spread_weights,0.60 0.30,relative weights,one and two geographical neighbour contributions to initial job priority,common initial threat sum plus weighted spatial expansions,shared work requests before policy selection,not varied
+crew,job_threshold,1e-10,normalized state,positive initial job inclusion threshold,applied before selecting at most 36 jobs,shared work requests before policy selection,not varied
+crew,scaled_duration_bounds,0.25 to 16,h,service duration bounds after applying the sensitivity multiplier,base empirical prior is first clipped to 0.25 to 8 hours,shared duration draws across policies,service multipliers 0.5 1 and 2
+scenario,initial_zone_counts,2 6 8 12,zones,affected locations in nominal single-domain cascade and compound classes,fixed scenario definition,1024 scenarios per class in primary test,shared across policies
+scenario,initial_severities,0.08 0.35 0.45 0.62,normalized state,initial severity in the four classes,fixed scenario definition,nominal single-domain cascade compound order,shared across policies
+scenario,innovation_scales,0.003 0.008 0.012 0.022,normalized state per h,future disturbance scale in the four classes,fixed scenario definition,nominal single-domain cascade compound order,unavailable to deployable policies
+scenario,initial_multiplier,0.75 to 1.25,ratio,uniform multiplier of initial severity,independent uniform draws on affected locations,shared across policies,not varied
+scenario,innovation_multiplier,0.6 to 1.4,ratio,uniform multiplier of disturbance scale,nominal disturbs only the first selected location and other classes all selected locations,shared across policies,not varied
+scenario,location_uniform_mix,0.05,none,positive addition to demand weighted location sampling,training mean demand plus 0.05 times its spatial mean then normalized,sampling locations without replacement,not varied
+scenario,initial_threat_cap,0.95,normalized state,initial threat clipping limit,fixed scenario construction,all initial states,not varied
+scenario,transition_threat_cap,0.98,normalized state,propagated threat clipping limit,fixed transition domain,all prediction and execution transitions,also the nonlinear saturation scale
+statistics,scenario_initialization,2026,integer,base initialization index,shared paired random input construction,all frozen primary and sensitivity scenarios,not retuned
+statistics,scenario_stride,7919,integer,scenario index multiplier in initialization,base index plus scenario identifier times stride,all frozen primary and sensitivity scenarios,not retuned
+statistics,coefficient_noise_index,31991,integer,controller coefficient perturbation initialization,fixed noisy matrix construction,coefficient noise sensitivity,not retuned

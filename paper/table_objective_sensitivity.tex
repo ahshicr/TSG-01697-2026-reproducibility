@@ -1,18 +1,20 @@
 \begin{table}[t]
 \centering
-\caption{Objective sensitivity of central PC relative to forecast matched on the same 4,096 paired trajectories. Policies retain their original actions under alternative weights.}
+\caption{Objective sensitivity of central PC relative to forecast matched. All rows use the same 1,024 scenario inputs. Candidate routes are selected again under each stated objective. Reference is the corresponding subset of the primary experiment, not its full 4,096 pairs.}
 \label{tab:objective-sensitivity}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrr}
+\begin{tabular}{@{}lrr@{}}
 \toprule
-Evaluation weights & Reduction (\%) & Paired difference (95\% CI) \\
+Weights & Reduction (\%) & Difference (95\% CI) \\
 \midrule
-Reference weights & 0.6327 & -6.2730 [-7.0372, -5.5195] \\
-$2\times$ mobility weight & 0.6375 & -6.3821 [-7.1811, -5.6118] \\
-$2\times$ unserved energy weight & 0.4105 & -6.9247 [-7.7991, -6.0867] \\
-$2\times$ communication weight & 0.7978 & -8.9713 [-10.0243, -7.9314] \\
-$2\times$ power service weight & 0.6411 & -6.5376 [-7.4521, -5.6625] \\
-$0.5\times$ cascade weight & 0.5380 & -4.9984 [-5.6519, -4.3621] \\
+Reference & 0.0995 & -1.1299 [-1.9426, -0.3834] \\
+$2\times$ mobility & 0.1028 & -1.1782 [-2.0284, -0.3950] \\
+$2\times$ unserved energy & 0.0597 & -1.1458 [-2.0653, -0.3006] \\
+$2\times$ communication & 0.1029 & -1.3283 [-2.3910, -0.3448] \\
+$2\times$ power service & 0.1264 & -1.4710 [-2.5631, -0.4754] \\
+$0.5\times$ cascade & 0.0810 & -0.8553 [-1.5909, -0.1857] \\
 \bottomrule
 \end{tabular}
 }

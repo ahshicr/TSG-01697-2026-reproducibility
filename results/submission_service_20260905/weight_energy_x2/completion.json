@@ -1,0 +1,97 @@
+{
+  "condition": "weight_energy_x2",
+  "changes": {
+    "cost_unserved": 5.2
+  },
+  "scenario_count": 1024,
+  "source_sha256": {
+    "run_frozen_service_experiments.py": "89a58fed5efe30b47748aed6f42418353050ce06daca05acb95d1b57802a8925",
+    "simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8",
+    "service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae",
+    "smartds_ev_feasibility.py": "cf9b49a48efcf84f756090f6f976c9e2e5b0c5509fe187a9b93162b95934c6e1",
+    "transition_parameter_uncertainty.csv": "00c23cbf9796f3a512efec7032a3c484d826a6899bd36f2dd1e9983111c4a8d2",
+    "packet_network_scenarios.csv": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47",
+    "forecast_plain_seed0.npz": "ff8f7718142074712f5deba7b2a3568270ae5cc263b017373f001cc3448f03d4"
+  },
+  "design_freeze_sha256": "8411c1943cfce79f6d81ef709d95c2c8ba7b0a890222967ebe6d78803e7539e0",
+  "period": "2023 chronological test after 2022 route-score validation",
+  "policies": [
+    "forecast_matched",
+    "pc_rollout",
+    "robust_pc_rollout"
+  ],
+  "horizon": 6,
+  "random_state": 2026,
+  "normalization_rule": "station means and resource budgets use only the forecasting training period",
+  "training_end": 35047,
+  "crew_prior_cutoff": "2022-01-01 00:00:00",
+  "crew_prior_events": 1467,
+  "crew_prior_observed_times": 255,
+  "budgets": {
+    "total_charge": 18.48320960998535,
+    "total_comm": 73.14408111572266,
+    "total_restore": 10.0
+  },
+  "objective_weights": {
+    "cost_mobility": 1.8,
+    "cost_unserved": 5.2,
+    "cost_comm": 1.7,
+    "cost_power_service": 1.2,
+    "cost_cascade": 12.0
+  },
+  "central_policy_coefficients": {
+    "road_persistence": 0.7284298414459285,
+    "power_persistence": 0.7718056156589982,
+    "comm_persistence": 0.5,
+    "spatial_spread": 0.23278107734113337,
+    "pr_coupling": 2.0570893161110102e-17,
+    "pc_coupling": 0.42695230962085035,
+    "rc_coupling": 0.04,
+    "cr_coupling": 0.08,
+    "cp_coupling": 0.04
+  },
+  "realized_reference_bounds": {
+    "road_persistence": [
+      0.5463223810844464,
+      0.9105373018074105
+    ],
+    "spatial_spread": [
+      0.11639053867056669,
+      0.34917161601170005
+    ],
+    "power_persistence": [
+      0.7536926590743023,
+      0.7866674013423922
+    ],
+    "pr_coupling": [
+      3.54246032992964e-20,
+      0.031808098204459956
+    ],
+    "pc_coupling": [
+      0.16883429340994127,
+      0.5513775065208045
+    ],
+    "comm_persistence": [
+      0.3,
+      0.8
+    ],
+    "rc_coupling": [
+      0.0,
+      0.08
+    ],
+    "cr_coupling": [
+      0.0,
+      0.16
+    ],
+    "cp_coupling": [
+      0.0,
+      0.08
+    ]
+  },
+  "route_selection": "Same continuous service objective for central and no-transition controls.",
+  "weight_sensitivity": "When weights change, all candidate scores and executed costs use those weights.",
+  "started_unix": 1788572288.6335998,
+  "rows": 3072,
+  "elapsed_s": 142.42236328125,
+  "scenario_sha256": "113b562372e4b58dfc48a2a39c4c8475d1a7e854f8c602fc2290af7a98fd480d"
+}

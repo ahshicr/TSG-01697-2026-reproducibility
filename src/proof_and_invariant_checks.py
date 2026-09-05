@@ -14,16 +14,16 @@ from simulate_rollout_revised import allocate, largest_remainder_crews
 
 
 ROOT = Path(__file__).resolve().parents[1]
-OUT = ROOT / "results" / "operational" / "proof_checks"
+OUT = ROOT / "results" / "submission_service_20260905" / "proof_checks"
 DATA = ROOT / "data" / "external" / "processed" / "boulder_ev" / "boulder_ev_rollout_dataset.npz"
-PARAMETERS = ROOT / "results" / "operational" / "transition_calibration" / "transition_parameter_uncertainty.csv"
-POWER = ROOT / "results" / "operational" / "smartds_ev_long_horizon" / "smartds_ev_scenarios.csv"
-PACKETS = ROOT / "results" / "operational" / "packet_network" / "packet_network_scenarios.csv"
+PARAMETERS = ROOT / "results" / "calibration_strict_20260905" / "transition_parameter_uncertainty.csv"
+POWER = ROOT / "results" / "standalone_smartds_strict_20260905" / "full_year" / "smartds_ev_scenarios.csv"
+PACKETS = ROOT / "results" / "packet_training_20260905" / "packet_network_scenarios.csv"
 ROUTES = ROOT / "results" / "operational" / "crew_routing" / "crew_route_examples.json"
 CHOICE = ROOT / "results" / "operational" / "station_choice" / "station_choice_scenarios.csv"
-MAIN_ROLLOUT = ROOT / "results" / "operational" / "boulder_robust_rollout" / "rollout_scenarios.csv"
+MAIN_ROLLOUT = ROOT / "results" / "submission_service_20260905" / "primary" / "rollout_scenarios.csv"
 STRESS_ROLLOUT = (
-    ROOT / "results" / "operational" / "boulder_integrated_execution_stress" / "rollout_scenarios.csv"
+    ROOT / "results" / "submission_service_20260905" / "electrical_stress" / "rollout_scenarios.csv"
 )
 
 
@@ -304,6 +304,9 @@ def main() -> None:
         writer.writerows(rows)
     report = {
         "status": "PASS" if all(row["status"] == "PASS" for row in rows) else "FAIL",
+        "scope": "Finite arithmetic, scenario-record, and execution checks. Mathematical statements require the manuscript proofs.",
+        "source_sha256": {p.relative_to(ROOT).as_posix():sha256(p) for p in
+            [Path(__file__),PARAMETERS,POWER,PACKETS,MAIN_ROLLOUT,STRESS_ROLLOUT,CHOICE,ROUTES]},
         "checks": rows,
         "output": {"path": output_csv.relative_to(ROOT).as_posix(), "bytes": output_csv.stat().st_size, "sha256": sha256(output_csv)},
     }
