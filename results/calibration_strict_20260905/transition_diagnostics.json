@@ -1,0 +1,42 @@
+{
+  "station_fit": {
+    "samples": 1268661,
+    "self_persistence": 0.7284298414459285,
+    "spatial_spread": 0.23278107734113337
+  },
+  "county_ev_alignment": {
+    "EAGLE_timezone": "UTC converted to America/Denver local civil hour before joining",
+    "EV_timezone": "source local civil time; no UTC label invented",
+    "outage_normalization_p99_customers": 2032.399999999965,
+    "coefficients_road_next_on_road_power_intercept": [
+      0.09166317774625533,
+      2.0570893161110102e-17,
+      0.275787836225431
+    ],
+    "coefficients_power_next_on_road_power_intercept": [
+      0.01015211705388946,
+      0.7718056156589982,
+      0.06915075085170508
+    ],
+    "aligned_train_transitions": 8309,
+    "aligned_test_transitions": 3108,
+    "road_rmse_fitted": 0.3055340713955263,
+    "road_rmse_persistence": 0.3741547003827482,
+    "power_rmse_fitted": 0.1249657805094745,
+    "power_rmse_persistence": 0.13319414512309605
+  },
+  "packet_fit": {
+    "rows": 12000,
+    "coefficients_loss_on_unprotected_power_overload": [
+      0.42695230962085035,
+      0.38773017403703725
+    ],
+    "rmse": 0.3551344956569884
+  },
+  "classification_rule": {
+    "estimated": "fitted to measured public observations",
+    "estimated-observational": "fitted association without a causal claim",
+    "constructed": "fitted to the disclosed simulator rather than field packets",
+    "sensitivity-only": "not identified; varied over a sign-constrained envelope"
+  }
+}

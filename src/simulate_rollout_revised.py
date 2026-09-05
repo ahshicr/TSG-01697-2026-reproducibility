@@ -13,8 +13,8 @@ Key differences from the submitted experiment:
 * integer crew routes are committed at the first decision and only completed
   repair events affect the subsequent threat trajectory;
 * unmet charging is counted once in the stage objective; and
-* electrical and route solvers remain outside the policy score, so all policies
-  face the same executable-action gate without circular validation.
+* electrical feasibility is evaluated after scoring and route outcomes are
+  recorded separately from the model-based policy cost.
 """
 
 from __future__ import annotations
@@ -259,6 +259,25 @@ def projected_route_loss(
     return total
 
 
+def route_candidate_plans(
+    first_hour: int,
+    threat: np.ndarray,
+    backlog: np.ndarray,
+    packet_fraction: np.ndarray,
+    crew_scenario: dict,
+) -> dict:
+    """Construct the common candidate portfolio without selecting a route."""
+    priorities = {}
+    for candidate in ("static", "greedy", "forecast_matched", "pc_rollout", "robust_pc_rollout"):
+        _, _, priority = policy_action(candidate, first_hour, G["horizon"], threat, backlog, None)
+        priorities[candidate] = priority
+    priorities["uniform_route"] = np.ones(threat.shape[1], dtype=np.float32)
+    return {
+        candidate: build_crew_plan(priority, packet_fraction, crew_scenario)
+        for candidate, priority in priorities.items()
+    }
+
+
 def route_portfolio_plan(
     selector_policy: str,
     first_hour: int,
@@ -276,32 +295,7 @@ def route_portfolio_plan(
     worst score over the declared transition-matrix set.
     """
 
-    priorities = {}
-    # Candidate generation is deliberately shared: each of the three
-    # portfolio selectors sees routes induced by every non-oracle priority
-    # rule plus a uniform route.  Thus differences come from route scoring,
-    # not from one selector receiving a richer feasible set.
-    for candidate in (
-        "static",
-        "greedy",
-        "forecast_matched",
-        "pc_rollout",
-        "robust_pc_rollout",
-    ):
-        _, _, priority = policy_action(
-            candidate,
-            first_hour,
-            G["horizon"],
-            threat,
-            backlog,
-            None,
-        )
-        priorities[candidate] = priority
-    priorities["uniform_route"] = np.ones_like(selector_priority)
-    plans = {
-        candidate: build_crew_plan(priority, packet_fraction, crew_scenario)
-        for candidate, priority in priorities.items()
-    }
+    plans = route_candidate_plans(first_hour, threat, backlog, packet_fraction, crew_scenario)
     forecast = forecast_at(first_hour, G["horizon"])
     scores = {}
     if selector_policy == "robust_pc_rollout":
@@ -481,7 +475,11 @@ def threat_step(
         + coefficient("pc_coupling") * power
         + coefficient("rc_coupling") * (adj @ road)
     )
-    next_threat = np.stack([road_next, power_next, comm_next], axis=0) + innovation
+    propagated = np.stack([road_next, power_next, comm_next], axis=0)
+    if not policy_model and G.get("realized_transition_mode", "linear") == "nonlinear_saturation":
+        spatial_state = np.stack([adj @ row for row in threat], axis=0)
+        propagated = 0.98 * (-np.expm1(-(np.maximum(propagated, 0.0) + 0.15 * spatial_state**2) / 0.98))
+    next_threat = propagated + innovation
     per_zone_reference = G["base_total_restore"] / threat.shape[1]
     repair = np.clip(restoration / max(per_zone_reference, 1e-8), 0.0, 3.0)
     effects = np.asarray(G["restoration_effect"], dtype=np.float64)[:, None] * repair[None, :]
@@ -571,13 +569,11 @@ def rollout_restoration_score(
 
 
 def forecast_at(first_hour: int, remaining: int) -> np.ndarray:
-    """Use the forecast issued from the current observed hour, with padding."""
+    """Use the forecast issued before this hour, with past-only padding."""
 
     row = G["forecast_index"].get(first_hour)
     if row is None:
-        raw = G["raw"]
-        end = min(first_hour + remaining, raw.shape[0])
-        values = raw[first_hour:end]
+        values = G["raw"][first_hour - 1 : first_hour]
     else:
         values = G["forecast_pred"][row, :remaining]
     if len(values) == 0:
@@ -602,6 +598,8 @@ def policy_action(
     threat: np.ndarray,
     backlog: np.ndarray,
     oracle_innovations: np.ndarray | None,
+    *,
+    discretize_restoration: bool = True,
 ):
     mean_demand = G["mean_demand"]
     mean_energy = G["mean_energy"]
@@ -672,7 +670,7 @@ def policy_action(
     charge = allocate(G["total_charge"], energy_score, G["service_reserve_fraction"])
     communication = allocate(G["total_comm"], comm_score, G["service_reserve_fraction"])
     restoration = allocate(G["total_restore"], restore_score, G["restore_reserve_fraction"])
-    if G["integer_crews"] > 0:
+    if discretize_restoration and G["integer_crews"] > 0:
         crews = largest_remainder_crews(restoration, G["integer_crews"])
         restoration = crews.astype(np.float32) * (G["total_restore"] / G["integer_crews"])
     return charge, communication, restoration
@@ -686,6 +684,7 @@ def evaluate_policy(
     crew_scenario: dict,
     smartds_mapping_index: int,
     true_coefficients: dict[str, float] | None = None,
+    crew_plan_override: dict | None = None,
 ):
     raw = G["raw"]
     threat = initial_threat.copy()
@@ -734,7 +733,9 @@ def evaluate_policy(
         )
         action_fraction = packet_action_fraction(threat)
         if crew_plan is None:
-            if policy in {"forecast_matched", "pc_rollout", "robust_pc_rollout"}:
+            if crew_plan_override is not None:
+                crew_plan = dict(crew_plan_override)
+            elif policy in {"forecast_matched", "pc_rollout", "robust_pc_rollout"}:
                 crew_plan = route_portfolio_plan(
                     policy,
                     first_hour,
@@ -1058,8 +1059,11 @@ def payload_from_args(args):
     forecast = np.load(forecast_path)
     raw = np.stack([data["pickup"], data["energy"]], axis=-1).astype(np.float32)
     indices = forecast["indices"].astype(np.int64)
-    mean_demand = data["pickup"].mean(axis=0).astype(np.float32)
-    mean_energy = data["energy"].mean(axis=0).astype(np.float32)
+    training_end = int(data["split_train_end_index"])
+    if not 0 < training_end < int(data["split_val_end_index"]) <= int(indices.min()):
+        raise ValueError("Training statistics and test forecast periods must be chronologically disjoint")
+    mean_demand = data["pickup"][:training_end].mean(axis=0).astype(np.float32)
+    mean_energy = data["energy"][:training_end].mean(axis=0).astype(np.float32)
     station_ids = data["station_id"].astype(str)
 
     coordinates = pd.read_csv(args.smartds_coordinates).set_index("station_id").loc[station_ids]
@@ -1072,6 +1076,9 @@ def payload_from_args(args):
     crew_depot_index = int(np.argmin(distance_km.sum(axis=1)))
     event_frame = pd.read_csv(args.crew_events)
     event_frame = event_frame.loc[event_frame["threshold_customers"].eq(50)].copy()
+    training_cutoff = pd.Timestamp(str(data["timestamp_local"][training_end]))
+    event_end = pd.to_datetime(event_frame["end_exclusive"])
+    event_frame = event_frame.loc[event_end < training_cutoff].copy()
     recovery_h = event_frame["post_peak_half_recovery_h"].dropna().to_numpy(dtype=float)
     if not len(recovery_h):
         recovery_h = (event_frame["duration_h"] / 2.0).dropna().to_numpy(dtype=float)
@@ -1272,6 +1279,10 @@ def payload_from_args(args):
         "transition_coefficient_names": coefficient_names,
         "transition_uncertainty_bounds": uncertainty_bounds,
         "sample_transition_uncertainty": args.sample_transition_uncertainty,
+        "normalization_train_end": training_end,
+        "normalization_rule": "station means and resource budgets use only the forecasting training period",
+        "crew_prior_cutoff": str(training_cutoff),
+        "crew_prior_events": int(len(event_frame)),
         "packet_response_surface": packet_response_surface,
         "policies": policies,
     }
@@ -1441,6 +1452,8 @@ def main() -> int:
             },
             "seconds": time.time() - started,
             "forecast_file": payload["forecast_file"],
+            "normalization_train_end": payload["normalization_train_end"],
+            "normalization_rule": payload["normalization_rule"],
             "transition_spectral_radius_estimate": spectral_radius,
             "policy_transition_spectral_radius_estimate": policy_spectral_radius,
             "policies": " ".join(payload["policies"]),

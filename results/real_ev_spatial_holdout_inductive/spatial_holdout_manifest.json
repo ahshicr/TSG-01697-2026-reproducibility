@@ -1,0 +1,49 @@
+{
+  "design": "5 contiguous west-east coordinate blocks balanced by station count; each fold withholds one block from training targets and neighbour inputs, then evaluates all its stations during the 2023 temporal test period.",
+  "features": "calendar, station coordinates, and lagged neighbour/global activity from non-held-out stations; a held-out station's 1 h, 24 h, and 168 h observed lags and pre-2022 calibration are available only as deployment-time inputs; no held-out target enters model fitting",
+  "include_target_history": true,
+  "folds": 5,
+  "horizon": 6,
+  "train_end_exclusive": "2022-01-01 00:00:00",
+  "validation_end_exclusive": "2023-01-01 00:00:00",
+  "alphas": [
+    0.1,
+    1.0,
+    10.0,
+    100.0
+  ],
+  "outputs": {
+    "spatial_holdout_metrics.csv": {
+      "bytes": 18125,
+      "sha256": "9f937eb3b0e142e83ff0bf4e55ab8d7698ff8c010878b2d4c0dc4b96f435797a"
+    },
+    "spatial_holdout_splits.csv": {
+      "bytes": 10150,
+      "sha256": "cfb2918456a3e515c52163a337354698eb6f7d241a132cc6880559c924429a4a"
+    },
+    "spatial_holdout_predictions.npz": {
+      "bytes": 14716216,
+      "sha256": "71708d7df01f6d89e2f11f0f58f5b202277574a4f7b250082c69ce09e741c9ce"
+    },
+    "spatial_holdout_fold0_model.npz": {
+      "bytes": 3176,
+      "sha256": "b192d6533d49806b6bd2d68c395e45834751fb55b85881612a77076b92442b12"
+    },
+    "spatial_holdout_fold1_model.npz": {
+      "bytes": 3197,
+      "sha256": "8bcd984ad4abdd995357470eb2dbcf71ab747d6f1c443ef351b450ef66406ef3"
+    },
+    "spatial_holdout_fold2_model.npz": {
+      "bytes": 3192,
+      "sha256": "a3749159d59b00f145969080b50e26a80a468ac1ced7caef3440c3d51a835c74"
+    },
+    "spatial_holdout_fold3_model.npz": {
+      "bytes": 3199,
+      "sha256": "d666888e2259916b8f95ec6353f7c197c3764c81d9eedc9752f3ff1a69e2812e"
+    },
+    "spatial_holdout_fold4_model.npz": {
+      "bytes": 3183,
+      "sha256": "12dbfca06704e0240cabdbf8a3fa6e61f442fb7a9e9c2c4a738a20b48819a425"
+    }
+  }
+}

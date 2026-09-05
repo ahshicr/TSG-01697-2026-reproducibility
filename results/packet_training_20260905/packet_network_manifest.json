@@ -1,0 +1,85 @@
+{
+  "simulator": "finite-buffer discrete-event FCFS packet queue with erasures and retransmission backoff",
+  "analytic_validation": {
+    "lambda_pps": 10.0,
+    "mu_pps": 20.0,
+    "theoretical_mean_ms": 100.0,
+    "relative_error": 0.002693282094964502,
+    "generated_packets": 40392,
+    "arrival_attempts_including_retries": 40392,
+    "delivered_packets": 40392,
+    "buffer_drops": 0,
+    "erasures": 0,
+    "control_generated": 40392,
+    "control_delivered": 40392,
+    "control_failed": 0,
+    "control_delivery_fraction": 1.0,
+    "control_on_time_fraction": 1.0,
+    "control_latency_mean_ms": 99.73067179050355,
+    "control_latency_p95_ms": 295.07382216435656,
+    "control_latency_p99_ms": 449.70124709022156,
+    "attempt_drop_fraction": 0.0
+  },
+  "packet_contract": {
+    "duration_s": 120.0,
+    "buffer_packets": 100,
+    "control_fraction": 0.05,
+    "deadline_ms": 500.0,
+    "max_retries": 2,
+    "base_arrival_pps": 8.0,
+    "ev_session_arrival_pps": 0.8,
+    "base_service_pps": 30.0,
+    "traffic_multipliers": [
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ],
+    "backup_duration_s": [
+      0.0,
+      60.0,
+      300.0
+    ]
+  },
+  "backup_logic_check": "For service starts before backup_duration_s, service rate excludes power derating; after depletion, the power-threat factor is applied. A backup longer than the simulated outage window therefore prevents direct power-induced service-rate loss for that window.",
+  "interpretation": "Traffic rates are transparent stress assumptions linked to observed station activity, not captured utility packet traces. The effective action fraction is the share of control packets delivered within deadline and is used to derate executable rollout actions.",
+  "hourly_proxy_comparison": {
+    "spearman": 0.8694165493102689,
+    "mae": 0.2549042471933677
+  },
+  "rows": 12000,
+  "period": "training",
+  "selected_hours": [
+    1282,
+    10738,
+    11108,
+    11109,
+    11222,
+    12235,
+    15042,
+    15378,
+    15749,
+    16048,
+    16555,
+    17508,
+    19003,
+    26360,
+    27812,
+    31195,
+    32538,
+    32539,
+    33161,
+    34337
+  ],
+  "outage_event_prior_cutoff": "2022-01-01",
+  "outputs": {
+    "packet_network_scenarios.csv": {
+      "bytes": 3140209,
+      "sha256": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47"
+    },
+    "packet_network_summary.csv": {
+      "bytes": 75486,
+      "sha256": "1c57a7d58ebfaf84a15f12a06a15ff7bd63104710657facb98904d25b7953de7"
+    }
+  }
+}

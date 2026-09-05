@@ -1,0 +1,12 @@
+property,code_reference,evidence,status,detail
+continuous_action_budget,src/simulate_rollout_revised.py::allocate,"10,000 random score/budget tests",PASS,max_abs_budget_error=1.365e-04; min_action=6.226e-04
+integer_crew_count,src/simulate_rollout_revised.py::largest_remainder_crews,"5,000 random score vectors",PASS,failures=0
+backlog_bounded_zero_service,q[t+1]=[e[t]+rho*q[t]-s[t]]_+ with rho=0.22,all 8117 test hours and 50 stations,PASS,max_empirical_to_theoretical_bound=1.000000000
+threat_cube_invariance,"projected transition Pi_[0,0.98]","100,000 steps at simultaneous upper uncertainty bounds",PASS,"failures=0; final_range=[0.980,0.980]"
+ac_action_projection,src/smartds_ev_feasibility.py::solve_alpha,results/standalone_smartds_strict_20260905/full_year/smartds_ev_scenarios.csv,PASS,feasible=14902/14902
+communication_backup_and_action_derating,src/packet_network_validation.py::simulate_link,results/packet_training_20260905/packet_network_scenarios.csv,PASS,full_backup_error=0.000e+00; depleted_error=0.000e+00
+routed_work_order_coverage,src/crew_routing_validation.py::solve_routes,results/operational/crew_routing/crew_route_examples.json,PASS,examples=12; failures=0
+online_smartds_projection_in_main_rollout,src/simulate_rollout_revised.py::project_smartds_action,results/submission_service_20260905/primary/rollout_scenarios.csv,PASS,feasible_policy_scenarios=32768/32768
+smartds_projection_changes_service_and_backlog_under_stress,src/simulate_rollout_revised.py::evaluate_policy,results/submission_service_20260905/electrical_stress/rollout_scenarios.csv,PASS,raw_infeasible_hours=348; projected_infeasible_hours=0; curtailed_kwh=16660.638
+crew_completion_events_in_main_rollout,src/simulate_rollout_revised.py::build_crew_plan/evaluate_policy,results/submission_service_20260905/primary/rollout_scenarios.csv,PASS,policy_scenarios=32768; event_failures=0; paired_input_failures=0
+station_choice_flow_feasibility,src/station_choice_validation.py,results/operational/station_choice/station_choice_scenarios.csv,PASS,feasible=2592/2592

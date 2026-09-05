@@ -1,0 +1,36 @@
+{
+  "scenario_count": 128,
+  "rows": 6912,
+  "independent_seed_batches": [
+    {
+      "path": "results/operational/crew_routing/crew_routing_scenarios.csv",
+      "sha256": "da4f0a33fbc537b4ce4027351ff90ab20828c8bec4b8c53b3c8b84519773b5a3",
+      "scenarios": 32
+    },
+    {
+      "path": "results/operational/crew_routing_batch_20260826/crew_routing_scenarios.csv",
+      "sha256": "c09c57b121267f8bbf0bcab9d9be9031227762eb03f210cc2e1cc41d8e8cd1df",
+      "scenarios": 32
+    },
+    {
+      "path": "results/operational/crew_routing_batch_20260827/crew_routing_scenarios.csv",
+      "sha256": "afea9d246d13dbc83fcca243c069eaff8cf73256b522a1c01d0c15f550211b67",
+      "scenarios": 32
+    },
+    {
+      "path": "results/operational/crew_routing_batch_20260828/crew_routing_scenarios.csv",
+      "sha256": "e337e845b8d376f280367a16263c9fe2a373ee9ff64463449a004cac4b557125",
+      "scenarios": 32
+    }
+  ],
+  "outputs": {
+    "crew_routing_scenarios.csv": {
+      "sha256": "691b760f48a5f325adc164de8dbafdcc6253df78469c9c146819b4d7a1003e65",
+      "bytes": 1324417
+    },
+    "crew_routing_summary.csv": {
+      "sha256": "f0aa0e16e07293270e39f870cff352c869c2db0ae624b6eaceee02f71b59aa40",
+      "bytes": 39142
+    }
+  }
+}

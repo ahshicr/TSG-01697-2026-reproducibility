@@ -1,0 +1,13 @@
+{
+  "complete_submission_build": true,
+  "generated": [
+    "table_robust_boulder.tex",
+    "table_objective_sensitivity.tex",
+    "table_integrated_execution.tex",
+    "table_packet_feedback.tex",
+    "supplementary_experiment_tables.tex"
+  ],
+  "omitted_until_complete": [],
+  "inference_sha256": "f3c7cf598d2508fcaf2456544f93425a0c8ea06514b25d99f70a29293d110090",
+  "source_sha256": "857c1df9cd8f798ce905467ccb9ddabca0c271899acfe35e25dfcb646f0d6b36"
+}

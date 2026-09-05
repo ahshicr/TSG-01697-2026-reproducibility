@@ -1,0 +1,220 @@
+\appendix[Parameters and additional comparisons]
+
+\label{app:parameters}
+
+Tables~\ref{tab:scenario-parameters}, \ref{tab:complete-parameters}, and \ref{tab:execution-parameters} state the numerical settings, their roles, sources, selection periods, and tested ranges.\AITextRef\ Grouped values follow the listed parameter order. Unless a data source or sensitivity range is stated, values are declared benchmark settings held fixed across policies. They were not retuned on the revised test. Table~\ref{tab:calibrated-uncertainty} separately gives transition estimates and intervals. Long estimates are rounded for display.
+
+Table~\ref{tab:supp-primary} retains the complete primary comparison family. Table~\ref{tab:supp-sensitivity} gives every integrated sensitivity comparison, Table~\ref{tab:supp-physical} gives all secondary service and physical outcomes, and Table~\ref{tab:supp-cost-tail} gives the empirical cost tails. The numerical record retains all paired mean and rank tests, including unfavorable comparisons.
+
+\begin{table}[!t]
+\centering
+\caption{Scenario construction and statistical settings.}
+\label{tab:scenario-parameters}
+\footnotesize\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}p{0.22\columnwidth}p{0.22\columnwidth}p{0.49\columnwidth}@{}}
+\toprule Parameter & Value & Unit, role, source, selection and sensitivity \\ \midrule
+Affected zones, severity, innovation & (2,\allowbreak 6,\allowbreak 8,\allowbreak 12), (0.08,\allowbreak 0.35,\allowbreak 0.45,\allowbreak 0.62), (0.003,\allowbreak 0.008,\allowbreak 0.012,\allowbreak 0.022) & Values follow nominal, single domain, cascade and compound order within each sequence. Nominal affects road only, single domain draws one of the three domains uniformly, and the remaining classes affect all three. \\
+Initial and innovation multipliers & 0.75 to 1.25, 0.6 to 1.4 & Independent uniform draws over the displayed intervals. Nominal innovations affect only the first sampled location. Other classes perturb every sampled location in each affected domain. \\
+Location sampling offset & 0.05 & Sampling probability is proportional to the training mean arrival count plus this fraction of its spatial mean. Locations are sampled without replacement. \\
+Initial and propagated state caps & 0.95, 0.98 & Normalized upper limits. Both initial and propagated states are clipped below by zero. The second value is also the nonlinear saturation scale. \\
+Primary pairs, resamples, primary tests, physical tests & 4096, 20000, 15, 9 & Four equal threat groups, percentile 95 percent intervals and separate Holm adjustments for paired mean and rank tests. Integrated sensitivity has 45 comparisons. \\
+Initial index, scenario stride, noise index & 2026, 7919, 31991 & A scenario uses the initial index plus its identifier times the stride. The last index fixes controller coefficient noise. The paired policies share the resulting inputs. No index was retuned. \\
+\bottomrule\end{tabular}
+\end{table}
+
+\begin{table*}[p]
+\centering
+\caption{Prediction, objective, service and allocation settings.}
+\label{tab:complete-parameters}
+\footnotesize\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{@{}p{0.235\textwidth}p{0.18\textwidth}p{0.55\textwidth}@{}}
+\toprule Parameter & Value & Unit, role, source, selection and sensitivity \\ \midrule
+History $L$, horizon $H$ & 12, 6 & Observed and predicted hours. \\
+Hidden units, epochs, batch & 32, 40, 256 & Hidden width, maximum epochs and batch samples. Checkpoint selected by validation error. \\
+Learning rate, decay, dropout & 0.002, 0.0001, 0.1 & AdamW rate, weight decay and dropout fraction, shared by all chronological fits. \\
+$\epsilon_{\rm LN}$, Huber threshold, gradient clip & $10^{-5}$, 1.0, 2.0 & Variance stabilizer, normalized loss threshold and Euclidean gradient bound. \\
+Training repetitions, neighbours & 3, 4 & Independent fits and geographical neighbours. Training uses 2018 to 2021, selection uses 2022. Graph uses station coordinates. \\
+Exposure weights, bounds, mean floor & (0.25,\allowbreak 0.25), 1 to 6, $10^{-6}$ & Arrival and energy weights, clipping interval and positive training mean floor in the corresponding arrival or energy units. \\
+Discount $\gamma$ & 1.0 & Undiscounted six hour score. \\
+$\lambda_m,\lambda_e,\lambda_c,\lambda_p,\lambda_z$ & 1.8, 2.6, 1.7, 1.2, 12.0 & Reciprocal service units defined in the objective. Sensitivities use 3.6, 5.2, 3.4, 2.4 and 6, one weight at a time. \\
+$\beta_m,\beta_e,\beta_r,\beta_p$ & 0.13, 0.19, 6.0, 3.5 & Mobility, energy, road threat and power threat conversions to communication load. \\
+$\alpha_c,\beta_{mc},\rho_q$ & 0.40, 0.45, 0.22 & Communication derating, communication shortfall to mobility loss and backlog carryover. Carryover is below one. \\
+Communication shortfall cap & 0.90 & Maximum fractional reduction of charging support. \\
+$\kappa_q,\kappa_{\rm ch},\kappa_E,\kappa_{\rm com}$ & 1.0, 1.5, 0.7, 1.5 & Backlog and threat weights in charging, then energy and threat weights in communication. \\
+$\omega_p,\omega_c,\omega_r,\omega_\Gamma$ & 1.6, 1.3, 1.1, 0.8 & Power, communication, road and predicted marginal benefit weights in repair priority. \\
+Service reserve, repair reserve, $\epsilon$ & 0.04, 0.02, $10^{-9}$ & Uniform reserve fractions and positive score stabilizer. \\
+Charging budget $B^{\rm ch}$ & 18.48321 & kWh per hour. Training station mean energy sum multiplied by 1.22. Electrical stress uses factor 24.4 with twenty times demand. \\
+Communication budget $B^{\rm com}$ & 73.144081 & Service units. Training capacity proxy sum multiplied by 0.72. The proxy uses training arrivals and connected session hours. \\
+Repair priority budget $B^{\rm res}$ & 10.0 & Priority units. Maximum of 10 and 0.018 times summed training mean arrivals. All three budgets use 2018 to 2021 only. \\
+Road, power, communication repair effect & 0.08, 0.12, 0.10 & Threat reduction per quantum in continuous priority prediction, not realized repair. \\
+Predictive repair quantum cap & 3.0 & Priority divided by the per zone reference, clipped from zero to this cap. \\
+\bottomrule\end{tabular}
+\end{table*}
+
+\begin{table*}[p]
+\centering
+\caption{Crew, communication, electrical and station settings.}
+\label{tab:execution-parameters}
+\footnotesize\setlength{\tabcolsep}{4pt}\renewcommand{\arraystretch}{1.0}
+\begin{tabular}{@{}p{0.235\textwidth}p{0.18\textwidth}p{0.55\textwidth}@{}}
+\toprule Parameter & Value & Unit, role, source, selection and sensitivity \\ \midrule
+Crews, maximum jobs & 4, 36 & Crews and work orders. Sensitivity uses 12 and 24 crews. Job count follows initial threat. \\
+Travel speed, circuity & 30, 1.25 & km per hour and road to great circle distance ratio at Boulder coordinates. \\
+Repair duration & empirical & Hours. EAGLE-I 50 customer half recovery prior, 255 observations among 1,467 events ending before 2022, clipped to 0.25 to 8 hours. \\
+Spatial job weights, inclusion threshold & (0.60,\allowbreak 0.30), $10^{-10}$ & One and two neighbour contributions to initial threat, then the inclusion threshold. Jobs are fixed before policy selection. \\
+Scaled service duration interval & 0.25 to 16 & Hours after scaling the base prior by 0.5, 1 or 2, then clipping. \\
+Route construction & deterministic list & Priority per incremental completion time, fixed ties and no time cutoff. Common candidates for all selectors. \\
+Queue window, arrival rate, service rate & 120, 8+\allowbreak{}0.8 activity, 30 & Seconds and packets per second. Activity is connected sessions plus arrivals from twenty training hours. Traffic factors are 0.5, 1, 2 and 4. \\
+Buffer, control share, deadline & 100, 0.05, 500 & Packets, fraction and milliseconds. \\
+Retries, mean backoff & 2, 0.05 & Maximum retransmissions and exponential retry wait in seconds. \\
+Erasure probability, backup & $\min(0.25,\allowbreak 0.002+\allowbreak 0.08z^c)$, 60 & Threat dependent erasure and backup in seconds. Sensitivity uses 0 and 300 seconds. \\
+Queue derating, rate floor, context ratio & 0.70, 0.75, 0.5, 0.5 & Base rate factor $1-0.70z^c$, multiplied by $1-0.75z^p$ after backup. Rate floor in packets per second. Constructed $z^c/z^p=0.5$. \\
+Power and communication lookup scales & 0.75, 0.375 & Distance scales for nearest training response selection. \\
+Feeder, power factor & SMART-DS SFO P1U, 0.98 & Complete public feeder and lagging EV power factor. \\
+EV load model, voltage band, line limit & constant PQ model 1, 0.95 to 1.05, 1.0 & Balanced three phase wye increments at 17 loads. Voltage and loading in p.u. Base loads unchanged. \\
+Bisection steps, execution tolerance & 14, $10^{-4}$ & Fraction resolution about 0.000061. Original OpenDSS convergence criterion unchanged. \\
+Measurement tolerance, iteration limit & $10^{-10}$, 100 & Independent measurements for all central and matched pairs. Second tolerance is 0.00000001. Accepted actions unchanged. \\
+Mappings, initialization index & 20, 20260825 & Station to load assignments. Scenario index modulo twenty selects the shared assignment. \\
+Station capacity & $\max(1.2q_{0.995},\allowbreak 7.2)$ & kWh per hour. Training energy quantile at probability 0.995. Stress proxy, not nameplate power. \\
+Closure, demand, distance, loyalty & (0.1,\allowbreak 0.2,\allowbreak 0.3), (1,\allowbreak 2,\allowbreak 4), (0.5,\allowbreak 1,\allowbreak 2), 2.0 & Fraction, multiplier, reciprocal km and cost units. Full factorial at 24 selected 2023 hours. \\
+\bottomrule\end{tabular}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Central PC against both service and exposure score controls. Holm correction includes all fifteen comparisons separately for each test. Bootstrap intervals are marginal intervals rather than simultaneous intervals.}
+\label{tab:supp-primary}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Comparator & Group & Pairs & $\Delta$ & 95\% CI & Holm $t$ & Holm Wilcoxon \\
+\midrule
+Forecast matched & All & 4096 & -1.1436 & [-1.5257, -0.7704] & $1.38\times10^{-8}$ & $9.79\times10^{-23}$ \\
+Forecast matched & Nominal & 1024 & 0.0013 & [-0.0042, 0.0075] & 1.0000 & $3.77\times10^{-17}$ \\
+Forecast matched & Single domain & 1024 & -0.1021 & [-0.2602, 0.0510] & 0.5860 & 0.0020 \\
+Forecast matched & Cascade & 1024 & -0.7946 & [-1.7624, 0.1327] & 0.3944 & 0.0983 \\
+Forecast matched & OOD compound & 1024 & -3.6789 & [-4.8554, -2.5890] & $1.94\times10^{-9}$ & $1.15\times10^{-11}$ \\
+Exposure matched & All & 4096 & -7.6977 & [-8.3843, -7.0077] & $2.83\times10^{-97}$ & $5.2\times10^{-147}$ \\
+Exposure matched & Nominal & 1024 & 0.0019 & [-0.0037, 0.0081] & 1.0000 & $7.68\times10^{-16}$ \\
+Exposure matched & Single domain & 1024 & -0.2304 & [-0.4169, -0.0533] & 0.0626 & $3.11\times10^{-6}$ \\
+Exposure matched & Cascade & 1024 & -8.3878 & [-9.6902, -7.1245] & $2.38\times10^{-34}$ & $1.39\times10^{-44}$ \\
+Exposure matched & OOD compound & 1024 & -22.1746 & [-24.3945, -20.0079] & $6.17\times10^{-72}$ & $1.96\times10^{-76}$ \\
+Exposure central & All & 4096 & -12.0931 & [-13.1616, -11.0704] & $1.98\times10^{-104}$ & $1.32\times10^{-139}$ \\
+Exposure central & Nominal & 1024 & 0.0103 & [0.0047, 0.0165] & 0.0036 & 0.4691 \\
+Exposure central & Single domain & 1024 & -0.3792 & [-0.5915, -0.1773] & 0.0031 & 0.1441 \\
+Exposure central & Cascade & 1024 & -8.5773 & [-9.9791, -7.2295] & $4.84\times10^{-32}$ & $2.28\times10^{-40}$ \\
+Exposure central & OOD compound & 1024 & -39.4260 & [-42.9641, -36.0140] & $5.55\times10^{-89}$ & $1.29\times10^{-95}$ \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Physical outcomes of central PC (C) and forecast matched (F) on 4,096 paired scenarios. Intervals concern C minus F. Holm correction covers all nine endpoints separately for each test. Completion fraction uses requested jobs, including undelivered requests. Scheduled completion and travel include dispatched jobs finishing beyond the horizon. Decision computation time is excluded because concurrent execution is not a controlled timing comparison. Electrical loss and minimum voltage use independent OpenDSS measurements of identical accepted loads at convergence tolerance $10^{-10}$, with $10^{-8}$ comparison solves and at most 100 iterations. These measurements do not alter requests, accepted actions, routes, or costs.}
+\label{tab:supp-physical}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrrr@{}}
+\toprule
+Endpoint & C mean & F mean & Difference 95\% CI & Holm $t$ & Holm Wilcoxon \\
+\midrule
+Unserved energy (kWh) & 294.358909 & 294.395760 & [-0.057777, -0.015918] & 0.0037 & $1.26\times10^{-12}$ \\
+Electrical loss (MWh) & 0.841670840 & 0.841669314 & [$6.013\times10^{-7}$, $2.457\times10^{-6}$] & 0.0071 & $2\times10^{-14}$ \\
+Minimum voltage (p.u.) & 0.989098473 & 0.989098647 & [$-4.103\times10^{-7}$, $5.085\times10^{-8}$] & 0.7135 & 0.0117 \\
+Timely action fraction & 0.976412 & 0.976401 & [$-2.077\times10^{-5}$, $4.310\times10^{-5}$] & 1.0000 & 1.0000 \\
+Retained action fraction & 1.000000 & 1.000000 & [0, 0] & 1.0000 & 1.0000 \\
+Curtailment (kWh) & 0 & 0 & [0, 0] & 1.0000 & 1.0000 \\
+Completed/requested jobs & 0.811998 & 0.810978 & [$5.779\times10^{-4}$, 0.001470] & $6.51\times10^{-5}$ & 0.0013 \\
+Scheduled completion (h) & 3.096674 & 3.118857 & [-0.026427, -0.018020] & $2.11\times10^{-23}$ & $8.59\times10^{-18}$ \\
+Scheduled travel (h) & 2.621301 & 2.619267 & [-0.003585, 0.007646] & 1.0000 & 1.0000 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{Primary empirical cost distribution. Quantiles and upper tail means describe the same 4,096 scenarios per policy. Tail means include a fractional observation at their probability boundary. These descriptive values are not inferential evidence of tail superiority.}
+\label{tab:supp-cost-tail}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}lrrrrrr@{}}
+\toprule
+Policy & Mean & 95\% quantile & 99\% quantile & Upper 5\% mean & Upper 1\% mean & Maximum \\
+\midrule
+Forecast matched & 1113.68 & 2599.56 & 3334.41 & 3062.58 & 3694.88 & 4494.26 \\
+Central PC & 1112.54 & 2597.87 & 3331.67 & 3055.50 & 3687.60 & 4494.26 \\
+Robust PC & 1112.90 & 2603.73 & 3331.44 & 3058.35 & 3692.33 & 4494.26 \\
+Exposure matched & 1120.23 & 2618.63 & 3357.45 & 3082.80 & 3729.44 & 4531.67 \\
+Exposure central & 1124.63 & 2632.39 & 3369.16 & 3105.46 & 3746.92 & 4507.25 \\
+Static & 1202.74 & 2767.64 & 3507.76 & 3224.38 & 3895.21 & 4799.52 \\
+Greedy & 1122.54 & 2632.59 & 3372.35 & 3093.79 & 3744.89 & 4494.26 \\
+Oracle & 1053.67 & 2582.47 & 3301.28 & 3019.15 & 3647.82 & 4474.21 \\
+\bottomrule
+\end{tabular}
+}
+\end{table*}
+
+\begin{table*}[t]
+\centering
+\caption{All integrated sensitivity comparisons. C denotes central PC, F forecast matched, and R robust PC. The mean difference is first policy minus second policy. Holm correction includes the full sensitivity family. Intervals are marginal.}
+\label{tab:supp-sensitivity}
+\footnotesize\setlength{\tabcolsep}{4pt}
+\resizebox{\textwidth}{!}{%
+\begin{tabular}{@{}llrrrrr@{}}
+\toprule
+Condition & Comparison & Pairs & $\Delta$ & 95\% CI & Holm $t$ & Holm Wilcoxon \\
+\midrule
+Primary & R minus C & 4096 & 0.3670 & [0.0788, 0.6627] & 0.2589 & 0.1847 \\
+$20\times$ EV load & C minus F & 1024 & -3.7920 & [-9.9833, 2.2046] & 1.0000 & 1.0000 \\
+$20\times$ EV load & R minus C & 1024 & -0.6276 & [-6.5897, 5.3242] & 1.0000 & 1.0000 \\
+No backup & C minus F & 1024 & -1.7641 & [-2.1646, -1.3886] & $2.04\times10^{-16}$ & $3.66\times10^{-35}$ \\
+No backup & R minus C & 1024 & 0.1626 & [-0.0448, 0.4040] & 1.0000 & 1.0000 \\
+60 s backup & C minus F & 1024 & -1.0259 & [-1.6009, -0.4900] & 0.0086 & $7.19\times10^{-12}$ \\
+60 s backup & R minus C & 1024 & 0.2204 & [-0.1668, 0.6233] & 1.0000 & 1.0000 \\
+300 s backup & C minus F & 1024 & -1.9467 & [-2.8292, -1.0894] & 0.0005 & $1.36\times10^{-10}$ \\
+300 s backup & R minus C & 1024 & 0.8154 & [0.0944, 1.5804] & 0.5204 & 0.1050 \\
+$0.75M$ & C minus F & 1024 & 3.7779 & [2.4720, 5.0919] & $8.54\times10^{-7}$ & 0.0002 \\
+$0.75M$ & R minus C & 1024 & -3.6909 & [-4.7773, -2.6813] & $4.01\times10^{-10}$ & $9.13\times10^{-14}$ \\
+$1.25M$ & C minus F & 1024 & -1.2737 & [-2.0959, -0.5635] & 0.0324 & $7.69\times10^{-7}$ \\
+$1.25M$ & R minus C & 1024 & 3.4569 & [2.4826, 4.5032] & $1.02\times10^{-9}$ & $4.68\times10^{-11}$ \\
+Coefficient noise 0.15 & C minus F & 1024 & -1.8341 & [-2.6349, -1.1321] & $6.76\times10^{-5}$ & $2.13\times10^{-14}$ \\
+Coefficient noise 0.15 & R minus C & 1024 & 1.2651 & [0.6919, 1.8547] & 0.0006 & $1.52\times10^{-5}$ \\
+12 crews & C minus F & 1024 & -0.3849 & [-0.4717, -0.3068] & $8.38\times10^{-18}$ & $1.02\times10^{-52}$ \\
+12 crews & R minus C & 1024 & 0.0279 & [-0.0273, 0.0874] & 1.0000 & 1.0000 \\
+24 crews & C minus F & 1024 & -0.6119 & [-0.7337, -0.5022] & $7.53\times10^{-23}$ & $1.49\times10^{-74}$ \\
+24 crews & R minus C & 1024 & -0.0236 & [-0.0538, -0.0003] & 1.0000 & 0.0934 \\
+$\rho_c=0$ & C minus F & 1024 & -1.4042 & [-2.0789, -0.7983] & 0.0006 & $8.37\times10^{-10}$ \\
+$\rho_c=0$ & R minus C & 1024 & 0.7161 & [0.2249, 1.2241] & 0.1195 & 0.0311 \\
+$\tau_{pc}=0$ & C minus F & 1024 & -1.5121 & [-2.1857, -0.9005] & 0.0002 & $3.08\times10^{-11}$ \\
+$\tau_{pc}=0$ & R minus C & 1024 & 0.7820 & [0.2952, 1.2915] & 0.0562 & 0.0063 \\
+$\tau_{rc}=0$ & C minus F & 1024 & -1.1054 & [-1.9120, -0.3671] & 0.1144 & 0.0007 \\
+$\tau_{rc}=0$ & R minus C & 1024 & 0.2731 & [-0.3154, 0.8676] & 1.0000 & 1.0000 \\
+$\tau_{cr}=0$ & C minus F & 1024 & -1.4150 & [-2.1974, -0.7115] & 0.0052 & $1.18\times10^{-7}$ \\
+$\tau_{cr}=0$ & R minus C & 1024 & 0.5521 & [-0.0121, 1.1336] & 0.9031 & 0.4140 \\
+$\tau_{cp}=0$ & C minus F & 1024 & -0.9430 & [-1.6911, -0.2523] & 0.2088 & 0.0005 \\
+$\tau_{cp}=0$ & R minus C & 1024 & 0.3110 & [-0.2648, 0.8932] & 1.0000 & 1.0000 \\
+All constructed couplings zero & C minus F & 1024 & -1.1745 & [-1.7176, -0.6815] & 0.0003 & $1.02\times10^{-9}$ \\
+All constructed couplings zero & R minus C & 1024 & 0.7285 & [0.2995, 1.1792] & 0.0326 & 0.0009 \\
+Constructed couplings doubled & C minus F & 1024 & 0.2837 & [-0.7188, 1.2761] & 1.0000 & 1.0000 \\
+Constructed couplings doubled & R minus C & 1024 & -2.0608 & [-2.9543, -1.2204] & 0.0001 & $2.23\times10^{-6}$ \\
+Nonlinear realized transition & C minus F & 1024 & -1.5148 & [-1.9601, -1.1040] & $3.75\times10^{-10}$ & $4.53\times10^{-19}$ \\
+Nonlinear realized transition & R minus C & 1024 & 0.7813 & [0.4315, 1.1492] & 0.0006 & $4.6\times10^{-5}$ \\
+$2\times$ mobility & C minus F & 1024 & -1.1782 & [-2.0284, -0.3950] & 0.1092 & 0.0006 \\
+$2\times$ mobility & R minus C & 1024 & 0.3137 & [-0.3283, 0.9612] & 1.0000 & 1.0000 \\
+$2\times$ unserved energy & C minus F & 1024 & -1.1458 & [-2.0653, -0.3006] & 0.2088 & 0.0006 \\
+$2\times$ unserved energy & R minus C & 1024 & 0.1823 & [-0.4827, 0.8508] & 1.0000 & 1.0000 \\
+$2\times$ communication & C minus F & 1024 & -1.3283 & [-2.3910, -0.3448] & 0.2088 & 0.0003 \\
+$2\times$ communication & R minus C & 1024 & 0.2559 & [-0.5376, 1.0534] & 1.0000 & 1.0000 \\
+$2\times$ power service & C minus F & 1024 & -1.4710 & [-2.5631, -0.4754] & 0.1198 & 0.0002 \\
+$2\times$ power service & R minus C & 1024 & 0.3342 & [-0.4771, 1.1526] & 1.0000 & 1.0000 \\
+$0.5\times$ cascade & C minus F & 1024 & -0.8553 & [-1.5909, -0.1857] & 0.2760 & 0.0011 \\
+$0.5\times$ cascade & R minus C & 1024 & 0.1604 & [-0.3922, 0.7155] & 1.0000 & 1.0000 \\
+
+\bottomrule\end{tabular}}
+\end{table*}

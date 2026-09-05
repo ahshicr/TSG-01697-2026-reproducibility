@@ -1,0 +1,114 @@
+{
+  "period": "2022 validation only",
+  "scenarios": 512,
+  "variants": [
+    [
+      "exposure_matched",
+      "forecast_matched",
+      false
+    ],
+    [
+      "exposure_central",
+      "pc_rollout",
+      false
+    ],
+    [
+      "service_matched",
+      "forecast_matched",
+      true
+    ],
+    [
+      "service_central",
+      "pc_rollout",
+      true
+    ],
+    [
+      "service_robust",
+      "robust_pc_rollout",
+      true
+    ]
+  ],
+  "source_sha256": {
+    "run_service_score_validation.py": "8d54a41510674bbce552bd9ad4a0985ad38caf1a04e4f56b2bcf006f0d206fb0",
+    "simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8",
+    "service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae",
+    "transition_parameter_uncertainty.csv": "00c23cbf9796f3a512efec7032a3c484d826a6899bd36f2dd1e9983111c4a8d2",
+    "smartds_ev_feasibility.py": "cf9b49a48efcf84f756090f6f976c9e2e5b0c5509fe187a9b93162b95934c6e1",
+    "packet_network_scenarios.csv": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47",
+    "forecast_plain_seed0.npz": "ff8f7718142074712f5deba7b2a3568270ae5cc263b017373f001cc3448f03d4",
+    "validation_forecast_plain_seed0.npz": "43e0136143bd742b602687a584df34dbb7186c322305965551f57397d07fe6d4",
+    "boulder_ev_rollout_dataset.npz": "285df84bfc3ef0e7ae8b08b55b39ea1d9b4bd263c9d377daa6b48b298b98e371"
+  },
+  "random_state": 9202201,
+  "first_hour_min": 35047,
+  "first_hour_max": 43796,
+  "policy_selection": "Three models compared by 2022 validation forecast error, never by policy test cost.",
+  "score_design": "Same service equations and weights as the declared objective, with packet and AC factors fixed to one.",
+  "control": "Same service score with uncompleted threats held fixed, no matrix propagation.",
+  "packet_environment": "Fixed response surface generated only from training-period activity.",
+  "tuning": "No weights, capacities or forecast settings changed for route score comparison.",
+  "seconds": 135.26325130462646,
+  "rows": 2560,
+  "comparisons": [
+    {
+      "policy": "service_central",
+      "comparator": "service_matched",
+      "n": 512,
+      "policy_mean": 997.7862397766714,
+      "comparator_mean": 997.8812932005897,
+      "difference": -0.09505342391818172,
+      "ci_low": -0.9497603913784503,
+      "ci_high": 0.7539492834503738,
+      "improvement_percent": 0.009525524184676193,
+      "paired_t_p": 0.8300399018612805,
+      "wilcoxon_p": 0.18670439282440965,
+      "holm_t": 1.0,
+      "holm_wilcoxon": 0.3734087856488193
+    },
+    {
+      "policy": "service_central",
+      "comparator": "exposure_matched",
+      "n": 512,
+      "policy_mean": 997.7862397766714,
+      "comparator_mean": 1006.4932295364844,
+      "difference": -8.706989759812895,
+      "ci_low": -11.113000961389169,
+      "ci_high": -6.466102438845923,
+      "improvement_percent": 0.8650818012777577,
+      "paired_t_p": 1.4379543069497041e-12,
+      "wilcoxon_p": 5.1582993506035263e-20,
+      "holm_t": 5.7518172277988165e-12,
+      "holm_wilcoxon": 2.0633197402414105e-19
+    },
+    {
+      "policy": "service_central",
+      "comparator": "exposure_central",
+      "n": 512,
+      "policy_mean": 997.7862397766714,
+      "comparator_mean": 1005.7897201262955,
+      "difference": -8.003480349624116,
+      "ci_low": -10.291546239556858,
+      "ci_high": -5.948641437344515,
+      "improvement_percent": 0.7957409177555653,
+      "paired_t_p": 2.1618294169608206e-12,
+      "wilcoxon_p": 1.0991978403080636e-15,
+      "holm_t": 6.485488250882462e-12,
+      "holm_wilcoxon": 3.297593520924191e-15
+    },
+    {
+      "policy": "service_robust",
+      "comparator": "service_central",
+      "n": 512,
+      "policy_mean": 997.5352256383438,
+      "comparator_mean": 997.7862397766714,
+      "difference": -0.2510141383275779,
+      "ci_low": -1.0892631438511404,
+      "ci_high": 0.5787497815251229,
+      "improvement_percent": 0.02515710563254119,
+      "paired_t_p": 0.5552355687956536,
+      "wilcoxon_p": 0.8108598699435434,
+      "holm_t": 1.0,
+      "holm_wilcoxon": 0.8108598699435434
+    }
+  ]
+}

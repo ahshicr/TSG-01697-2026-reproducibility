@@ -1,0 +1,25 @@
+{
+  "scenarios": 32,
+  "policies": [
+    "pc_rollout",
+    "forecast_matched"
+  ],
+  "workers": 1,
+  "tolerances": [
+    1e-08,
+    1e-10
+  ],
+  "maximum_iterations": 100,
+  "original_gate_tolerance": 0.0001,
+  "frozen_source_sha256": {
+    "simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8",
+    "service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae",
+    "smartds_ev_feasibility.py": "cf9b49a48efcf84f756090f6f976c9e2e5b0c5509fe187a9b93162b95934c6e1",
+    "transition_parameter_uncertainty.csv": "00c23cbf9796f3a512efec7032a3c484d826a6899bd36f2dd1e9983111c4a8d2",
+    "packet_network_scenarios.csv": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47",
+    "forecast_plain_seed0.npz": "ff8f7718142074712f5deba7b2a3568270ae5cc263b017373f001cc3448f03d4"
+  },
+  "precision_source_sha256": "46ac6c89da89ab8e0e5f6a5c6fce21ee2b375f5453ee4c1d1a1fc239f8de12ff",
+  "independence": "Separate OpenDSS contexts measure identical accepted loads without changing original execution or scores.",
+  "started_unix": 1788577070.2862701
+}

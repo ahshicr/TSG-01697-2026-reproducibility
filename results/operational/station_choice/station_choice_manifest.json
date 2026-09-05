@@ -1,0 +1,39 @@
+{
+  "choice_models": {
+    "no_choice": "original station only",
+    "nearest": "capacity-aware sequential nearest available station",
+    "logit": "iterative capacity-aware distance/loyalty multinomial logit",
+    "coordinated": "global capacity-constrained minimum-cost flow (HiGHS)"
+  },
+  "capacity_proxy": "max(7.2 kW, 1.2 x station training-period 99.5th percentile reconstructed load); stress proxy, not reported charger nameplate capacity",
+  "sensitivity": {
+    "closure_fraction": [
+      0.1,
+      0.2,
+      0.3
+    ],
+    "demand_multiplier": [
+      1.0,
+      2.0,
+      4.0
+    ],
+    "distance_beta_per_km": [
+      0.5,
+      1.0,
+      2.0
+    ],
+    "loyalty_penalty": 2.0
+  },
+  "hours": 24,
+  "rows": 2592,
+  "outputs": {
+    "station_choice_scenarios.csv": {
+      "bytes": 441819,
+      "sha256": "1bb85d4650e0cc1fc3874fa47de0b29d6b1e19f46dcfccc6c216e43688da41e6"
+    },
+    "station_choice_summary.csv": {
+      "bytes": 48931,
+      "sha256": "2043cbffb840de6363c9c1b81e66207a6722538e7ebb4b3bee1dd3671a7c5fe8"
+    }
+  }
+}

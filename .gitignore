@@ -1,9 +1,13 @@
 __pycache__/
-*.py[cod]
+*.pyc
 .venv/
-.pytest_cache/
 results/reviewer_smoke_local/
+results/reviewer_full_local/
+results/reviewer_precision_local/
+results/reviewer_execution_check_local.json
 paper/*.aux
 paper/*.bbl
 paper/*.blg
 paper/*.log
+paper/*.fls
+paper/*.fdb_latexmk

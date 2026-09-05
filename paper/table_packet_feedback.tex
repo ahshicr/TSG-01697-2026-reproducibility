@@ -1,14 +1,17 @@
 \begin{table}[t]
 \centering
-\caption{Backup power effect with packet feedback at $2\times$ traffic with $n=1024$ paired scenarios}
+\caption{Backup duration for central PC at $2\times$ packet traffic on 1,024 paired scenarios. Completion is the fraction of requested jobs completed. Cost differences compare the same policy with no backup.}
 \label{tab:packet-feedback}
+\footnotesize
+\setlength{\tabcolsep}{3pt}
 \resizebox{\columnwidth}{!}{%
-\begin{tabular}{lrrrr}
+\begin{tabular}{@{}lrrrr@{}}
 \toprule
-Backup & Timely action & Restoration enacted & Cost reduction (\%) & Difference 95\% CI \\
+Backup & Timely action & Completion & Reduction (\%) & Difference 95\% CI \\
 \midrule
-60 s & 0.938 & 0.756 & 10.54 & [-147.3, -126.8] \\
-300 s & 0.969 & 0.789 & 18.83 & [-261.2, -227.7] \\
+0 s & 0.891 & 0.754 & 0.00 & Reference \\
+60 s & 0.946 & 0.790 & 12.35 & [-186.05, -161.06] \\
+300 s & 0.983 & 0.819 & 21.55 & [-323.85, -281.66] \\
 \bottomrule
 \end{tabular}
 }

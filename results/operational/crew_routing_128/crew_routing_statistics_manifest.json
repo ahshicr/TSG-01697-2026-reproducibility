@@ -1,0 +1,16 @@
+{
+  "primary_family": "Route-aware PC versus forecast-matched integrated routed risk over 3 crew counts x 3 service-time scales",
+  "multiplicity": "Holm correction across all nine prespecified crew/service comparisons",
+  "bootstrap_replicates": 20000,
+  "seed": 20260825,
+  "outputs": {
+    "crew_routing_paired_statistics.csv": {
+      "sha256": "f80d3afc4288775130a4a66a414389d89e79451fe3787330b44f658c4749d18d",
+      "bytes": 4392
+    },
+    "crew_routing_penalty_statistics.csv": {
+      "sha256": "f5e358799bceefcff820d4a970449df2ccd48df2aac7c26fe445bb7ab6a8f950",
+      "bytes": 4819
+    }
+  }
+}

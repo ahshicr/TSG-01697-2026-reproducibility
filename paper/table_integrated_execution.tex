@@ -1,25 +1,26 @@
 \begin{table}[t]
 \centering
-\caption{SMART-DS projection and routed crew events inside the closed loop evaluation}
+\caption{Electrical projection and repair completion in the integrated experiments. Primary includes eight policies and stress includes six. Action retention is the mean hourly fraction. Job completion is the mean scenario fraction of requested jobs completed within the horizon.}
 \label{tab:integrated-execution}
 \footnotesize
 \setlength{\tabcolsep}{3pt}
-\begin{tabular}{lrrrr}
+\resizebox{\columnwidth}{!}{%
+\begin{tabular}{@{}lrrrr@{}}
 \toprule
 Condition & Pairs & AC hours & Raw infeas. & After proj. \\
 \midrule
-Measured load & 4,096 & 147,456 & 0 & 0 \\
-$20\times$ EV stress & 1,024 & 36,864 & 1,089 & 0 \\
+Measured load & 4,096 & 196,608 & 0 & 0 \\
+$20\times$ EV load & 1,024 & 36,864 & 348 & 0 \\
 \bottomrule
 \end{tabular}
-\vspace{2pt}
-
-\begin{tabular}{lrr}
+}
+\vspace{3pt}
+\begin{tabular}{@{}lrr@{}}
 \toprule
-Condition & Action retained (\%) & Crew completed (\%) \\
+Condition & Action retained (\%) & Jobs completed (\%) \\
 \midrule
-Measured load & 100.00 & 81.86 \\
-$20\times$ EV stress & 99.26 & 81.92 \\
+Measured load & 100.00 & 81.05 \\
+$20\times$ EV load & 99.80 & 81.12 \\
 \bottomrule
 \end{tabular}
 \end{table}
