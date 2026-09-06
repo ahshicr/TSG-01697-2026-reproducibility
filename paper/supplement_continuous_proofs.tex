@@ -1,0 +1,331 @@
+\subsection{Continuous operators and complete sensitivity proofs}
+\label{supp:theory}
+
+The Lipschitz results below concern the continuous prediction and allocation
+operators before execution.  They exclude integer priority rounding, packet deadline switches, OpenDSS
+acceptance tests and bisection, station flow active set changes, finite route
+argmin selection, and integer completion events.  Finite route selection is
+treated by a score error bound, while execution constraints are treated by a
+separate preservation proposition.  Algebraic equalities and bounds are stated
+in real arithmetic.  Electrical feasibility means satisfaction of the stated
+numerical acceptance criteria.
+
+To define the analytical map explicitly, hold the forecast continuation fixed
+and set the packet and electrical factors to one.  Write
+$b=e+\rho_q q$ and let $\bar s$ be the resulting charging service.  Then
+\begin{equation}
+F_{c,h}(x,a,\zeta)=
+(\hat m_{h+1},\hat e_{h+1},b-\bar s).
+\label{si:eq:continuous-service}
+\end{equation}
+Let $L_c$ be \eqref{eq:stage} evaluated with this same ungated service.
+Neither $F_{c,h}$ nor $L_c$ includes a variable packet fraction, an AC acceptance
+decision, or a crew event.  The subscript $h$ is suppressed where the same
+bounds apply at every step.  Within this continuous analysis, $x$ is driven by
+the fixed forecast, not by unrevealed future demand.  Forecast histories are common to the compared
+trajectories.  The forecaster argument also establishes continuity when those
+histories vary over a bounded set.
+
+The analysis uses the Euclidean norm.  The projection onto a closed convex set
+is nonexpansive, so
+\begin{equation}
+\|\Pi_{\mathcal{Z}}(u)-\Pi_{\mathcal{Z}}(v)\|\le \|u-v\|.
+\label{si:eq:projection}
+\end{equation}
+
+\textit{Condition 1.}  On the stated bounded continuous prediction domain and
+for all feasible requested actions, the one step service state operator
+$F_c(x,a,\zeta)$ is
+Lipschitz in $(x,\zeta)$ with finite constants $L_x$ and $L_z$.
+\begin{equation}
+\|F_c(x,a,\zeta)-F_c(\tilde x,a,\tilde \zeta)\|
+\le L_x\|x-\tilde x\|+L_z\|\zeta-\tilde \zeta\|.
+\end{equation}
+
+\textit{Condition 2.}  The continuous stage risk $L_c$ is Lipschitz in
+$(x,\zeta)$ with constants $C_x$ and $C_z$ for all feasible actions.
+\begin{equation}
+|L_c(x,a,\zeta)-L_c(\tilde x,a,\tilde\zeta)|
+\le C_x\|x-\tilde x\|+C_z\|\zeta-\tilde \zeta\|.
+\end{equation}
+\textit{Lemma 2.}  Conditions 1 and 2 hold for the continuous service equations
+on the stated bounded domain.  The continuous state transition and stage risk
+are also Lipschitz in the feasible action argument.
+
+\textit{Proof.}  Let $\mathcal D$ denote the product of the closed state,
+threat, and feasible action intervals.  The backlog bound in Section III gives
+a finite upper bound for $q$ because $0\le\rho_q<1$ and arrivals are bounded.
+All remaining state variables have finite upper bounds by the definition of
+$\mathcal D$.  The scalar maps $r\mapsto[r]_+$ and
+$r\mapsto\min\{c,r\}$ are nonexpansive.  Euclidean projection and componentwise
+clipping are also nonexpansive.  Every affine map has a finite operator norm.
+
+For bounded scalars $a,a',b,b'$, the product satisfies
+\begin{equation}
+|ab-a'b'|\le |a|\,|b-b'|+|b'|\,|a-a'|.
+\end{equation}
+The right hand side has finite coefficients on $\mathcal D$.  The only quotient
+in the service equations has the form $g(\ell,c)=\ell/(1+c)$.  If
+$0\le\ell,\ell'\le\bar\ell$ and $c,c'\ge0$, then
+\begin{align}
+|g(\ell,c)-g(\ell',c')|
+&\le |\ell-\ell'|
++\bar\ell |c-c'| .
+\end{align}
+This follows by adding and subtracting $\ell'/(1+c)$ and using
+$(1+c)^{-1}\le1$ together with
+$|(1+c)^{-1}-(1+c')^{-1}|\le|c-c'|$.
+Explicit constants follow from these inequalities.  Use common zone bounds
+$\bar m$, $\bar e$, and $\bar q$, and set $\bar b=\bar e+\rho_q\bar q$ and
+$\bar c=\beta_m\bar m+\beta_e\bar b+\beta_r+\beta_p$.
+For a zone input $(m,e,q,z^r,z^p,z^c,u^{\rm ch},u^{\rm com})$, valid constants are
+\begin{align}
+K_b&=\sqrt{1+\rho_q^2},\\
+K_c&=\|(\beta_m,\beta_e,\beta_e\rho_q,\beta_r,\beta_p)\|_2,\\
+K_{\ell}&=K_c+1+B_{\rm com}(1+\alpha_c),\\
+K_{\eta}&=K_{\ell}+\bar cK_c,\\
+K_s&=K_b+1+B_{\rm ch}(1+K_{\eta}).
+\label{si:eq:service-constants}
+\end{align}
+The product bound gives the communication capacity constant in $K_\ell$.
+Since $0\le\ell^c\le c\le\bar c$, the quotient bound gives $K_\eta$.
+Applying the product bound to $u^{\rm ch}(1-z^p)\eta^c$ and then taking the
+minimum with $b$ gives $K_s$.  For the remaining cost terms, valid constants are
+\begin{align}
+K_m&=1+\beta_{mc}+\bar m(1+\beta_{mc}K_\eta),\\
+K_p&=\bar b+K_b,\qquad K_z=3+K_\eta,\\
+K_L&=\lambda_mK_m+\lambda_e(K_b+K_s)+\lambda_cK_\ell
+\nonumber\\
+&\quad+\lambda_pK_p+\lambda_zK_z.
+\label{si:eq:cost-constants}
+\end{align}
+These bounds follow by applying the same product inequality to mobility loss,
+power loss, and the two cross domain products, respectively.
+The only variable output of \eqref{si:eq:continuous-service} is $b-\bar s$.
+Summing squared zone differences therefore gives the joint constant
+$K_F=K_b+K_s$ for $F_c$.  Cauchy--Schwarz over the zones gives
+$\sqrt N K_L$ for $L_c$.  Thus the choices
+$L_x=L_z=L_a=K_F$ and $C_x=C_z=C_a=\sqrt N K_L$ are finite and satisfy
+Conditions 1 and 2, including their action bounds.  \hfill $\square$
+
+\textit{Lemma 3.}  For fixed action sequence and disturbance sequence, if two
+rollout trajectories start from threat fields $\zeta_0$ and $\tilde\zeta_0$ and
+from the same physical state, then
+\begin{equation}
+\|\zeta_h-\tilde\zeta_h\|
+\le\|M\|^h\|\zeta_0-\tilde\zeta_0\|.
+\label{si:eq:lemma1}
+\end{equation}
+
+\textit{Proof.}  Let $\Delta_h=\|\zeta_h-\tilde\zeta_h\|$.
+Because the action and innovation sequences are
+shared, \eqref{eq:propagation} and the nonexpansiveness in
+\eqref{si:eq:projection} give
+$\Delta_{h+1}\le\|M\|\Delta_h$.  Iteration proves \eqref{si:eq:lemma1}.
+\hfill $\square$
+
+\textit{Lemma 4.}  Under Condition 1, the service state error satisfies
+\begin{equation}
+E_h\le
+\sum_{k=0}^{h-1}L_x^{h-1-k}L_z\Delta_k .
+\label{si:eq:lemma2}
+\end{equation}
+
+\textit{Proof.}  The two rollouts use the same action sequence.  Condition 1
+gives $E_{h+1}\le L_xE_h+L_z\Delta_h$.  Since the initial physical state is the
+same, $E_0=0$.  Expanding the recursion gives
+$E_1\le L_z\Delta_0$ and
+$E_2\le L_xL_z\Delta_0+L_z\Delta_1$.  Repeating the expansion gives
+\eqref{si:eq:lemma2}.  \hfill $\square$
+
+\textit{Theorem 1.}  Let $J_H(x_0,\zeta_0)$ be the discounted $H$ step sum of $L_c$ for
+a fixed feasible action sequence, and let $\tilde J_H(x_0,\tilde\zeta_0)$ be the
+corresponding risk for an initial threat estimate $\tilde\zeta_0$.  For any
+$\alpha>0$, define
+\begin{equation}
+\chi_{\alpha}=
+\max\left\{\|M\|+\alpha L_z,\,
+L_x\right\}.
+\end{equation}
+If $\|\zeta_0-\tilde\zeta_0\|\le \varepsilon$, then
+\begin{equation}
+|J_H(x_0,\zeta_0)-\tilde J_H(x_0,\tilde\zeta_0)|
+\le
+\varepsilon \left(C_z+\frac{C_x}{\alpha}\right)
+\sum_{h=0}^{H-1}(\gamma\chi_{\alpha})^h .
+\label{si:eq:riskbound}
+\end{equation}
+For every finite $H$ the sum is finite.  If $\gamma\chi_{\alpha}<1$, it is also
+uniformly bounded as the horizon increases by
+\begin{equation}
+\varepsilon \left(C_z+\frac{C_x}{\alpha}\right)
+\frac{1}{1-\gamma\chi_{\alpha}}.
+\end{equation}
+
+\textit{Proof.}  Let
+$\Delta_h=\|\zeta_h-\tilde\zeta_h\|$ and
+$E_h=\|x_h-\tilde x_h\|$.  Lemma 3 and Condition 1 give the one step bounds
+\begin{align}
+\Delta_{h+1} &\le \|M\|\Delta_h, \label{si:eq:delta_step}\\
+E_{h+1} &\le L_z\Delta_h+L_xE_h . \label{si:eq:state_step}
+\end{align}
+For a fixed $\alpha>0$, define the weighted error
+$V_h=\Delta_h+\alpha E_h$.  Multiplying \eqref{si:eq:state_step} by $\alpha$ and
+adding \eqref{si:eq:delta_step} gives
+\begin{align}
+V_{h+1}
+&\le (\|M\|+\alpha L_z)\Delta_h
++\alpha L_xE_h \nonumber\\
+&\le \chi_{\alpha}\Delta_h+\alpha\chi_{\alpha}E_h
+=\chi_{\alpha}V_h .
+\end{align}
+The two rollouts start from the same physical state, so $E_0=0$ and
+$V_0=\Delta_0\le\varepsilon$.  Induction gives
+$V_h\le\chi_{\alpha}^h\varepsilon$ for every $h$.  Since
+$\Delta_h\le V_h$ and $E_h\le V_h/\alpha$, Condition 2 yields
+\begin{equation}
+|L_c(x_h,a_h,\zeta_h)-L_c(\tilde x_h,a_h,\tilde\zeta_h)|
+\le
+\left(C_z+\frac{C_x}{\alpha}\right)
+\chi_{\alpha}^h\varepsilon .
+\end{equation}
+Multiplying by $\gamma^h$ and summing from $h=0$ to $H-1$ gives
+\eqref{si:eq:riskbound}.  The infinite geometric series gives the uniform bound
+when $\gamma\chi_{\alpha}<1$.  \hfill $\square$
+
+\textit{Condition 3.}  The continuous service transition and stage risk are
+Lipschitz in the action argument on the compact feasible set.  The PC allocation
+map $\pi_c$ before execution is Lipschitz in the forecast driven service state
+and threat state.  Constants are taken uniformly over the finite set of
+remaining episode horizons.
+There are finite constants $L_a$, $C_a$, $L_{\pi}^x$, and $L_{\pi}^{z}$ such
+that
+\begin{align}
+\|F_c(x,a,\zeta)-F_c(x,\tilde a,\zeta)\|&\le L_a\|a-\tilde a\|,\\
+|L_c(x,a,\zeta)-L_c(x,\tilde a,\zeta)|&\le C_a\|a-\tilde a\|,\\
+\|\pi_c(x,\zeta,A)-\pi_c(\tilde x,\tilde\zeta,A)\|
+&\le L_{\pi}^x\|x-\tilde x\|+L_{\pi}^{z}\|\zeta-\tilde\zeta\|.
+\end{align}
+\textit{Lemma 5.}  Condition 3 holds for the continuous PC map on the stated
+compact domain.
+
+\textit{Proof.}  Lemma 2 already establishes the first two inequalities in the
+action argument.  It remains to prove the bound for $\pi_c$.  For a score vector
+$v\in\mathbb R_+^N$, set $r_i(v)=\sqrt{v_i+\epsilon}$,
+$S(v)=\sum_i r_i(v)$, and $p_i(v)=r_i(v)/S(v)$.  The mean value theorem gives
+\begin{equation}
+\|r(v)-r(w)\|_2\le\frac{1}{2\sqrt{\epsilon}}\|v-w\|_2.
+\end{equation}
+Moreover, $S(v)\ge N\sqrt{\epsilon}$ and
+$|S(v)-S(w)|\le\sqrt N\|r(v)-r(w)\|_2$.  Since
+$\|r(w)\|_2\le S(w)$, let $\Delta_S=|S(v)-S(w)|$.  Adding and subtracting
+$r(w)/S(v)$ gives
+\begin{align}
+\|p(v)-p(w)\|_2
+&\le \frac{\|r(v)-r(w)\|_2}{S(v)}
++\frac{\|r(w)\|_2\Delta_S}{S(v)S(w)} \nonumber\\
+&\le\left(\frac{1}{2N\epsilon}
++\frac{1}{2\sqrt N\epsilon}\right)\|v-w\|_2.
+\label{si:eq:allocator-lipschitz}
+\end{align}
+Equation \eqref{eq:allocator} is an affine function of $p(v)$.  Its Lipschitz
+constant is therefore at most
+\begin{equation}
+(1-\eta_B)B
+\left(\frac{1}{2N\epsilon}+\frac{1}{2\sqrt N\epsilon}\right).
+\end{equation}
+
+The forecaster requires several additional operators.  Every trained affine map
+has its finite matrix norm as a Lipschitz constant.  The sigmoid and hyperbolic
+tangent have derivative bounds $1/4$ and $1$.  The GRU combines these maps with
+gated products.  Its hidden inputs remain bounded over the finite history, so
+the product inequality in Lemma 2 applies to every gate multiplication.
+
+For LayerNorm with hidden width $d$, write $P_d=I-\mathbf1\mathbf1^\top/d$,
+$v=P_dh$, and $s=(\|v\|_2^2/d+\epsilon_{\rm LN})^{1/2}$.  Its normalization
+Jacobian is
+\begin{equation}
+\left(s^{-1}I-\frac{vv^\top}{d s^3}\right)P_d.
+\label{si:eq:layernorm-bound}
+\end{equation}
+At $v=0$, the bracket is $s^{-1}I$.  Otherwise, it has eigenvalues $s^{-1}$ perpendicular to $v$ and
+$\epsilon_{\rm LN}/s^3$ along $v$.  Both are at most
+$1/\sqrt{\epsilon_{\rm LN}}$.  With learned scale $g$ and offset $b_{\rm LN}$,
+the LayerNorm constant is at most $\|g\|_\infty/\sqrt{\epsilon_{\rm LN}}$.
+Its output norm is at most $\|g\|_\infty\sqrt d+\|b_{\rm LN}\|_2$, which also
+provides a bound for the next recurrent input.
+
+Exact GELU is $t\Phi(t)$, where $\Phi$ and $\phi$ are the standard normal
+distribution and density.  Its derivative is $\Phi(t)+t\phi(t)$, whose absolute
+value is at most $1+1/\sqrt{2\pi e}$.
+Dropout is the identity during inference.  Input $\log(1+y)$ has derivative at
+most one for $y\ge0$, and normalization uses fixed strictly positive scales.
+The inverse transformation $\exp(\sigma o+\mu)-1$ has bounded derivative on the
+bounded network output.  Final positive clipping is nonexpansive.  These facts,
+the hidden state bound, and induction over the fixed history prove that the
+entire implemented forecaster has a finite constant on the stated domain.
+
+The forecast exposure weights use positive fixed training means, sums, products,
+and clipping.  They are bounded and Lipschitz by Lemma 2.
+For every candidate, \eqref{eq:propagation} composes an affine map, the
+$1/\delta$ Lipschitz saturation, and a nonexpansive projection.
+Finite iteration and the bounded product inequality therefore prove that
+\eqref{eq:envelope} is Lipschitz in $(x,\zeta)$.
+Taking differences and positive parts preserves this property.
+For finite families $f_j$, the inequality
+$|\min_j f_j(v)-\min_j f_j(w)|\le\max_j|f_j(v)-f_j(w)|$
+gives the largest component constant for their minimum.
+The charging, communication, central PC, and robust priority scores are
+therefore Lipschitz.
+Combining their constants with \eqref{si:eq:allocator-lipschitz} gives finite
+$L_{\pi}^x$ and $L_{\pi}^z$.  This proof ends at the continuous allocation.
+Finite route selection, packet events, the OpenDSS switch, and integer crew
+completion are separate operations.  \hfill $\square$
+
+\textit{Corollary 1 (continuous sensitivity before execution).}  Let
+$J_H^{\pi_c}(x_0,\zeta_0)$ and
+$\tilde J_H^{\pi_c}(x_0,\tilde\zeta_0)$ be the predictive risks generated by
+the continuous PC score and allocation layer from the same physical state and
+two initial threat estimates.  Define
+\begin{align}
+\bar L_x&=L_x+L_aL_{\pi}^x,\quad
+\bar L_z=L_z+L_aL_{\pi}^{z},\\
+\bar C_x&=C_x+C_aL_{\pi}^x,\quad
+\bar C_z=C_z+C_aL_{\pi}^{z}.
+\end{align}
+For any $\alpha>0$, let
+\begin{equation}
+\bar\chi_{\alpha}=
+\max\left\{\|M\|+\frac{\|R\|L_{\pi}^{z}}{\delta}+\alpha\bar L_z,\,
+\bar L_x+\frac{\|R\|L_{\pi}^{x}}{\alpha\delta}\right\}.
+\end{equation}
+If $\|\zeta_0-\tilde\zeta_0\|\le\varepsilon$, then
+\begin{equation}
+|J_H^{\pi_c}(x_0,\zeta_0)-\tilde J_H^{\pi_c}(x_0,\tilde\zeta_0)|
+\le
+\varepsilon\left(\bar C_z+\frac{\bar C_x}{\alpha}\right)
+\sum_{h=0}^{H-1}(\gamma\bar\chi_{\alpha})^h .
+\end{equation}
+
+\textit{Proof.}  Let $a_h=\pi_c(x_h,\zeta_h,A)$ and
+$\tilde a_h=\pi_c(\tilde x_h,\tilde\zeta_h,A)$.  Condition 3 gives
+\[
+\|a_h-\tilde a_h\|\le L_{\pi}^xE_h+L_{\pi}^{z}\Delta_h .
+\]
+Combining this bound with Conditions 1 and 3 and the restoration term in
+\eqref{eq:propagation} yields
+\begin{align}
+E_{h+1}&\le \bar L_xE_h+\bar L_z\Delta_h,\\
+\Delta_{h+1}&\le
+(\|M\|+\|R\|L_{\pi}^{z}/\delta)\Delta_h
++\|R\|L_{\pi}^{x}E_h/\delta .
+\end{align}
+For $V_h=\Delta_h+\alpha E_h$, the preceding two inequalities give
+$V_{h+1}\le\bar\chi_{\alpha}V_h$.  Since $V_0\le\varepsilon$, induction gives
+$V_h\le\bar\chi_{\alpha}^h\varepsilon$.  The stage risk difference satisfies
+\[
+|L_c(x_h,a_h,\zeta_h)-L_c(\tilde x_h,\tilde a_h,\tilde\zeta_h)|
+\le \bar C_xE_h+\bar C_z\Delta_h .
+\]
+Using $E_h\le V_h/\alpha$ and $\Delta_h\le V_h$, then summing the discounted
+stage differences, gives the stated bound.  \hfill $\square$

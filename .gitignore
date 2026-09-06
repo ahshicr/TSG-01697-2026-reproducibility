@@ -5,8 +5,16 @@ results/reviewer_smoke_local/
 results/reviewer_full_local/
 results/reviewer_precision_local/
 results/reviewer_execution_check_local.json
+results/reviewer_reference_check_local*.json
+results/reviewer_guarded_local/
+results/reviewer_independent_local/
+results/guarded_validation_20260905/**/rollout_scenarios.csv
+results/guarded_validation_20260905/**/candidate_scores.jsonl
+results/guarded_test_20260905/**/rollout_scenarios.csv
+results/guarded_test_20260905/**/candidate_scores.jsonl
+results/guarded_external_20260905/**/rollout_scenarios.csv
+results/guarded_external_20260905/**/candidate_scores.jsonl
 paper/*.aux
-paper/*.bbl
 paper/*.blg
 paper/*.log
 paper/*.fls

@@ -1,0 +1,118 @@
+\subsection{Reference protection and independent charging input}
+\label{sec:reference-protection}
+
+The matrix error comparisons motivate protection relative to a common
+executable route.  We fixed the rule in \eqref{eq:protected-route} before
+running its validation and evaluation.  Validation used 512 paired 2022
+scenarios in each of seven conditions and compared
+$\nu\in\{0,0.00025,0.0005,0.001\}$.  A candidate margin first had to limit
+its original-condition mean cost increase over central PC to 0.05\% of
+matched cost.  Among passing margins, selection minimized mean positive
+excess above matched across the six perturbed conditions, with ties assigned
+to the smaller margin.  Both route portfolios selected $\nu=0.001$.
+Table~\ref{tab:guarded-validation} retains all validation choices.
+The subsequent 2023 evaluation used 4,096 original-condition pairs and
+1,024 pairs in each of the six perturbed conditions and electrical stress.
+Because this year had already been examined during revision, it was a
+fixed-rule reevaluation rather than an unused test year.
+
+Let $E^+(P)=n^{-1}\sum_i[Q_i(P)-Q_i(P_b)]_+$, where each $P_b$ is the
+matched route for that scenario and portfolio.  This quantity measures
+additional cost incurred when a method performs worse than its reference.
+It differs from the upper tail of total cost, which also includes scenario
+severity shared by every policy.  For the aggregate error comparison, we
+first averaged the six condition-specific positive-excess differences
+within each of the 1,024 scenario identifiers.  Resampling those identifiers
+preserved dependence between the conditions.  Mean intervals used 20,000
+paired resamples.  The two portfolio comparisons received Holm adjustment,
+while all 80 additional mean-cost comparisons formed a separate family.
+The original-condition noninferiority check required a one-sided 97.5\%
+bootstrap upper bound below zero for
+$Q_i(P_g)-Q_i(P_c)-0.0005Q_i(P_b)$.
+
+\input{table_guarded_primary}
+
+On the original routes, reference protection retained a mean cost of
+1112.5728, compared with 1112.5353 for central PC and 1113.6789 for matched.
+The protected minus matched difference was $-1.1061$, with interval
+$[-1.3760,-0.8582]$ and Holm adjusted paired $t$ probability
+$3.93\times10^{-15}$.  The reduction was 0.0993\%.  Its mean penalty relative
+to central PC was 0.0375, or 0.0034\%, and the noninferiority upper bound
+was $-0.2550$.  The rule accepted a replacement in 6.20\% of scenarios.
+Consequently, most routes remained matched, but the replacements retained
+most of central PC's average benefit.  The fraction of scenarios worse than
+matched fell from 11.94\% for central PC to 0.90\%, and $E^+$ fell from
+1.0834 to 0.0657.  These frequencies describe realized outcomes rather than
+an unconditional guarantee from the model score.
+
+Across the six error conditions, the paired decrease in positive excess was
+1.2481, with interval $[-1.4785,-1.0296]$ for protected minus central and
+Holm adjusted probability $6.80\times10^{-26}$.
+Table~\ref{tab:guarded-primary} shows the individual conditions as well.
+Protection reduced additional losses under an underscaled matrix and
+expanded unobserved couplings, but it gave up some of central PC's average
+gain under an enlarged matrix, coefficient noise, zero couplings, and
+nonlinear propagation.  Positive-excess protection is therefore a selective
+tradeoff, not uniform mean superiority.  Nor does it imply lower total-cost
+tails.  The original-condition upper 5\% mean cost exceeded central PC by
+2.7673, with exploratory interval $[0.3615,5.5575]$.  Both portfolio tail
+comparisons are retained in Table~\ref{tab:guarded-tails}.
+
+The separate parameter-independent route construction tests whether a
+favorable score ablation could arise from using unknown parameters to
+generate the routes.  Table~\ref{tab:guarded-ablation} reports all conditions
+on this common alternative portfolio.  Removing the five unsupported terms
+from the score increased original-condition cost over central PC by 0.9937,
+with interval $[0.7761,1.2289]$ and Holm adjusted probability
+$1.26\times10^{-15}$.  Thus simply deleting those terms did not resolve
+parameter uncertainty.  Reference protection instead increased mean cost by
+0.1039 while passing the fixed noninferiority check, whose upper bound was
+$-0.3419$.  Its aggregate positive-excess decrease was 0.1823, with interval
+$[-0.2691,-0.1089]$ and Holm adjusted probability $1.01\times10^{-5}$.
+Its mean benefit over matched did not survive the full comparison correction.
+These results support the protection mechanism on a second route construction
+without attributing differences between the portfolios to a single score.
+
+An independent geographic input used the City of Palo Alto charging
+records.\footnote{City of Palo Alto, Electric Vehicle Charging Station Usage,
+published February 2021. The source record is available at
+\url{https://data.paloalto.gov/dataviews/257812/electric-vehicle-charging-station-usage-july-2011-dec-2020/}.}
+The complete municipal source contained 259,415 sessions.  Fixed quality
+rules and a requirement of at least 100 valid sessions in 2017 and 2018
+retained 33 stations and 159,587 sessions during 2017 to 2020, including
+20,042 in the 2020 evaluation year.  Arrival counts and session energy were
+observed.  Hourly energy was reconstructed uniformly over the reported
+charging duration, giving 1,416,780.194 kWh and conserving retained energy
+to numerical precision.  Station eligibility, coordinates, mean demand,
+and budgets used 2017 and 2018 only.  The charging, communication, and
+repair priority budgets were 54.4678 kWh per hour, 50.3244 service units,
+and 10 priority units, with the same construction rules as Boulder.
+
+The restoration parameters and selected margin were unchanged.  One demand
+input used the selected Boulder graph model with identical learned weights
+and normalization, replacing only the nonlearned adjacency by the Palo Alto
+station graph.  This was a retrospective geographic transfer, not a claim
+that the later-trained model had been deployed in 2020.  The second input
+used the corresponding hours of the preceding week.  Both forecasts were
+fixed before computing external policy outcomes and were evaluated separately.
+The electrical feeder, abstract transition, communication conditions, and
+repair duration model were retained, while route distances used the new
+station coordinates.  Constructed packet response functions were assigned
+by station index.  The new observations therefore test charging demand and
+station geometry rather than a jointly observed local infrastructure event.
+
+\input{table_guarded_transfer}
+
+Each input used 1,024 paired scenarios per condition, with all eight
+conditions and both portfolios retained.  External mean comparisons formed
+one 160-test Holm family.  On the original routes, reference protection
+reduced matched cost by 0.1806\% with the graph forecast and 0.1338\% with
+weekly persistence, with adjusted probabilities 0.00481 and 0.000264.
+The corresponding differences from central PC were $-0.2826$ and $-0.1761$,
+but their intervals included zero.  Table~\ref{tab:guarded-transfer} shows
+that both fixed inputs and both route portfolios passed the predeclared
+noninferiority check. Tables~\ref{tab:guarded-external-published} and
+\ref{tab:guarded-external-independent} give the individual error and stress
+conditions under both forecasts. The validation, mean-cost, error-loss, and external
+conditions thus supported adopting reference protection, while retaining
+central PC and worst absolute-score PC as distinct comparisons.

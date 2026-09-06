@@ -1,0 +1,77 @@
+{
+  "status": "PASS",
+  "algebra": {
+    "random_cases": 2000,
+    "accepted": 166,
+    "invalid_cases": 5,
+    "separate_maxima_counterexample": true,
+    "ties_return_reference": true
+  },
+  "execution": [
+    {
+      "scenario": 0,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 1,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 2,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 3,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 4,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 5,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 6,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    },
+    {
+      "scenario": 7,
+      "published_policies_reexecuted": 3,
+      "future_isolation": true,
+      "observed_parameter_isolation": true,
+      "fallback_route_identity": true
+    }
+  ],
+  "seconds": 29.692328929901123,
+  "source_sha256": {
+    "verify_guarded_design.py": "cbd2125442b1593a311da3c80ef8afd89eedf5ac0ecaff795e3709fe30d82daf",
+    "guarded_route_scoring.py": "942960f5dc6f3194950bea1174d7816c72a7dad64739ce1c44631e505fd4818c",
+    "run_guarded_experiments.py": "b7cb80e9c197f362409f43c3426f1e7b3dd65835d51555af2f3853fdc9eb22bd",
+    "simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8",
+    "service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae"
+  },
+  "scope": "Finite numerical examples and direct implementation correspondence, not a global proof or field guarantee."
+}

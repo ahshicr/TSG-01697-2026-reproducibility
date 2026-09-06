@@ -1,4 +1,4 @@
-"""Print the full declared settings and comparisons inside the manuscript.
+"""Print the full declared settings and comparisons in the manuscript appendix.
 
 Grouped parameter rows reduce repeated prose, not coverage. Values are read
 from the same parameter ledger as the optional repository reader report.
@@ -95,12 +95,38 @@ def main():
     add(2,'statistics','n_primary bootstrap holm_family physical_family', 'Primary pairs, resamples, primary tests, physical tests', 'Four equal threat groups, percentile 95 percent intervals and separate Holm adjustments for paired mean and rank tests. Integrated sensitivity has 45 comparisons.')
     add(2,'statistics','scenario_initialization scenario_stride coefficient_noise_index', 'Initial index, scenario stride, noise index', 'A scenario uses the initial index plus its identifier times the stride. The last index fixes controller coefficient noise. The paired policies share the resulting inputs. No index was retuned.')
     transition = {k for k in ledger if k[0] == 'transition'}
-    if covered | transition != set(ledger):
-        raise ValueError('Unprinted settings: ' + str(set(ledger) - covered - transition))
+    added_source = ROOT/'config/guarded_parameter_ledger.csv'
+    added_entries = list(csv.DictReader(added_source.open(encoding='utf-8',newline='')))
+    added = {(row['group'],row['symbol']) for row in added_entries}
+    assert len(added)==len(added_entries)==23
+    assert all(ledger[(row['group'],row['symbol'])]==row for row in added_entries)
+    if covered | transition | added != set(ledger):
+        raise ValueError('Unprinted settings: ' + str(set(ledger) - covered - transition - added))
 
-    output = [r'\appendix[Parameters and additional comparisons]',r'\label{app:parameters}',
+    output = ['\\subsection{Parameters and additional comparisons}\n\\suppressfloats[t]',r'\label{app:parameters}',
         r'Tables~\ref{tab:scenario-parameters}, \ref{tab:complete-parameters}, and \ref{tab:execution-parameters} state the numerical settings, their roles, sources, selection periods, and tested ranges.\AITextRef\ Grouped values follow the listed parameter order. Unless a data source or sensitivity range is stated, values are declared benchmark settings held fixed across policies. They were not retuned on the revised test. Table~\ref{tab:calibrated-uncertainty} separately gives transition estimates and intervals. Long estimates are rounded for display.',
         r'Table~\ref{tab:supp-primary} retains the complete primary comparison family. Table~\ref{tab:supp-sensitivity} gives every integrated sensitivity comparison, Table~\ref{tab:supp-physical} gives all secondary service and physical outcomes, and Table~\ref{tab:supp-cost-tail} gives the empirical cost tails. The numerical record retains all paired mean and rank tests, including unfavorable comparisons.']
+    output.append(r'''The added reference-protection study uses the same numerical settings unless
+specified in Section~\ref{sec:reference-protection}.
+Table~\ref{tab:guarded-validation} gives all margin choices,
+Table~\ref{tab:guarded-ablation} separates route construction from the
+observation-supported score, and Table~\ref{tab:guarded-tails} retains the
+primary tail comparisons. Table~\ref{tab:guarded-parameters} states the
+additional settings. Tables~\ref{tab:guarded-external-published} and
+\ref{tab:guarded-external-independent} retain every external condition
+under both forecasts, including higher protected costs.
+The tolerance coefficient is $10^{-10}$.
+Scenario initialization uses 9202201 for validation and 202609052 for the
+independent municipal input, with the same stride of 7919. Statistical
+resampling uses 202609055. Mean and tail intervals use 20,000 and 2,000
+resamples, respectively. These indices and counts were fixed before
+evaluation rather than chosen from its outcomes.
+\input{table_guarded_validation}
+\input{table_guarded_ablation}
+\input{table_guarded_tails}
+\input{table_guarded_parameters}
+\input{table_guarded_external_published}
+\input{table_guarded_external_independent}''')
     labels = ['tab:complete-parameters','tab:execution-parameters','tab:scenario-parameters']
     for number in [2, 0, 1]:
         label = labels[number]
@@ -155,12 +181,14 @@ def main():
     target = PAPER / 'manuscript_appendix.tex'
     target.write_text('\n\n'.join(output) + '\n', encoding='utf-8')
     report = dict(ledger_entries=len(ledger),appendix_entries=len(covered),
+        additional_parameter_entries=len(added),
+        additional_ledger_sha256=hashlib.sha256(added_source.read_bytes()).hexdigest(),
         unchanged_statistical_rows=len(source_rows),
         transition_table_entries=len(transition),grouped_rows=[len(r) for r in rows],
         ledger_sha256=hashlib.sha256(source.read_bytes()).hexdigest(),
         statistical_source_sha256=hashlib.sha256((PAPER/'supplementary_experiment_tables.tex').read_bytes()).hexdigest(),
         output_sha256=hashlib.sha256(target.read_bytes()).hexdigest())
-    (ROOT/'results/submission_service_20260905/inference/appendix_build_manifest.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
+    (ROOT/'results/supplement_build_manifest_20260905.json').write_text(json.dumps(report,indent=2),encoding='utf-8')
     print(json.dumps(report,indent=2))
 
 

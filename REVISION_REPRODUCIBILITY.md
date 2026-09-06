@@ -9,7 +9,7 @@ target stays within its declared period. Budget and normalization means use
 training observations only. Missing forecasts fall back to past observations,
 not realized future demand.
 
-All three service selectors receive the same forecasts, current threats and
+The service selectors receive the same forecasts, current threats and
 backlogs, jobs, travel and service durations, dispatch inputs, and six route
 candidates. The candidate set includes transition-derived priorities and is
 shared even with the no-transition selector. Their distinction is the score:
@@ -19,6 +19,13 @@ shared even with the no-transition selector. Their distinction is the score:
 | Forecast matched | Holds unrepaired threats fixed |
 | Central PC | Propagates the fitted central transition |
 | Robust PC | Uses the largest service cost over 21 declared matrices |
+| PC with reference protection | Uses the largest proposed-minus-reference difference at a common matrix and keeps the exact reference route unless the fixed margin is passed |
+
+The protection margin was selected from four declared values using 2022 only,
+and retained for all later comparisons. A second route group removes transition
+coefficients from route generation entirely. Within each group, the compared
+selectors share the same six candidates. This is an ablation, not a comparison
+of protected cost on one group with central cost on another group.
 
 The primary study also retains static, greedy, oracle, exposure-matched, and
 exposure-central policies. Only the oracle uses future innovations and demand.
@@ -46,10 +53,17 @@ experiment, not an extra operation in the primary loop.
 | Separate packet model study | `results/operational/packet_network` | Queue, erasure, deadline and proxy comparisons |
 | Geographical forecast holdout | `results/real_ev_spatial_holdout_inductive` | Independent station-block comparison |
 | Historical method after training-only correction | `results/submission_20260905/primary`, `results/submission_20260905/source_snapshot` | Superseded method evidence, not current primary results |
+| Fixed protection protocol and parameter ledger | `config/guarded_improvement_protocol.md`, `config/guarded_parameter_ledger.csv` | Predeclared margin selection, tests and settings |
+| All margin-selection records | `results/guarded_validation_20260905` | Four options and the fixed selection decision |
+| Protected domestic conditions | `results/guarded_test_20260905` | Eight conditions, both route groups and all numerical outcomes |
+| Independent municipal station-hour input | `data/external/processed/palo_alto_independent_20260905` | Prepared charging, coordinates and both fixed forecasts |
+| Independent protected conditions | `results/guarded_external_20260905` | Both forecasts, all eight conditions and both route groups |
+| Independent new choice and mean-statistic reconstruction | `results/guarded_verification_20260905.json` | Every saved finite choice, fallback and both new test families |
+| Independent original municipal reconstruction | `results/independent_input_verification_20260905.json` | Full source-to-hour reconstruction and forecast checks made locally with the original source |
 
 The complete parameter ledger is `config/full_parameter_ledger.csv`.
-The clean manuscript includes the parameter and statistical appendix.
-An optional repository reader report is not a separate journal submission attachment.
+The complete proofs and parameter/comparison tables are in the manuscript
+appendix, within the same PDF. No separate supplementary submission is needed.
 The marked manuscript retains old material, so its numbering differs from the
 clean manuscript. Its red strikeout denotes deletion and blue denotes addition.
 Old images are reduced and crossed out. Structurally changed tables are shown
@@ -91,6 +105,16 @@ and are descriptive, not tail-significance tests. Statistical uncertainty is
 conditional on the specified public data and simulation, not evidence of
 variation across independently observed utility systems.
 
+The protected study uses separate 80-comparison domestic and 160-comparison
+external families. A priori noninferiority allows a cost difference of at most
+0.05% of paired reference cost. The reported positive-excess comparison averages
+the six fixed coefficient-error conditions within each scenario ID before
+resampling IDs. It is not a favorable-condition subset. Tail intervals are
+exploratory and not multiplicity-adjusted. In particular, the protected rule's
+original-route upper-five-percent mean cost is higher than central PC, with a
+positive marginal interval. Noninferiority of the overall mean does not negate
+that adverse tail result or establish realized improvement on every scenario.
+
 ## Physical and mathematical scope
 
 The SMART-DS network is a synthetic feeder and is not geographically co-located
@@ -111,6 +135,13 @@ integer completion are separate operations. The route regret inequality is
 conditional on score errors. Exhaustive small-instance tests do not establish
 a population-wide score-error bound.
 
+The added theorem compares candidate and reference scores at a common matrix
+and explicitly accounts for differential score error. Identical fallback routes
+have identical execution under the same exogenous inputs. The proof does not
+turn estimated model membership or finite numerical checks into an unconditional
+guarantee for an unseen real system. The general baseline-relative robust
+improvement principle is attributed to earlier work rather than claimed as new.
+
 ## Reproduction scope
 
 The supplied processed inputs and trained forecasts suffice for the frozen
@@ -123,4 +154,9 @@ Scripts retained for historical experiments are not alternate entry points for
 the current primary result. In particular, `simulate_rollout_revised.py` alone
 retains the historical selector default. Use `run_frozen_service_experiments.py`.
 Older broad package-check scripts are not evidence that this snapshot passes.
-The current read-only checker is `verify_reviewer_minimal.py`.
+The earlier read-only checker is `verify_reviewer_minimal.py`. The current
+protected execution entry is `reproduce_reference_protection.py`, whose optional
+full-statistics mode calls the independently written `verify_guarded_records.py`.
+The full raw-input reconstruction checker is `verify_independent_input.py`, which
+requires the separately acquired original municipal source and is not a
+prerequisite for executing the released processed inputs.

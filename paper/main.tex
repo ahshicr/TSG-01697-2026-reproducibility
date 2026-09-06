@@ -41,24 +41,24 @@ email lwzhao055@wzpt.edu.cn. Corresponding author is Wuzhao Li.}}
 \begin{abstract}
 Restoration in mobility coupled distribution systems requires charging,
 communication, and repair decisions that remain feasible after network and
-crew constraints are applied.  This paper develops a physically constrained
-coupled rollout that selects integer repair routes by their predicted service
-cost under a calibrated transition model.  Continuous service allocations are
-updated from observed history and shared demand forecasts.  Packet delivery,
-distribution system feasibility, and recorded crew completion determine when
-requested actions change the realized state.  The analysis establishes finite
-horizon sensitivity for the continuous decision layer, a conditional regret
-bound for route selection, and constraint preservation during execution.
-Measured electric vehicle charging records, public outage observations, and an
-independent feeder support paired policy comparisons.  Service cost evaluation
-improves on exposure based route scores.  Adding threat propagation gives a
-smaller average improvement over a control with the same service score, with
-the clearest evidence under compound stress.  The worst set extension does not
-improve the reported mean or conditional tail costs.  Electrical projection
-reduces charging when feeder limits bind, while packet delivery and crew routing
-determine effective service and repair.  These results connect distribution
-systems, communication networks, and repair operations through explicit state
-updates in a public data service restoration model.
+crew constraints are applied.  This paper develops physically constrained
+coupled rollout with reference protection.  Candidate repair routes are
+compared by predicted service cost against the same executable reference
+across plausible transition models.  Insufficient predicted advantage retains
+the reference route.  Continuous allocations use observed history and shared
+demand forecasts, while packet delivery, electrical feasibility, and crew
+completion determine realized service.  The analysis establishes continuous
+sensitivity, conditional route regret, relative protection under a differential
+error condition, and execution constraints.  Measured electric vehicle
+charging, public outage observations, and an independent feeder support
+paired comparisons.  Service cost evaluation improves on exposure scores.
+Adding threat propagation gives a smaller average benefit over the same
+service score without propagation.  Reference protection retains most of
+this benefit while reducing additional losses under parameter misspecification.
+Independent municipal charging inputs support the fixed comparison, with
+benefits distinct from uniform superiority in total-cost tails.  The resulting
+service restoration model connects distribution systems, communication
+networks, and crew routing through explicit decisions and completion events.
 \end{abstract}
 
 \begin{IEEEkeywords}
@@ -133,10 +133,14 @@ as served load would create the same inconsistency on the electrical side.
 This paper develops physically constrained coupled rollout, abbreviated as PC
 rollout.  A compact graph recurrent model forecasts station arrivals and
 charging energy.  A nonnegative transition model propagates mobility, power,
-and communication threats over a finite horizon.  The primary central PC
-policy evaluates each candidate under the calibrated central transition.  A
-separate robust extension evaluates a declared finite set of transition
-matrices.  Requested charging and communication actions are reduced when
+and communication threats over a finite horizon.  Central PC evaluates each
+candidate under the calibrated central transition, while a robust extension
+minimizes the worst absolute score over a declared finite matrix set.
+PC with reference protection instead compares each route with the same
+executable reference under each matrix and retains that reference when the
+predicted advantage is insufficient.  This distinguishes protection against
+a harmful replacement from minimizing the largest absolute cost.
+Requested charging and communication actions are reduced when
 packets miss their deadlines.  Charging is then projected through an
 independent SMART-DS and OpenDSS calculation.  Repair priorities form work
 orders, integer crew routes, and recorded completion events.  Only executable
@@ -145,16 +149,18 @@ service and completed repair enter the next realized state.
 The paper makes the following theoretical and algorithmic contributions.
 \begin{itemize}
 \item It formulates an action dependent finite horizon restoration rule that
-selects a committed repair route by predicted service losses and backlog under
-a calibrated transition model.  Continuous service allocations are recalculated
-as new observations arrive.
+selects a committed repair route by predicted service losses and backlog.
+A paired comparison across transition models protects an executable reference
+when a replacement has insufficient predicted advantage.  Continuous service
+allocations are recalculated as new observations arrive.
 \item It constructs an executable action algorithm that distinguishes requested
 service, packet delivery, distribution system projection, dispatched work
 orders, and integer repair completion.  A capacity constrained assignment model
 treats station reassignment separately.
 \item It establishes finite horizon sensitivity for the continuous prediction
-and allocation layer, a conditional regret bound for a finite route portfolio,
-and feasibility and invariance results for executed actions.
+and allocation layer, conditional regret and reference protection bounds for
+finite route selection, and feasibility and invariance results for executed
+actions.
 \end{itemize}
 
 The rest of this paper is organized as follows.  Section II reviews related
@@ -253,6 +259,16 @@ physical state and computational state \cite{fuller2020digital,
 minerva2020digital}.  The present formulation uses that connection to separate
 the predictive state from the executed state and to keep their update rules
 explicit.
+
+Comparing a proposed decision with a common reference also has an established
+role in optimization under model uncertainty.  Robust baseline regret
+evaluates both policies under the same transition model before taking the
+adverse model choice \cite{petrik2016baseline}.  That work studies discounted
+Markov policies and the complexity of their optimization.  Here the decision
+is a finite, committed crew route with explicit completion times.  Reference
+protection specializes the comparison to predicted service costs and adds a
+fixed acceptance margin.  Its execution bound depends on the error in route
+cost differences, separately from continuous forecast sensitivity.
 
 \subsection{Graph forecasting for charging states}
 
@@ -613,7 +629,7 @@ s_{i,t}^{\mathrm{res}}=
 \omega_pz_{i,t}^{p}+\omega_cz_{i,t}^{c}+\omega_rz_{i,t}^{r}
 +\omega_{\Gamma}b_{i,t}^{\pi}.
 \end{equation}
-Here $b^{\pi}=b^{\rm cen}$ for the primary central PC method and
+Here $b^{\pi}=b^{\rm cen}$ for central PC candidate construction and
 $b^{\pi}=b^{\rm rob}$ only for the robust extension.
 The restoration action uses a small uniform reserve and a concave risk
 allocation.
@@ -708,6 +724,9 @@ Thus it holds each unrepaired threat fixed while crediting the same possible
 completion events.  The earlier current exposure and propagated exposure
 selectors are retained as additional controls.  These comparisons separate the
 service objective from the effect of transition prediction.
+
+\input{method_reference_protection}
+
 Travel uses geocoded station
 locations, 1.25 road circuity, and 30 km/h.
 Service time scenarios are informed by observed EAGLE-I post peak recovery
@@ -747,7 +766,8 @@ trained forecaster $f_{\theta}$ \\
 \State Apply packet delivery to obtain dispatched work orders
 \State Convert each priority by largest remainder and construct the shared route portfolio
 \State Evaluate each route with \eqref{eq:route-service-score} and its completion schedule
-\State Select and commit the route with the smallest central model score
+\State Obtain the forecast matched reference and paired model differences
+\State Select with \eqref{eq:protected-route} and commit its complete integer route
 \EndIf
 \State Gate charging and communication actions by packets delivered on time
 \State Project charging through OpenDSS and credit only the executable service
@@ -789,142 +809,28 @@ $\square$
 \subsection{Mathematical properties}
 \label{sec:theory}
 
-The Lipschitz results below concern the continuous prediction and allocation
-operators before execution.  They exclude integer priority rounding, packet deadline switches, OpenDSS
-acceptance tests and bisection, station flow active set changes, finite route
-argmin selection, and integer completion events.  Finite route selection is
-treated by a score error bound, while execution constraints are treated by a
-separate preservation proposition.  Algebraic equalities and bounds are stated
-in real arithmetic.  Electrical feasibility means satisfaction of the stated
-numerical acceptance criteria.
+The analysis separates continuous prediction, finite route selection, and
+executed service.  Continuous sensitivity does not cover packet deadlines,
+OpenDSS acceptance and bisection, station assignment switches, integer route
+selection, or repair completion events.  All algebraic bounds use real
+arithmetic.  Electrical feasibility refers to the stated numerical criteria.
 
-To define the analytical map explicitly, hold the forecast continuation fixed
-and set the packet and electrical factors to one.  Write
-$b=e+\rho_q q$ and let $\bar s$ be the resulting charging service.  Then
+For the continuous map, hold the forecast continuation fixed and set packet
+and electrical factors to one.  With $b=e+\rho_q q$ and ungated charging
+service $\bar s$, define
 \begin{equation}
-F_{c,h}(x,a,\zeta)=
-(\hat m_{h+1},\hat e_{h+1},b-\bar s).
+F_{c,h}(x,a,\zeta)=(\hat m_{h+1},\hat e_{h+1},b-\bar s).
 \label{eq:continuous-service}
 \end{equation}
-Let $L_c$ be \eqref{eq:stage} evaluated with this same ungated service.
-Neither $F_{c,h}$ nor $L_c$ includes a variable packet fraction, an AC acceptance
-decision, or a crew event.  The subscript $h$ is suppressed where the same
-bounds apply at every step.  Within this continuous analysis, $x$ is driven by
-the fixed forecast, not by unrevealed future demand.  Forecast histories are common to the compared
-trajectories.  The forecaster argument also establishes continuity when those
-histories vary over a bounded set.
-
-The analysis uses the Euclidean norm.  The projection onto a closed convex set
-is nonexpansive, so
-\begin{equation}
-\|\Pi_{\mathcal{Z}}(u)-\Pi_{\mathcal{Z}}(v)\|\le \|u-v\|.
-\label{eq:projection}
-\end{equation}
-
-\textit{Condition 1.}  On the stated bounded continuous prediction domain and
-for all feasible requested actions, the one step service state operator
-$F_c(x,a,\zeta)$ is
-Lipschitz in $(x,\zeta)$ with finite constants $L_x$ and $L_z$.
-\begin{equation}
-\|F_c(x,a,\zeta)-F_c(\tilde x,a,\tilde \zeta)\|
-\le L_x\|x-\tilde x\|+L_z\|\zeta-\tilde \zeta\|.
-\end{equation}
-
-\textit{Condition 2.}  The continuous stage risk $L_c$ is Lipschitz in
-$(x,\zeta)$ with constants $C_x$ and $C_z$ for all feasible actions.
-\begin{equation}
-|L_c(x,a,\zeta)-L_c(\tilde x,a,\tilde\zeta)|
-\le C_x\|x-\tilde x\|+C_z\|\zeta-\tilde \zeta\|.
-\end{equation}
-\textit{Lemma 2.}  Conditions 1 and 2 hold for the continuous service equations
-on the stated bounded domain.  The continuous state transition and stage risk
-are also Lipschitz in the feasible action argument.
-
-\textit{Proof.}  Let $\mathcal D$ denote the product of the closed state,
-threat, and feasible action intervals.  The backlog bound in Section III gives
-a finite upper bound for $q$ because $0\le\rho_q<1$ and arrivals are bounded.
-All remaining state variables have finite upper bounds by the definition of
-$\mathcal D$.  The scalar maps $r\mapsto[r]_+$ and
-$r\mapsto\min\{c,r\}$ are nonexpansive.  Euclidean projection and componentwise
-clipping are also nonexpansive.  Every affine map has a finite operator norm.
-
-For bounded scalars $a,a',b,b'$, the product satisfies
-\begin{equation}
-|ab-a'b'|\le |a|\,|b-b'|+|b'|\,|a-a'|.
-\end{equation}
-The right hand side has finite coefficients on $\mathcal D$.  The only quotient
-in the service equations has the form $g(\ell,c)=\ell/(1+c)$.  If
-$0\le\ell,\ell'\le\bar\ell$ and $c,c'\ge0$, then
-\begin{align}
-|g(\ell,c)-g(\ell',c')|
-&\le |\ell-\ell'|
-+\bar\ell |c-c'| .
-\end{align}
-This follows by adding and subtracting $\ell'/(1+c)$ and using
-$(1+c)^{-1}\le1$ together with
-$|(1+c)^{-1}-(1+c')^{-1}|\le|c-c'|$.
-Explicit constants follow from these inequalities.  Use common zone bounds
-$\bar m$, $\bar e$, and $\bar q$, and set $\bar b=\bar e+\rho_q\bar q$ and
-$\bar c=\beta_m\bar m+\beta_e\bar b+\beta_r+\beta_p$.
-For a zone input $(m,e,q,z^r,z^p,z^c,u^{\rm ch},u^{\rm com})$, valid constants are
-\begin{align}
-K_b&=\sqrt{1+\rho_q^2},\\
-K_c&=\|(\beta_m,\beta_e,\beta_e\rho_q,\beta_r,\beta_p)\|_2,\\
-K_{\ell}&=K_c+1+B_{\rm com}(1+\alpha_c),\\
-K_{\eta}&=K_{\ell}+\bar cK_c,\\
-K_s&=K_b+1+B_{\rm ch}(1+K_{\eta}).
-\label{eq:service-constants}
-\end{align}
-The product bound gives the communication capacity constant in $K_\ell$.
-Since $0\le\ell^c\le c\le\bar c$, the quotient bound gives $K_\eta$.
-Applying the product bound to $u^{\rm ch}(1-z^p)\eta^c$ and then taking the
-minimum with $b$ gives $K_s$.  For the remaining cost terms, valid constants are
-\begin{align}
-K_m&=1+\beta_{mc}+\bar m(1+\beta_{mc}K_\eta),\\
-K_p&=\bar b+K_b,\qquad K_z=3+K_\eta,\\
-K_L&=\lambda_mK_m+\lambda_e(K_b+K_s)+\lambda_cK_\ell
-\nonumber\\
-&\quad+\lambda_pK_p+\lambda_zK_z.
-\label{eq:cost-constants}
-\end{align}
-These bounds follow by applying the same product inequality to mobility loss,
-power loss, and the two cross domain products, respectively.
-The only variable output of \eqref{eq:continuous-service} is $b-\bar s$.
-Summing squared zone differences therefore gives the joint constant
-$K_F=K_b+K_s$ for $F_c$.  Cauchy--Schwarz over the zones gives
-$\sqrt N K_L$ for $L_c$.  Thus the choices
-$L_x=L_z=L_a=K_F$ and $C_x=C_z=C_a=\sqrt N K_L$ are finite and satisfy
-Conditions 1 and 2, including their action bounds.  \hfill $\square$
-
-\textit{Lemma 3.}  For fixed action sequence and disturbance sequence, if two
-rollout trajectories start from threat fields $\zeta_0$ and $\tilde\zeta_0$ and
-from the same physical state, then
-\begin{equation}
-\|\zeta_h-\tilde\zeta_h\|
-\le\|M\|^h\|\zeta_0-\tilde\zeta_0\|.
-\label{eq:lemma1}
-\end{equation}
-
-\textit{Proof.}  Let $\Delta_h=\|\zeta_h-\tilde\zeta_h\|$.
-Because the action and innovation sequences are
-shared, \eqref{eq:propagation} and the nonexpansiveness in
-\eqref{eq:projection} give
-$\Delta_{h+1}\le\|M\|\Delta_h$.  Iteration proves \eqref{eq:lemma1}.
-\hfill $\square$
-
-\textit{Lemma 4.}  Under Condition 1, the service state error satisfies
-\begin{equation}
-E_h\le
-\sum_{k=0}^{h-1}L_x^{h-1-k}L_z\Delta_k .
-\label{eq:lemma2}
-\end{equation}
-
-\textit{Proof.}  The two rollouts use the same action sequence.  Condition 1
-gives $E_{h+1}\le L_xE_h+L_z\Delta_h$.  Since the initial physical state is the
-same, $E_0=0$.  Expanding the recursion gives
-$E_1\le L_z\Delta_0$ and
-$E_2\le L_xL_z\Delta_0+L_z\Delta_1$.  Repeating the expansion gives
-\eqref{eq:lemma2}.  \hfill $\square$
+Let $L_c$ be \eqref{eq:stage} evaluated with the same service.
+On the bounded domain, let $L_x,L_z,L_a$ and $C_x,C_z,C_a$ be its
+Euclidean state, threat, and action Lipschitz constants, respectively.
+The Appendix, part~\ref{supp:theory}, derives finite constants from the
+actual operators in Conditions 1--3 and Lemmas 2--5.
+The derivation includes positive denominators, the normalized allocator,
+LayerNorm, GELU, and recurrent products.  It establishes the stated
+continuous properties analytically, without treating finite numerical
+checks as a continuity proof.
 
 \textit{Theorem 1.}  Let $J_H(x_0,\zeta_0)$ be the discounted $H$ step sum of $L_c$ for
 a fixed feasible action sequence, and let $\tilde J_H(x_0,\tilde\zeta_0)$ be the
@@ -950,125 +856,9 @@ uniformly bounded as the horizon increases by
 \frac{1}{1-\gamma\chi_{\alpha}}.
 \end{equation}
 
-\textit{Proof.}  Let
-$\Delta_h=\|\zeta_h-\tilde\zeta_h\|$ and
-$E_h=\|x_h-\tilde x_h\|$.  Lemma 3 and Condition 1 give the one step bounds
-\begin{align}
-\Delta_{h+1} &\le \|M\|\Delta_h, \label{eq:delta_step}\\
-E_{h+1} &\le L_z\Delta_h+L_xE_h . \label{eq:state_step}
-\end{align}
-For a fixed $\alpha>0$, define the weighted error
-$V_h=\Delta_h+\alpha E_h$.  Multiplying \eqref{eq:state_step} by $\alpha$ and
-adding \eqref{eq:delta_step} gives
-\begin{align}
-V_{h+1}
-&\le (\|M\|+\alpha L_z)\Delta_h
-+\alpha L_xE_h \nonumber\\
-&\le \chi_{\alpha}\Delta_h+\alpha\chi_{\alpha}E_h
-=\chi_{\alpha}V_h .
-\end{align}
-The two rollouts start from the same physical state, so $E_0=0$ and
-$V_0=\Delta_0\le\varepsilon$.  Induction gives
-$V_h\le\chi_{\alpha}^h\varepsilon$ for every $h$.  Since
-$\Delta_h\le V_h$ and $E_h\le V_h/\alpha$, Condition 2 yields
-\begin{equation}
-|L_c(x_h,a_h,\zeta_h)-L_c(\tilde x_h,a_h,\tilde\zeta_h)|
-\le
-\left(C_z+\frac{C_x}{\alpha}\right)
-\chi_{\alpha}^h\varepsilon .
-\end{equation}
-Multiplying by $\gamma^h$ and summing from $h=0$ to $H-1$ gives
-\eqref{eq:riskbound}.  The infinite geometric series gives the uniform bound
-when $\gamma\chi_{\alpha}<1$.  \hfill $\square$
-
-\textit{Condition 3.}  The continuous service transition and stage risk are
-Lipschitz in the action argument on the compact feasible set.  The PC allocation
-map $\pi_c$ before execution is Lipschitz in the forecast driven service state
-and threat state.  Constants are taken uniformly over the finite set of
-remaining episode horizons.
-There are finite constants $L_a$, $C_a$, $L_{\pi}^x$, and $L_{\pi}^{z}$ such
-that
-\begin{align}
-\|F_c(x,a,\zeta)-F_c(x,\tilde a,\zeta)\|&\le L_a\|a-\tilde a\|,\\
-|L_c(x,a,\zeta)-L_c(x,\tilde a,\zeta)|&\le C_a\|a-\tilde a\|,\\
-\|\pi_c(x,\zeta,A)-\pi_c(\tilde x,\tilde\zeta,A)\|
-&\le L_{\pi}^x\|x-\tilde x\|+L_{\pi}^{z}\|\zeta-\tilde\zeta\|.
-\end{align}
-\textit{Lemma 5.}  Condition 3 holds for the continuous PC map on the stated
-compact domain.
-
-\textit{Proof.}  Lemma 2 already establishes the first two inequalities in the
-action argument.  It remains to prove the bound for $\pi_c$.  For a score vector
-$v\in\mathbb R_+^N$, set $r_i(v)=\sqrt{v_i+\epsilon}$,
-$S(v)=\sum_i r_i(v)$, and $p_i(v)=r_i(v)/S(v)$.  The mean value theorem gives
-\begin{equation}
-\|r(v)-r(w)\|_2\le\frac{1}{2\sqrt{\epsilon}}\|v-w\|_2.
-\end{equation}
-Moreover, $S(v)\ge N\sqrt{\epsilon}$ and
-$|S(v)-S(w)|\le\sqrt N\|r(v)-r(w)\|_2$.  Since
-$\|r(w)\|_2\le S(w)$, let $\Delta_S=|S(v)-S(w)|$.  Adding and subtracting
-$r(w)/S(v)$ gives
-\begin{align}
-\|p(v)-p(w)\|_2
-&\le \frac{\|r(v)-r(w)\|_2}{S(v)}
-+\frac{\|r(w)\|_2\Delta_S}{S(v)S(w)} \nonumber\\
-&\le\left(\frac{1}{2N\epsilon}
-+\frac{1}{2\sqrt N\epsilon}\right)\|v-w\|_2.
-\label{eq:allocator-lipschitz}
-\end{align}
-Equation \eqref{eq:allocator} is an affine function of $p(v)$.  Its Lipschitz
-constant is therefore at most
-\begin{equation}
-(1-\eta_B)B
-\left(\frac{1}{2N\epsilon}+\frac{1}{2\sqrt N\epsilon}\right).
-\end{equation}
-
-The forecaster requires several additional operators.  Every trained affine map
-has its finite matrix norm as a Lipschitz constant.  The sigmoid and hyperbolic
-tangent have derivative bounds $1/4$ and $1$.  The GRU combines these maps with
-gated products.  Its hidden inputs remain bounded over the finite history, so
-the product inequality in Lemma 2 applies to every gate multiplication.
-
-For LayerNorm with hidden width $d$, write $P_d=I-\mathbf1\mathbf1^\top/d$,
-$v=P_dh$, and $s=(\|v\|_2^2/d+\epsilon_{\rm LN})^{1/2}$.  Its normalization
-Jacobian is
-\begin{equation}
-\left(s^{-1}I-\frac{vv^\top}{d s^3}\right)P_d.
-\label{eq:layernorm-bound}
-\end{equation}
-At $v=0$, the bracket is $s^{-1}I$.  Otherwise, it has eigenvalues $s^{-1}$ perpendicular to $v$ and
-$\epsilon_{\rm LN}/s^3$ along $v$.  Both are at most
-$1/\sqrt{\epsilon_{\rm LN}}$.  With learned scale $g$ and offset $b_{\rm LN}$,
-the LayerNorm constant is at most $\|g\|_\infty/\sqrt{\epsilon_{\rm LN}}$.
-Its output norm is at most $\|g\|_\infty\sqrt d+\|b_{\rm LN}\|_2$, which also
-provides a bound for the next recurrent input.
-
-Exact GELU is $t\Phi(t)$, where $\Phi$ and $\phi$ are the standard normal
-distribution and density.  Its derivative is $\Phi(t)+t\phi(t)$, whose absolute
-value is at most $1+1/\sqrt{2\pi e}$.
-Dropout is the identity during inference.  Input $\log(1+y)$ has derivative at
-most one for $y\ge0$, and normalization uses fixed strictly positive scales.
-The inverse transformation $\exp(\sigma o+\mu)-1$ has bounded derivative on the
-bounded network output.  Final positive clipping is nonexpansive.  These facts,
-the hidden state bound, and induction over the fixed history prove that the
-entire implemented forecaster has a finite constant on the stated domain.
-
-The forecast exposure weights use positive fixed training means, sums, products,
-and clipping.  They are bounded and Lipschitz by Lemma 2.
-For every candidate, \eqref{eq:propagation} composes an affine map, the
-$1/\delta$ Lipschitz saturation, and a nonexpansive projection.
-Finite iteration and the bounded product inequality therefore prove that
-\eqref{eq:envelope} is Lipschitz in $(x,\zeta)$.
-Taking differences and positive parts preserves this property.
-For finite families $f_j$, the inequality
-$|\min_j f_j(v)-\min_j f_j(w)|\le\max_j|f_j(v)-f_j(w)|$
-gives the largest component constant for their minimum.
-The charging, communication, central PC, and robust priority scores are
-therefore Lipschitz.
-Combining their constants with \eqref{eq:allocator-lipschitz} gives finite
-$L_{\pi}^x$ and $L_{\pi}^z$.  This proof ends at the continuous allocation.
-Finite route selection, packet events, the OpenDSS switch, and integer crew
-completion are separate operations.  \hfill $\square$
+The complete proof in the Appendix, part~\ref{supp:theory}, propagates
+the weighted state and threat error and sums its stage-cost bound.
+It uses the operator norm of $M$, not its spectral radius.
 
 \textit{Corollary 1 (continuous sensitivity before execution).}  Let
 $J_H^{\pi_c}(x_0,\zeta_0)$ and
@@ -1095,28 +885,11 @@ If $\|\zeta_0-\tilde\zeta_0\|\le\varepsilon$, then
 \sum_{h=0}^{H-1}(\gamma\bar\chi_{\alpha})^h .
 \end{equation}
 
-\textit{Proof.}  Let $a_h=\pi_c(x_h,\zeta_h,A)$ and
-$\tilde a_h=\pi_c(\tilde x_h,\tilde\zeta_h,A)$.  Condition 3 gives
-\[
-\|a_h-\tilde a_h\|\le L_{\pi}^xE_h+L_{\pi}^{z}\Delta_h .
-\]
-Combining this bound with Conditions 1 and 3 and the restoration term in
-\eqref{eq:propagation} yields
-\begin{align}
-E_{h+1}&\le \bar L_xE_h+\bar L_z\Delta_h,\\
-\Delta_{h+1}&\le
-(\|M\|+\|R\|L_{\pi}^{z}/\delta)\Delta_h
-+\|R\|L_{\pi}^{x}E_h/\delta .
-\end{align}
-For $V_h=\Delta_h+\alpha E_h$, the preceding two inequalities give
-$V_{h+1}\le\bar\chi_{\alpha}V_h$.  Since $V_0\le\varepsilon$, induction gives
-$V_h\le\bar\chi_{\alpha}^h\varepsilon$.  The stage risk difference satisfies
-\[
-|L_c(x_h,a_h,\zeta_h)-L_c(\tilde x_h,\tilde a_h,\tilde\zeta_h)|
-\le \bar C_xE_h+\bar C_z\Delta_h .
-\]
-Using $E_h\le V_h/\alpha$ and $\Delta_h\le V_h$, then summing the discounted
-stage differences, gives the stated bound.  \hfill $\square$
+Here $L_\pi^x$ and $L_\pi^z$ are the constants for the continuous allocation
+map proved in Lemma 5 in the Appendix. The complete corollary proof in
+the Appendix, part~\ref{supp:theory}, includes the action dependence of
+both service and predicted repair.  Neither statement asserts contraction
+for the calibrated matrix.
 
 \textit{Theorem 2 (conditional finite portfolio regret).}  Let $\mathcal P$ be the nonempty finite
 portfolio of integer crew routes available at one decision time.  Let $Q(P)$
@@ -1167,6 +940,8 @@ which proves \eqref{eq:route-error-span}.
 For any $P\ne P^*$, the gap condition implies
 $\widehat Q(P)>\widehat Q(P^*)+\delta_s$, so no such plan can be returned.
 \hfill $\square$
+
+\input{theory_reference_protection}
 
 \textit{Proposition 1 (execution feasibility and invariance).}  Assume
 the base feeder operating point is feasible, packet enactment satisfies
@@ -1224,6 +999,8 @@ well defined.  \hfill $\square$
 Theorem 1 and Corollary 1 concern finite horizon sensitivity in the continuous
 prediction and allocation layer.  Theorem 2 gives a conditional bound for the
 finite route portfolio in terms of $\varepsilon_Q$ and the solver tolerance.
+Theorem 3 concerns relative route protection under a differential score error
+condition and does not assert unconditional improvement in realized cost.
 Proposition 1 covers constraint preservation in execution.  The numerical
 checks in Section IV evaluate these same properties for the reported scenarios.
 
@@ -1242,7 +1019,8 @@ of each source.
 \begin{figure*}[t]
 \centering
 \includegraphics[width=\textwidth]{fig_executable_system.png}
-\caption{Executable PC closed loop.  Observed charging history supplies the
+\caption{Executable PC closed loop. Protected PC denotes PC with reference protection.
+Observed charging history supplies the
 shared forecast, and the controller receives the current scenario threat state.
 EAGLE-I observations inform transition calibration and the repair duration prior.
 Requested service actions pass through packet
@@ -1373,8 +1151,11 @@ from the additional effect of propagation.  All five selectors share the same
 candidate set, including candidates constructed from central and worst set
 priorities.  Only their final scoring rule changes.  Static and greedy use
 their own direct route priorities, and the oracle alone receives future demand
-and innovations.  Table~\ref{tab:policy-definitions} gives the eight policy
-definitions and their common execution conditions.
+and innovations.  These eight policies isolate service scoring and propagation.
+Table~\ref{tab:policy-definitions} also defines PC with reference protection,
+which changes the route acceptance rule while keeping the same execution
+conditions.  The mechanism comparisons below retain their original controls
+and statistical families.
 
 The service score was compared with exposure scoring on 512 validation
 scenarios from 2022 before the revised test.  Central service scoring reduced
@@ -1398,7 +1179,7 @@ with 20,000 resamples, paired $t$ tests, and two sided Wilcoxon tests.  Holm
 correction includes all fifteen comparisons separately for each test.
 Bootstrap intervals are marginal intervals, not simultaneous intervals for the
 whole family.  Table~\ref{tab:supp-primary} retains every comparison.
-The appendix reports each value, unit, role, calibration rule,
+The Appendix, part~\ref{app:parameters}, reports each value, unit, role, calibration rule,
 selection source, and tested range in
 Tables~\ref{tab:scenario-parameters}, \ref{tab:complete-parameters}, and
 \ref{tab:execution-parameters}.
@@ -1438,7 +1219,7 @@ observed cost was identical at 4494.26.  The conditional means include a
 fractional observation at the empirical quantile boundary.  These descriptive
 tail comparisons do not establish a tail protection benefit, and the worst set
 calculation remains a sensitivity extension rather than the principal method.
-Table~\ref{tab:supp-cost-tail} reports the empirical cost tails of all eight policies.
+Table~\ref{tab:supp-cost-tail} reports the empirical cost tails of the eight mechanism controls.
 
 \input{table_objective_sensitivity}
 
@@ -1647,6 +1428,8 @@ without changing the scoring rule or granting future information to the policy.
 Table~\ref{tab:supp-sensitivity} retains every zero coupling, expanded coupling, and
 nonlinear comparison alongside the matrix error tests.
 
+\input{results_reference_protection}
+
 \subsection{Numerical and mathematical checks}
 \label{sec:checks}
 
@@ -1691,6 +1474,22 @@ $10^{-10}$ loss measurements by at most $3.10\times10^{-8}$ MWh per scenario.
 This precision check supports reporting the small loss increase without
 attributing it to the original solver tolerance.
 
+The added protection study retained 302,592 policy records, including every
+validation margin and both independent demand inputs.  Independent
+reconstruction checked all 83,968 protected route choices and equality of
+the 79,716 fallback executions with their respective matched routes.
+The original 12,288 central, robust, and matched primary records retained
+identical cost, unserved energy, routes, and completion events.
+Separate statistical calculations recovered all 240 mean comparisons and
+their Holm adjustments, the original-condition intervals, and every
+noninferiority and aggregate error-loss test.  Direct hourly overlap
+reconstruction checked the 159,587 retained municipal sessions, all 8,778
+weekly forecasts were reproduced, and 32 graph forecasts were replayed
+without changing learned parameters.  Sixteen external scenarios also
+reproduced their 144 policy outcomes under original and electrical stress
+conditions.  These finite checks support implementation correspondence
+without proving the uniform error condition of Theorem 3.
+
 \subsection{Interpretation and reproducibility}
 \label{sec:interpretation}
 
@@ -1708,6 +1507,15 @@ all tested errors in the controller's matrix.  The scoring choices in
 Table~\ref{tab:policy-definitions} therefore distinguish service cost reduction,
 propagation benefit, and conditional protection against model error.
 
+Reference protection addresses a different comparison.  It accepts a route
+only when every declared matrix predicts sufficient improvement over the
+same matched route.  Its actual benefit is lower positive excess relative
+to that reference while retaining most of the average propagation gain on
+the original portfolio.  The higher primary upper-tail cost relative to
+central PC shows why this result should not be described as general tail
+optimization.  On independent municipal demand, the fixed rule also
+preserved average performance within the declared noninferiority margin.
+
 Execution results explain the route from a requested decision to a realized
 state.  Packet delivery, feeder acceptance, and crew completion determine
 whether a request produces service or repair.  The feeder constraint is
@@ -1716,13 +1524,18 @@ stress.  This independent feasibility calculation checks execution, whereas
 relative cost benefits remain estimates under the modeled service objective
 and transition scenarios.
 
-The three public data sources enter through distinct variables.  Boulder
+The public data sources enter through distinct variables.  Boulder
 supplies charging demand, EAGLE-I supplies outage timing, and SMART-DS supplies
 the electrical network, as specified in Table~\ref{tab:evidence-sources}.
-Their combination defines a service restoration experiment, not observations
-of a single coincident infrastructure.  Constructed communication conditions
-and repair durations connect these inputs through explicit execution rules.
+Palo Alto supplies the separate charging input for the fixed geographic
+comparison.  Their combination defines a service restoration experiment,
+not observations of a single coincident infrastructure.  Constructed
+communication conditions and repair durations connect these inputs through
+explicit execution rules.
 
+The Appendix, part~\ref{supp:theory}, contains the complete continuous
+operator proofs, and part~\ref{app:parameters} contains
+parameter definitions and additional comparisons.
 The materials supporting these results are available in a public repository.
 It contains code, processed inputs, trained model parameters, the distribution
 feeder, and scenario records for regenerating the reported statistics.
@@ -1739,16 +1552,27 @@ This paper develops restoration decisions that evaluate repair routes through
 predicted service costs, backlog, and calibrated threat propagation.\AITextRef
 Packet delivery, electrical feasibility, and integer repair completion connect
 these decisions to realized service.  The analysis establishes continuous
-sensitivity bounds, conditional finite route regret, and execution constraints.
+sensitivity bounds, conditional finite route regret and relative protection,
+and execution constraints.
 Matched comparisons distinguish the benefit of service cost scoring from the
 smaller average contribution of propagation, most clearly observed under
-compound stress.  Worst set scoring provides protection in selected error
-conditions but does not improve primary mean or tail costs.  These results
-support a service restoration model with explicit execution rules and
-comparisons that separate the effects of the objective and transition model.
+compound stress.  Comparing a replacement with an executable reference
+reduces additional losses under parameter misspecification while retaining
+most of that average benefit.  Independent charging inputs support the fixed
+protection rule, with performance distinct from optimizing total-cost tails.
+These results connect route choice, model uncertainty, and realized service
+through explicit execution rules and controlled comparisons.
+
+\appendix[Complete proofs, parameters and additional comparisons]
+\label{app:details}
+\setcounter{equation}{0}
+\renewcommand{\theequation}{A\arabic{equation}}
+
+\input{supplement_continuous_proofs}
 
 \input{manuscript_appendix}
 
+\RestoreBibliographyColumns
 \section*{Acknowledgment}
 OpenAI Codex assisted with text revision, mathematical exposition, and
 computational scripts for the abstract, five main sections, and appendix.
@@ -1756,8 +1580,6 @@ Figure 1 was generated and edited with OpenAI image generation tools as a
 conceptual illustration. Figure 2 was drawn from computed numerical records,
 not generated as an image of results.
 
-% Restore full column height after flushing the appendix floats.
-\RestoreBibliographyColumns
 \begingroup
 \raggedbottom
 \bibliographystyle{IEEEtran}

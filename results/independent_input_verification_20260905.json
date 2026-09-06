@@ -1,0 +1,113 @@
+{
+  "status": "PASS",
+  "sessions_reconstructed": 159587,
+  "energy_max_hourly_error_kwh": 4.767982808573379e-07,
+  "all_station_hour_energy_and_arrivals_reconstructed": true,
+  "weekly_windows_exact": 8778,
+  "graph_windows_replayed": 32,
+  "graph_max_absolute_error": 2.2351741790771484e-08,
+  "learned_parameters_unchanged": true,
+  "execution_replays": [
+    {
+      "forecast": "graph",
+      "condition": "primary",
+      "scenario": 0,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "primary",
+      "scenario": 1,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "primary",
+      "scenario": 127,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "primary",
+      "scenario": 767,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "electrical_stress",
+      "scenario": 0,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "electrical_stress",
+      "scenario": 1,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "electrical_stress",
+      "scenario": 127,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "graph",
+      "condition": "electrical_stress",
+      "scenario": 767,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "primary",
+      "scenario": 0,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "primary",
+      "scenario": 1,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "primary",
+      "scenario": 127,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "primary",
+      "scenario": 767,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "electrical_stress",
+      "scenario": 0,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "electrical_stress",
+      "scenario": 1,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "electrical_stress",
+      "scenario": 127,
+      "policy_rows": 9
+    },
+    {
+      "forecast": "weekly",
+      "condition": "electrical_stress",
+      "scenario": 767,
+      "policy_rows": 9
+    }
+  ],
+  "preparation_sha256": "db88932a4b9cfd811fcc93b943bc5d8ac46880e579b741f8c1601e20c99f53ed",
+  "source_sha256": "e65f5f5d3861cdd6bf3da2de97aabe590d7708e001db1532202eec52081ba82c",
+  "script_sha256": "62a09e6e259330e6a80c98533be98b0bcd0cf3bba2d45c4b6d07eced1990b252",
+  "seconds": 122.65113735198975,
+  "scope": "Independent reconstruction of finite data and replayed executions, not a field deployment claim."
+}

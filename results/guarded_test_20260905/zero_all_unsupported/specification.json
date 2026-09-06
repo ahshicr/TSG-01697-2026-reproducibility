@@ -1,0 +1,36 @@
+{
+  "phase": "test",
+  "condition": "zero_all_unsupported",
+  "scenarios": 1024,
+  "source_sha256": {
+    "src/run_guarded_experiments.py": "b7cb80e9c197f362409f43c3426f1e7b3dd65835d51555af2f3853fdc9eb22bd",
+    "src/guarded_route_scoring.py": "942960f5dc6f3194950bea1174d7816c72a7dad64739ce1c44631e505fd4818c",
+    "src/service_route_scoring.py": "c258236a0ec0cddf1dda479b279e9a57e3b685129ce28310b1b9a9b60482f7ae",
+    "src/simulate_rollout_revised.py": "1d4bda0b9409abe223317831f30daeeaf485a9a51b8e9795486b7f83ef2a9bd8",
+    "src/smartds_ev_feasibility.py": "cf9b49a48efcf84f756090f6f976c9e2e5b0c5509fe187a9b93162b95934c6e1",
+    "src/run_frozen_service_experiments.py": "89a58fed5efe30b47748aed6f42418353050ce06daca05acb95d1b57802a8925",
+    "results/calibration_strict_20260905/transition_parameter_uncertainty.csv": "00c23cbf9796f3a512efec7032a3c484d826a6899bd36f2dd1e9983111c4a8d2",
+    "results/packet_training_20260905/packet_network_scenarios.csv": "fdd8f442f21525ac0fc8a7bf3cfff2b1ae110b4340f5e75de8679de167b13b47",
+    "results/real_ev_strict_20260905/forecast_plain_seed0.npz": "ff8f7718142074712f5deba7b2a3568270ae5cc263b017373f001cc3448f03d4",
+    "results/real_ev_strict_20260905/validation_forecast_plain_seed0.npz": "43e0136143bd742b602687a584df34dbb7186c322305965551f57397d07fe6d4",
+    "data/external/processed/boulder_ev/boulder_ev_rollout_dataset.npz": "285df84bfc3ef0e7ae8b08b55b39ea1d9b4bd263c9d377daa6b48b298b98e371"
+  },
+  "protocol_sha256": "d17f8af1fc74d62deb2ff32de39f502b0bd1d6a76a625bbf41d791f096911aa2",
+  "guard_rates": [
+    0.001
+  ],
+  "random_state": 2026,
+  "changes": {
+    "realized_zero": [
+      "comm_persistence",
+      "pc_coupling",
+      "rc_coupling",
+      "cr_coupling",
+      "cp_coupling"
+    ]
+  },
+  "dispatch_rule": "All route decisions precede all realized policy execution.",
+  "cache_rule": "Exact same route shares one deterministic execution, not a predicted outcome.",
+  "latency_rule": "Dispatch all-variant time and repeated service time are separate diagnostics.",
+  "started_unix": 1788605397.9201927
+}

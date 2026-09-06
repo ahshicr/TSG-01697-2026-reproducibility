@@ -3,11 +3,23 @@
 **Transition Based Closed Loop Restoration for Mobility Coupled Distribution
 Systems with Executable Actions**
 
-This snapshot contains the corrected, frozen service-cost experiments,
+This snapshot contains the corrected, frozen service-cost and reference-protection experiments,
 processed public data, trained models, executable simulation, statistical
 results, and manuscript sources. It does not require HPC access.
 
 ## Current result and earlier versions
+
+The protected route rule is the principal added method. On the original 4,096
+pairs, its mean cost is 1112.572766, compared with 1113.678863 for the matched
+reference and 1112.535293 for central PC. Protected minus matched cost is
+-1.106096, with marginal 95% interval [-1.376034, -0.858215], a 0.099319%
+reduction. The new domestic 80-comparison Holm adjustment retains this mean
+effect. Protected minus central is +0.037473 and does not establish superiority.
+The fixed mean noninferiority and six-condition positive-excess tests pass on
+both route groups, followed by both independent municipal forecasts. The
+adverse total-cost tail result is retained and is not described as protection.
+
+The following earlier mechanism comparisons remain unchanged controls.
 
 On 4,096 paired scenarios, central PC reduces mean dimensionless cost by
 0.102684% relative to the control with the same service score but without
@@ -35,7 +47,59 @@ the revised 2023 evaluation. The test year had previously been inspected for
 diagnosis. This is a frozen revision evaluation, not a claim that the year had
 never been examined. Design decisions and source digests are preserved.
 
-## Verify without rerunning the simulations
+## Reproduce the current protected method
+
+The current main method compares each proposed route with the reference route
+under the same transition matrix, then takes the largest paired difference.
+It changes the reference only when this difference passes the fixed margin.
+The earlier central and absolute-worst-cost methods remain mechanism controls.
+
+From this repository's root, use Python 3.13.7 and the pinned dependencies.
+This single check restores the losslessly compressed records, verifies the
+snapshot, and freshly executes both route groups on domestic and independent
+municipal inputs, with both independent forecasts and a binding-load condition.
+
+```powershell
+python -m pip install -r requirements.txt
+python -u src/reproduce_reference_protection.py --output results/reviewer_reference_check_local.json --full-statistics
+```
+
+The small replay checks 24 scenario-condition combinations and 216 policy rows.
+With `--full-statistics`, it also independently checks all 83,968 recorded
+protection choices and recomputes the 240 new mean comparisons, their separate
+80-test and 160-test correction families, and the adoption intervals. Omitting
+that option retains the fresh execution check. Neither mode retrains models or
+reconstructs the municipal user-level source table.
+
+All validation, domestic and external conditions are supplied. Their larger
+CSV and JSONL records are compressed with gzip without changing any source byte.
+`COMPRESSED_RECORDS.csv` records both original and compressed hashes and sizes.
+The restore command refuses to replace a conflicting existing record.
+
+```powershell
+python src/unpack_guarded_records.py
+```
+
+Prepared station-hour inputs suffice for independent policy execution. The
+original Palo Alto export contains unrelated user fields and is deliberately
+not redistributed. Rebuilding session-to-hour inputs requires downloading the
+original table from its municipal owner under its terms. The released source
+and full reconstruction report explain this separate task.
+
+For new simulations, always use new output directories. A small or complete
+protected domestic experiment can be run as follows. Removing
+`--smoke-scenarios 16 --conditions primary` runs all declared domestic conditions.
+
+```powershell
+python -u src/run_guarded_experiments.py --phase test --output results/reviewer_guarded_local --conditions primary --smoke-scenarios 16 --workers 2
+python -u src/run_independent_guarded_experiments.py --output results/reviewer_independent_local --conditions primary --smoke-scenarios 16 --workers 2
+```
+
+Both external forecasts are evaluated by default. Their outcomes must not be
+used to reselect the fixed margin. The graph transfer is retrospective because
+the source model's training period is later than the external evaluation year.
+
+## Verify the earlier mechanism comparisons
 
 Use Python 3.13.7 and the pinned environment in `requirements.txt`. For the
 read-only statistical check, NumPy, pandas, and SciPy suffice.
@@ -52,7 +116,7 @@ corrections for paired t and Wilcoxon tests. It also recomputes empirical cost
 quantiles and fractional upper-tail means. Passing it does not prove a theorem,
 external field validity, or publication readiness.
 
-## Run the executable method
+## Run the earlier mechanism controls
 
 From this repository's root, use the frozen runner, not the older simulator's
 default entry point.
@@ -106,14 +170,42 @@ python src/make_manuscript_appendix.py
 python src/make_submission_figures.py
 ```
 
-The manuscript appendix contains the necessary parameter and comparison tables.
-The optional repository reader report is not a separate journal submission attachment.
+The manuscript appendix contains complete continuous-operator proofs,
+the full parameter tables, and additional comparisons in the same PDF.
+There is no separate supplementary submission. The Chinese author assessment is not a review
+attachment and is not included in this public deposit.
+
+The new protected result tables are generated with
+`python src/build_guarded_paper_tables.py` after records have been restored.
+Full parameter values are documented separately from numerical result tables.
 
 These commands regenerate outputs from the released scenario rows and input
 summaries. Run snapshot verification first. Generated image or PDF metadata
 may differ, and editing a released file intentionally invalidates its checksum.
 Figure 1 is a retained conceptual illustration, not a quantitative result.
 Figure 2 is regenerated from numerical source records.
+
+The protected rule reduced mean cost relative to the no-transition reference on
+the original routes, and reduced positive excess over that reference across the
+fixed coefficient errors. It did not establish mean superiority over central PC
+or universal total-cost tail protection. The adverse upper-tail result and every
+external condition remain in the manuscript appendix and full records.
+
+## Compile the manuscripts
+
+From `paper`, use a complete TeX Live installation. Repeated passes establish
+the document labels. The supplied bibliography permits compilation without
+downloading any citation metadata.
+
+```powershell
+pdflatex main.tex
+pdflatex main.tex
+latexmk -pdf main_latexdiff.tex
+```
+
+The marked manuscript was made with latexdiff. Accepting its changes yields
+the clean text. Original deletions remain visibly struck out, including
+earlier proof statements that have been replaced or expanded.
 
 See `REVISION_REPRODUCIBILITY.md` for evidence mappings and study boundaries,
 `DATA_DICTIONARY.md` for variables and units, and

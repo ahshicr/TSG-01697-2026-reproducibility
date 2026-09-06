@@ -1,0 +1,246 @@
+{
+  "status": "PASS",
+  "records": {
+    "validation/primary": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 235,
+      "fallback": 3861
+    },
+    "validation/matrix_scale_075": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 447,
+      "fallback": 3649
+    },
+    "validation/matrix_scale_125": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 191,
+      "fallback": 3905
+    },
+    "validation/matrix_noise_015": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 212,
+      "fallback": 3884
+    },
+    "validation/expanded_unsupported": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 235,
+      "fallback": 3861
+    },
+    "validation/zero_all_unsupported": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 235,
+      "fallback": 3861
+    },
+    "validation/nonlinear_ood": {
+      "scenarios": 512,
+      "rows": 7680,
+      "choices": 4096,
+      "accepted": 235,
+      "fallback": 3861
+    },
+    "test/primary": {
+      "scenarios": 4096,
+      "rows": 36864,
+      "choices": 8192,
+      "accepted": 274,
+      "fallback": 7918
+    },
+    "test/matrix_scale_075": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 161,
+      "fallback": 1887
+    },
+    "test/matrix_scale_125": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 46,
+      "fallback": 2002
+    },
+    "test/matrix_noise_015": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 44,
+      "fallback": 2004
+    },
+    "test/expanded_unsupported": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 58,
+      "fallback": 1990
+    },
+    "test/zero_all_unsupported": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 58,
+      "fallback": 1990
+    },
+    "test/nonlinear_ood": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 58,
+      "fallback": 1990
+    },
+    "test/electrical_stress": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 56,
+      "fallback": 1992
+    },
+    "graph/primary": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 67,
+      "fallback": 1981
+    },
+    "graph/matrix_scale_075": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 131,
+      "fallback": 1917
+    },
+    "graph/matrix_scale_125": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 43,
+      "fallback": 2005
+    },
+    "graph/matrix_noise_015": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 50,
+      "fallback": 1998
+    },
+    "graph/expanded_unsupported": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 67,
+      "fallback": 1981
+    },
+    "graph/zero_all_unsupported": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 67,
+      "fallback": 1981
+    },
+    "graph/nonlinear_ood": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 67,
+      "fallback": 1981
+    },
+    "graph/electrical_stress": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 52,
+      "fallback": 1996
+    },
+    "weekly/primary": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 138,
+      "fallback": 1910
+    },
+    "weekly/matrix_scale_075": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 203,
+      "fallback": 1845
+    },
+    "weekly/matrix_scale_125": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 125,
+      "fallback": 1923
+    },
+    "weekly/matrix_noise_015": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 110,
+      "fallback": 1938
+    },
+    "weekly/expanded_unsupported": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 138,
+      "fallback": 1910
+    },
+    "weekly/zero_all_unsupported": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 138,
+      "fallback": 1910
+    },
+    "weekly/nonlinear_ood": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 138,
+      "fallback": 1910
+    },
+    "weekly/electrical_stress": {
+      "scenarios": 1024,
+      "rows": 9216,
+      "choices": 2048,
+      "accepted": 173,
+      "fallback": 1875
+    }
+  },
+  "original_compatible_pairs": 12288,
+  "domestic_statistics": {
+    "mean_comparisons": 80,
+    "exact_primary_intervals": 10,
+    "all_mean_tests_and_Holm_recomputed": true,
+    "adoption_intervals_recomputed": true
+  },
+  "external_statistics": {
+    "mean_comparisons": 160,
+    "exact_primary_intervals": 20,
+    "all_mean_tests_and_Holm_recomputed": true,
+    "adoption_intervals_recomputed": true
+  },
+  "totals": {
+    "scenarios": 31232,
+    "rows": 302592,
+    "choices": 83968,
+    "accepted": 4252,
+    "fallback": 79716
+  },
+  "frozen_sha256": "ce0ac2900accce3ff256a26569b1d0dde1d870124499cda2f8172554f53f7de3",
+  "script_sha256": "510960ad5006d0f09d1c91887a8c32db5f028c79102be80978a2dc5be325fca2",
+  "seconds": 52.890886306762695,
+  "scope": "All recorded finite choices and fallback execution, source identity, primary intervals and all mean-test families. Not a global proof."
+}

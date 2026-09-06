@@ -1,0 +1,46 @@
+Reference protection compares a proposed route with an executable alternative
+before committing either route.  Let $P_b$ minimize the forecast matched
+service score on the common nonempty portfolio $\mathcal P$.  Fix the same
+deterministic ordering for every tie.  For each $P\in\mathcal P$, define
+\begin{align}
+\Delta(P,M)&=\widehat Q_t(P,M)-\widehat Q_t(P_b,M),\\
+U(P)&=\max_{M\in\mathcal U_V}\Delta(P,M).
+\label{eq:reference-difference}
+\end{align}
+The subtraction in \eqref{eq:reference-difference} uses the same matrix for
+both routes.  It is not the difference between two separately maximized
+absolute scores.  Let $P_u$ be the first minimizer of $U$ and set
+\begin{align}
+\mu&=\nu\max\{1,|\widehat Q_t(P_b,M_c)|\},\\
+\tau&=10^{-10}\max\{1,\max_{P,M}|\widehat Q_t(P,M)|\}.
+\end{align}
+For a nonnegative margin ratio $\nu$, PC with reference protection returns
+\begin{equation}
+P_g=\begin{cases}
+P_u,&U(P_u)<-\mu-\tau,\\
+P_b,&\text{otherwise}.
+\end{cases}
+\label{eq:protected-route}
+\end{equation}
+Thus an insufficient predicted advantage retains the forecast matched route,
+including its complete travel and completion schedule.  This rule changes
+route selection only.  It does not change the common service allocations,
+work orders, forecasts, uncertainty matrices, or execution constraints.
+The comparison is made once at dispatch and uses no realized future outcome.
+The margin is selected on validation observations and fixed before subsequent
+evaluation.  The tolerance prevents near ties from replacing the reference
+but is not a bound on all floating point errors in the forecast and score.
+
+To separate the influence of uncertain parameters from route construction,
+a second comparison uses six priorities that contain no transition
+coefficient.  They are the training mean arrivals, the weighted current
+threat, current threat multiplied by forecast exposure, total forecast
+arrivals, total forecast energy plus backlog, and a uniform priority.
+All selectors within this comparison receive the same resulting routes.
+An observation supported score retains road persistence, spatial spread,
+power persistence, and the fitted power to road association, while setting
+communication persistence and the other four couplings to zero in the
+score only.  Realized dynamics are unchanged.  This is an ablation of
+unobserved terms, not an assertion that their physical effects vanish.
+Changes between the two route portfolios cannot be attributed to score
+selection alone.

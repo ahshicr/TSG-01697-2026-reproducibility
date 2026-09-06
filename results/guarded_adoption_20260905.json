@@ -1,0 +1,63 @@
+{
+  "status": "ADOPT_REFERENCE_PROTECTION",
+  "margin_ratios": {
+    "published": 0.001,
+    "independent": 0.001
+  },
+  "original_routes": "Primary protected route comparison, retaining central and worst absolute score controls.",
+  "independent_routes": "Separate construction and scoring ablation, not an isolated between-portfolio score comparison.",
+  "passed": [
+    {
+      "group": "published",
+      "validation_screen_pass": true,
+      "domestic_noninferiority_pass": true,
+      "positive_excess_pass": true,
+      "external_noninferiority_pass": true,
+      "numerical_performance_adoption_pass": true,
+      "final_adoption_requires": "Independent verification of information, execution, statistics and complete mathematical statements."
+    },
+    {
+      "group": "independent",
+      "validation_screen_pass": true,
+      "domestic_noninferiority_pass": true,
+      "positive_excess_pass": true,
+      "external_noninferiority_pass": true,
+      "numerical_performance_adoption_pass": true,
+      "final_adoption_requires": "Independent verification of information, execution, statistics and complete mathematical statements."
+    }
+  ],
+  "mathematical_scope": "Complete finite-score derivation and conditional execution bound in Theorem 3. The numerical checker is not a theorem prover.",
+  "interpretation": "Reduced positive excess relative to matched with fixed average-cost noninferiority criteria, not uniform total-cost tail superiority.",
+  "deliverable_status": "Manuscript, correspondence, references, layout, marked changes and public release require final synchronization.",
+  "evidence": {
+    "selection": {
+      "path": "results/guarded_validation_20260905/method_decision.json",
+      "sha256": "ce0ac2900accce3ff256a26569b1d0dde1d870124499cda2f8172554f53f7de3"
+    },
+    "external_inference": {
+      "path": "results/guarded_external_20260905/inference/completion.json",
+      "sha256": "38174bbc928a72a652f2668a95404628fa0c258f7b7ad99d0d17dcdd36b2765e"
+    },
+    "records_verification": {
+      "path": "results/guarded_verification_20260905.json",
+      "sha256": "05a9f42593ca7b5a45afd88e425cfdf0c523f97bd29984d19639c7eb16961279"
+    },
+    "independent_input_verification": {
+      "path": "results/independent_input_verification_20260905.json",
+      "sha256": "619d096abeb330640e80548679ae0b77465b848e7a4017cffd963c6a20575515"
+    },
+    "design_checks": {
+      "path": "results/guarded_design_checks_final_20260905.json",
+      "sha256": "1836709314dbc768c2744b8196c36302db1a72732c78bf92745eb42cfdd1d048"
+    },
+    "mathematical_statement": {
+      "path": "paper/theory_reference_protection.tex",
+      "sha256": "a0f57425a74b3d58359a50faa911335d216fe51bb1807baec93f9e8186809807"
+    },
+    "method_statement": {
+      "path": "paper/method_reference_protection.tex",
+      "sha256": "63be57be9133987b113009ad3bb4b6af31bc8e8aa059595de5588a7bfb665bf2"
+    }
+  },
+  "script_sha256": "7cff3d5d3e231778d23e542176b1a91bb60dcb07db7530866744037d471d2b4b"
+}

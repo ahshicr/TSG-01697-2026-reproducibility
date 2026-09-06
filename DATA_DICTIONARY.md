@@ -86,3 +86,40 @@ contains electrical counts, retained actions, requests, dispatch and completion.
 
 Figure 2's numerical source rows are retained next to the figure. Figure 1 is
 a conceptual schematic and does not encode measurements or estimated effects.
+
+## Protected route comparisons
+
+The new study uses `published` for the original shared route construction and
+`independent` for the construction without any transition coefficients. Policy
+names combine the route group and selector, for example
+`published/protected_0.001`. Comparisons are paired within a route group only.
+The label `observed` retains only observation-supported score coefficients and
+occurs only in the independent route group.
+
+| Field | Meaning |
+|---|---|
+| `selected_candidate` | Deterministically ordered route chosen for actual execution |
+| `reference_candidate` | Forecast-matched route used as the same-matrix reference |
+| `guard_accepted` | One only when the strict protected replacement condition passes |
+| `guard_margin` | Fixed ratio times the scale of the central reference score |
+| `guard_tolerance` | Fixed numerical comparison tolerance, not an estimated model error |
+| `guard_upper_difference` | Largest same-matrix selected-minus-reference score |
+| `dispatch_all_variants_ms` | Wall time for constructing and scoring all variants, not a physical delay |
+
+`candidate_scores.jsonl` retains the full 21-by-six matrix scores, central
+scores, no-transition scores, ordered candidates and reference index for each
+scenario and each route group. These permit independent reconstruction of every
+selection without calling the selector. Route and completion fields in the
+paired CSV show what was actually executed. Unprotected rows have empty guard
+fields where the quantity does not apply.
+
+The inference outputs `paired_costs.csv`, `diagnostics.csv`, `tails.csv` and
+`completion.json` preserve the reported comparisons and declared decisions.
+Positive excess is `max(cost_policy - cost_matched, 0)` within the same scenario
+and route group. The six-condition comparison first averages this quantity
+within a scenario ID, then resamples IDs. The separate tail table concerns total
+cost, not positive excess, so the two quantities need not move together.
+
+The independent-input README defines every NPZ array, its units and date ranges.
+`graph` and `weekly` are both fixed forecast inputs, not selected winners.
+Municipal user identifiers are absent from these station-level arrays.

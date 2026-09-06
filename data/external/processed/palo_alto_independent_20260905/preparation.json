@@ -1,0 +1,56 @@
+{
+  "source_sha256": "e65f5f5d3861cdd6bf3da2de97aabe590d7708e001db1532202eec52081ba82c",
+  "source_records": 259415,
+  "exact_duplicate_analysis_records": 5,
+  "failed_rules_nonexclusive": {
+    "start": 0,
+    "station": 0,
+    "energy": 0,
+    "charging": 0,
+    "connection": 45,
+    "coordinates": 0
+  },
+  "valid_retained_sessions": 159587,
+  "excluded_station_rows": 52,
+  "stations": 33,
+  "retained_sessions_by_year": {
+    "2017": 49011,
+    "2018": 42803,
+    "2019": 47731,
+    "2020": 20042
+  },
+  "training_station_eligibility": "At least 100 valid 2017-2018 sessions. No test-year station selection.",
+  "time_basis": "Source local civil timestamps and reported elapsed charging durations.",
+  "reconstructed_energy_kwh": 1416780.194033255,
+  "expected_in_window_energy_kwh": 1416780.1939999997,
+  "energy_boundary_truncation_kwh": 4.656612873077393e-10,
+  "connected_hours": 376546.9089410098,
+  "expected_connected_hours": 376546.90888888936,
+  "raw_input_fields_loaded": [
+    "Station Name",
+    "Start Date",
+    "End Date",
+    "Total Duration (hh:mm:ss)",
+    "Charging Time (hh:mm:ss)",
+    "Energy (kWh)",
+    "Latitude",
+    "Longitude"
+  ],
+  "user_identifiers_loaded": false,
+  "training_mean_cutoff": "2019-01-01",
+  "evaluation_year": 2020,
+  "forecast_windows": 8778,
+  "checkpoint_sha256": "32da4aace6382fa559fd910dcce9169f5e2544c6ff3ebf0c8a9ca674bee1c760",
+  "learned_weights_unchanged": true,
+  "original_normalization_unchanged": true,
+  "changed_buffer": "Nonlearned station adjacency only",
+  "forecast_rule": "Fixed retrospective geographic transfer and separately reported weekly persistence. No external fitting or selection.",
+  "protocol_sha256": "40899a79c74b8d629dd300380c7a7c866133a74719a52a9291337a8ef2dda221",
+  "script_sha256": "d1954f4d745af2300ed2b44dbd2b30cb451349272b1bef7d2ad4c258249777bf",
+  "prepared_unix": 1788605356.3976362,
+  "outputs": {
+    "station_hour_inputs.npz": "b57b687b40dd735b670f33b62dd75f1e3c8a52ca264c3e4ddcb08fc55fddb0ed",
+    "issued_forecasts.npz": "ed3536e0e8b1031a5969c76e192b78b4e72cee9993f5694b0fa4ec3f73d24da6",
+    "station_coordinates.csv": "a254bb03915b7a66ef0536b9568cff19662316769af09ad1e4dc2733d554f922"
+  }
+}
