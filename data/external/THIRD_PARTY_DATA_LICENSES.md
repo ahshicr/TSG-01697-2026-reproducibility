@@ -40,6 +40,24 @@ It is a synthetic San Francisco-area network, not Boulder's utility feeder.
 The original object keys, checksums and access records are in
 `metadata/smartds_v1.0_sfo_p1u_dt104_manifest.json`.
 
+## City of Palo Alto charging observations
+
+The independent input derives from the City of Palo Alto's Electric Vehicle
+Charging Station Usage, July 2011 to December 2020, available at
+<https://data.paloalto.gov/dataviews/257812/electric-vehicle-charging-station-usage-july-2011-dec-2020/>.
+Use is subject to the City's custom Open Data Terms and Conditions of Use,
+<https://www.paloalto.gov/Departments/Information-Technology/Open-Data-Portal/Terms-of-Use>.
+It is not labelled CC0 or relicensed by this deposit. The City does not endorse
+this work. Original source accuracy is not warranted.
+
+Only processed station-level observations, public coordinates, reconstructed
+hourly energy and fixed forecasts are included. The original table includes
+unrelated user-identifying fields and is not redistributed. Its digest and the
+complete reconstruction rules are retained for source verification. Charging
+curves are reconstructed from reported elapsed charging duration and total
+energy, not independently metered hourly values. The accompanying processed
+README records all filtering, period, attribution and execution distinctions.
+
 ## Generated material and integrity
 
 Simulated packet traffic, route scenarios, derived forecast arrays and statistical

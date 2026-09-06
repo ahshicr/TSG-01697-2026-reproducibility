@@ -1,0 +1,22 @@
+\begin{table}[t]
+\centering
+\caption{Reference protection and independent-input settings. Values were fixed before the corresponding evaluation. The selected margin uses validation only. Existing service, objective, transition, and execution settings are unchanged.}
+\label{tab:guarded-parameters}
+\footnotesize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.08}
+\begin{tabular}{@{}p{.24\columnwidth}p{.25\columnwidth}p{.44\columnwidth}@{}}
+\toprule
+Setting & Value & Role, selection, and tested range \\
+\midrule
+Margin $\nu$ & 0.001 & Selected on 2022 only from 0, 0.00025, 0.0005, and 0.001. \\
+Cost floor, tolerance & 1, $10^{-10}$ & Central reference absolute-cost floor and maximum supplied-score tolerance coefficient. \\
+Mean penalty, upper percentile & 0.0005, 0.975 & Matched-cost fraction and one-sided endpoint. Both external forecasts must pass for each portfolio. \\
+Validation, original evaluation, other pairs & 512, 4096, 1024 & Per condition. Validation has seven conditions. Evaluation adds electrical stress. External evaluation uses 1024 in every condition. \\
+Mean, tail resamples & 20000, 2000 & Paired bootstrap. Tail intervals remain exploratory. \\
+Mean-test families & 80, 160 & Domestic and external Holm families. The two aggregate error-loss tests form a separate family. \\
+Station eligibility & At least 100 & Valid sessions in 2017 and 2018 only. Coordinates and budgets use the same period. \\
+Charging duration & $(0,48]$ h & Positive finite energy and valid connection required. Charging cannot exceed connection duration. \\
+Graph, weekly lag & 4, 168 h & Geographical neighbours and prior-week input. Learned weights and original normalization are unchanged. \\
+External evaluation & 2020 & Both forecasts reported. No restoration or margin fitting on external outcomes. \\
+\bottomrule
+\end{tabular}
+\end{table}

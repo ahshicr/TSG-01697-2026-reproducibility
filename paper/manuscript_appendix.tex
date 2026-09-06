@@ -1,10 +1,33 @@
-\appendix[Parameters and additional comparisons]
+\subsection{Parameters and additional comparisons}
+\suppressfloats[t]
 
 \label{app:parameters}
 
 Tables~\ref{tab:scenario-parameters}, \ref{tab:complete-parameters}, and \ref{tab:execution-parameters} state the numerical settings, their roles, sources, selection periods, and tested ranges.\AITextRef\ Grouped values follow the listed parameter order. Unless a data source or sensitivity range is stated, values are declared benchmark settings held fixed across policies. They were not retuned on the revised test. Table~\ref{tab:calibrated-uncertainty} separately gives transition estimates and intervals. Long estimates are rounded for display.
 
 Table~\ref{tab:supp-primary} retains the complete primary comparison family. Table~\ref{tab:supp-sensitivity} gives every integrated sensitivity comparison, Table~\ref{tab:supp-physical} gives all secondary service and physical outcomes, and Table~\ref{tab:supp-cost-tail} gives the empirical cost tails. The numerical record retains all paired mean and rank tests, including unfavorable comparisons.
+
+The added reference-protection study uses the same numerical settings unless
+specified in Section~\ref{sec:reference-protection}.
+Table~\ref{tab:guarded-validation} gives all margin choices,
+Table~\ref{tab:guarded-ablation} separates route construction from the
+observation-supported score, and Table~\ref{tab:guarded-tails} retains the
+primary tail comparisons. Table~\ref{tab:guarded-parameters} states the
+additional settings. Tables~\ref{tab:guarded-external-published} and
+\ref{tab:guarded-external-independent} retain every external condition
+under both forecasts, including higher protected costs.
+The tolerance coefficient is $10^{-10}$.
+Scenario initialization uses 9202201 for validation and 202609052 for the
+independent municipal input, with the same stride of 7919. Statistical
+resampling uses 202609055. Mean and tail intervals use 20,000 and 2,000
+resamples, respectively. These indices and counts were fixed before
+evaluation rather than chosen from its outcomes.
+\input{table_guarded_validation}
+\input{table_guarded_ablation}
+\input{table_guarded_tails}
+\input{table_guarded_parameters}
+\input{table_guarded_external_published}
+\input{table_guarded_external_independent}
 
 \begin{table}[!t]
 \centering

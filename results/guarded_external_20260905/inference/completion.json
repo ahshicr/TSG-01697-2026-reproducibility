@@ -1,0 +1,86 @@
+{
+  "status": "INDEPENDENT_INFERENCE_COMPLETE",
+  "external_gates": [
+    {
+      "forecast": "graph",
+      "group": "published",
+      "guard_minus_central": -0.2826166983172839,
+      "noninferiority_shifted_mean": -0.5415390640958033,
+      "noninferiority_upper": -0.21731426087248568,
+      "external_noninferiority_pass": true
+    },
+    {
+      "forecast": "graph",
+      "group": "independent",
+      "guard_minus_central": -0.022700832573774962,
+      "noninferiority_shifted_mean": -0.2672222995024337,
+      "noninferiority_upper": -0.18281939953678197,
+      "external_noninferiority_pass": true
+    },
+    {
+      "forecast": "weekly",
+      "group": "published",
+      "guard_minus_central": -0.17605490967590154,
+      "noninferiority_shifted_mean": -0.4388877246441,
+      "noninferiority_upper": -0.14869332469502938,
+      "external_noninferiority_pass": true
+    },
+    {
+      "forecast": "weekly",
+      "group": "independent",
+      "guard_minus_central": -0.07347854325005226,
+      "noninferiority_shifted_mean": -0.32288833620575874,
+      "noninferiority_upper": -0.21932397840941056,
+      "external_noninferiority_pass": true
+    }
+  ],
+  "adoption_decisions": [
+    {
+      "group": "published",
+      "validation_screen_pass": true,
+      "domestic_noninferiority_pass": true,
+      "positive_excess_pass": true,
+      "external_noninferiority_pass": true,
+      "numerical_performance_adoption_pass": true,
+      "final_adoption_requires": "Independent verification of information, execution, statistics and complete mathematical statements."
+    },
+    {
+      "group": "independent",
+      "validation_screen_pass": true,
+      "domestic_noninferiority_pass": true,
+      "positive_excess_pass": true,
+      "external_noninferiority_pass": true,
+      "numerical_performance_adoption_pass": true,
+      "final_adoption_requires": "Independent verification of information, execution, statistics and complete mathematical statements."
+    }
+  ],
+  "cost_comparisons": 160,
+  "tail_comparisons": 128,
+  "source_records": {
+    "graph/primary": "1e8e67f82f86dfb5b96b6ca67923f7515d0b6267ec1c8cf8ccf8f31a073cce8d",
+    "graph/matrix_scale_075": "8ff1b29782e8def53fc1d1367c289c492e519b890f6bfa0f03482747308f7577",
+    "graph/matrix_scale_125": "e2dd70832cf08c464b5b90851c652e90397bc0da35c3cb9b65f8c10a00e4e73c",
+    "graph/matrix_noise_015": "a23e1eb5d3133b66db5380db5b2337599dae49ad74c23f27cd791e2febb1791a",
+    "graph/expanded_unsupported": "a52517f8244a6deea44e910f56788f6a149433f89c6e6030ed2181eeaafb4ff9",
+    "graph/zero_all_unsupported": "227cacff8ac04d01bf94d155c795516a80b89458a30122695835a343fc05cb3b",
+    "graph/nonlinear_ood": "1e3df6e8b26606d7269be0ac3810cd13b2f778558967587519def9f1c937a75a",
+    "graph/electrical_stress": "8538396a90a4b33b30e6de2e383295b55eda23064e181890b95e2ee73c8c252d",
+    "weekly/primary": "3868c19e199d8557e78df8e28754f35659c6a02ac27c1ad777078ab501aeb495",
+    "weekly/matrix_scale_075": "47749e4cb8553ee6a5d26eaa90ccfeeb65be705a274818b94e9c31c8c84d54b7",
+    "weekly/matrix_scale_125": "4316b72344dad6d9a785d73ad94e355dc8d364d1f1c07819cb63e044587453e7",
+    "weekly/matrix_noise_015": "d06fc03dd5086128b1f1826d312a5afe7f2fff0169037fbca6cef07fe9bb6221",
+    "weekly/expanded_unsupported": "e8b501cc4fc3cb282165151cec8c2a314410102fd6cbff3ffaa08c8ee5353e95",
+    "weekly/zero_all_unsupported": "0fa87702f1b2275b5a03c0488fa24c2369c898b80b390cea780605b27c871845",
+    "weekly/nonlinear_ood": "1fd07b0551f548638dcf4b6a1d890006b4298cfe3aa38116592b9954cc32b580",
+    "weekly/electrical_stress": "3f66b3c9c48e4e6467e9c678b2eea567cceff9ed32409ed35597938e878bc6b0"
+  },
+  "frozen_sha256": "ce0ac2900accce3ff256a26569b1d0dde1d870124499cda2f8172554f53f7de3",
+  "domestic_inference_sha256": "86840e0887e35cc07262c315bd47ff2310ccfc18cb6c86f92a5964f5a44f31af",
+  "script_sha256": "4a4996299cb18c28d0d5a7a25f620b72920bb3d9bc0359790ad66da8d7be47e7",
+  "outputs": {
+    "paired_costs": "36dbbe1ef6a4f2fa5d1c9e7e422bb71ddb6692c5e51d0a3781217cf91878f35b",
+    "tails": "6e3c28a97ec5a0c52c8b73991d05afe6defefc01dec19d53a0024fee31e5f02d",
+    "diagnostics": "c862f3c77ac396f9e4864a3d2ca816e95f590a5d7bd70204e7ef830c60b2df0a"
+  },
+  "scope": "Independent geographic charging and constructed service-restoration execution, not joint field validation."
+}

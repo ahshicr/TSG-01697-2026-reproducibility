@@ -1,0 +1,20 @@
+\begin{table}[t]
+\centering
+\caption{All validation margins on 512 paired scenarios per condition. The third column is the guard minus central cost as a percentage of matched cost in the original condition. The final column averages positive excess above matched over the six perturbed conditions. All rows passed the 0.05\% screen. The fixed rule selected $\nu=0.001$ for each portfolio.}
+\label{tab:guarded-validation}
+\footnotesize\setlength{\tabcolsep}{3pt}\renewcommand{\arraystretch}{1.12}
+\begin{tabular}{@{}lrrr@{}}
+\toprule
+Routes & $\nu$ & Penalty (\%) & Mean $E^+$ \\
+\midrule
+Original & 0 & -0.07010 & 0.34298 \\
+Original & 0.00025 & -0.07024 & 0.34001 \\
+Original & 0.0005 & -0.07386 & 0.30859 \\
+Original & 0.001 & -0.06938 & 0.27427 \\
+Independent & 0 & 0.00342 & 0.03692 \\
+Independent & 0.00025 & 0.01051 & 0.03254 \\
+Independent & 0.0005 & 0.01376 & 0.03254 \\
+Independent & 0.001 & 0.01559 & 0.02397 \\
+\bottomrule
+\end{tabular}
+\end{table}

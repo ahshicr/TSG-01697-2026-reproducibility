@@ -1,0 +1,87 @@
+\textit{Theorem 3 (conditional protection relative to an executable route).}
+Let $\mathcal P$ and $\mathcal U_V$ be finite nonempty sets, let all supplied
+route scores be finite, and let $\mu,\tau\ge0$.  Under
+\eqref{eq:reference-difference} and \eqref{eq:protected-route}, either
+$P_g=P_b$, or
+\begin{equation}
+\Delta(P_g,M)<-\mu-\tau
+\quad\text{for every }M\in\mathcal U_V.
+\label{eq:protected-score-bound}
+\end{equation}
+Fix a common realized environment and the same deterministic execution
+rule for all routes.  Let $Q(P)$ be its cost under route $P$.  If some
+$M_0\in\mathcal U_V$ and $\varepsilon_D\ge0$ satisfy
+\begin{equation}
+\left|Q(P)-Q(P_b)-\Delta(P,M_0)\right|\le\varepsilon_D
+\quad\text{for all }P\in\mathcal P,
+\label{eq:differential-error-condition}
+\end{equation}
+then
+\begin{equation}
+Q(P_g)-Q(P_b)\le\max\{0,\varepsilon_D-\mu-\tau\}.
+\label{eq:protected-execution-bound}
+\end{equation}
+In particular, $\varepsilon_D\le\mu+\tau$ is sufficient for noninferiority
+to $P_b$ in that environment.  Uniform absolute error
+$|Q(P)-\widehat Q_t(P,M_0)|\le\varepsilon_Q$ implies
+\eqref{eq:differential-error-condition} with
+$\varepsilon_D=2\varepsilon_Q$.
+
+\textit{Proof.}  The finite nonempty portfolio and finite scores give a
+forecast matched minimizer $P_b$.  The same properties give each maximum
+$U(P)$ and a minimizer $P_u$.  Because $\Delta(P_b,M)=0$ for every matrix,
+$U(P_b)=0$ and $U(P_u)\le0$.  If the strict acceptance condition fails,
+\eqref{eq:protected-route} returns $P_b$, whose score difference and
+realized cost difference from itself are both zero.  If the condition
+holds, then for every $M\in\mathcal U_V$,
+\[
+\Delta(P_u,M)\le U(P_u)<-\mu-\tau.
+\]
+This proves \eqref{eq:protected-score-bound}.  Applying
+\eqref{eq:differential-error-condition} at $P_u$ and $M_0$ gives
+\begin{align}
+Q(P_u)-Q(P_b)
+&\le\Delta(P_u,M_0)+\varepsilon_D \nonumber\\
+&\le U(P_u)+\varepsilon_D
+<-\mu-\tau+\varepsilon_D.
+\end{align}
+Combining this strict inequality with the zero difference in the fallback
+branch proves \eqref{eq:protected-execution-bound}.  Under the absolute
+error condition, define $e(P)=Q(P)-\widehat Q_t(P,M_0)$.  Then
+\[
+|Q(P)-Q(P_b)-\Delta(P,M_0)|
+=|e(P)-e(P_b)|\le2\varepsilon_Q,
+\]
+which proves the final assertion.  \hfill $\square$
+
+The same matrix must be used in both terms of
+\eqref{eq:reference-difference}.  For example, suppose the reference
+scores at two matrices are $(100,0)$ and another route has scores
+$(99,10)$.  Subtracting their separate maxima gives $-1$, although the
+second matrix gives a cost increase of $10$.  The paired maximum is
+$10$, so \eqref{eq:protected-route} does not accept that route.
+
+Theorem 3 is an algebraic statement about the supplied finite scores.
+For computed differences $\widetilde\Delta$, suppose additionally that
+$|\widetilde\Delta(P,M)-\Delta(P,M)|\le\varepsilon_{\rm num}$ uniformly.
+A route accepted using the computed maximum then satisfies
+$\Delta(P_g,M)<-\mu-\tau+\varepsilon_{\rm num}$ for each matrix, by adding
+the difference error to the strict acceptance inequality.  Repeating the
+proof gives \eqref{eq:protected-execution-bound} with
+$\varepsilon_D+\varepsilon_{\rm num}$ in place of $\varepsilon_D$.
+If each computed score has absolute error at most $\xi$ and the subtraction
+has additional error at most $\chi$, the triangle inequality gives
+$\varepsilon_{\rm num}\le2\xi+\chi$.  The chosen $\tau$ alone does not
+establish either error bound.
+
+Returning $P_b$ means executing its route rather than merely assigning its
+policy label.  Given identical initial states and future inputs, the two
+executions have identical service allocations at the first step.  Their
+packet and electrical operations use the same inputs and deterministic
+acceptance rule, and their completed jobs are identical.  The service and
+state recursions therefore give identical next states.  Induction repeats
+this argument through the finite horizon, proving equality of the returned
+reference execution and its cost.  Numerical comparisons additionally check
+the realized records.  Neither finite portfolios nor those checks imply a
+small uniform $\varepsilon_D$ on new environments.  Reference selection and
+its acceptance branch remain outside the continuous map of Corollary 1.

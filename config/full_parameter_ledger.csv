@@ -112,3 +112,26 @@ scenario,transition_threat_cap,0.98,normalized state,propagated threat clipping 
 statistics,scenario_initialization,2026,integer,base initialization index,shared paired random input construction,all frozen primary and sensitivity scenarios,not retuned
 statistics,scenario_stride,7919,integer,scenario index multiplier in initialization,base index plus scenario identifier times stride,all frozen primary and sensitivity scenarios,not retuned
 statistics,coefficient_noise_index,31991,integer,controller coefficient perturbation initialization,fixed noisy matrix construction,coefficient noise sensitivity,not retuned
+reference_protection,nu,0.001,fraction,minimum predicted relative advantage for route replacement,validation selection within four fixed candidates,2022 only,0|0.00025|0.0005|0.001
+reference_protection,tolerance_coefficient,1e-10,fraction,strict acceptance tolerance times maximum absolute supplied score or one,declared arithmetic comparison setting,fixed before validation,not a bound on all forecast rounding errors
+reference_protection,normalization_floor,1,cost units,positive floor for absolute central reference cost,declared normalization,fixed before validation,not varied
+reference_protection,noninferiority_margin,0.0005,fraction of matched cost,maximum permitted mean penalty relative to central,fixed adoption criterion,before validation and external outcomes,not varied
+reference_protection,noninferiority_percentile,0.975,probability,one-sided bootstrap upper endpoint for each route portfolio,two-portfolio error allocation,fixed before inference,both external forecasts must pass
+reference_protection,validation_pairs,512,scenarios per condition,margin screening and selection,fixed validation design,2022,seven conditions
+reference_protection,primary_pairs,4096,scenarios,original condition evaluation,fixed test design,2023 previously examined,fixed-rule reevaluation
+reference_protection,other_pairs,1024,scenarios per condition,parameter errors and electrical stress evaluation,fixed test design,2023 and external 2020,eight conditions total in each evaluation
+reference_protection,mean_bootstraps,20000,resamples,paired mean and adoption intervals,fixed inference configuration,before inference,not varied
+reference_protection,tail_bootstraps,2000,resamples,exploratory paired quantile and tail intervals,fixed inference configuration,before inference,no multiplicity claim for tail intervals
+reference_protection,mean_test_families,80|160,comparisons,domestic and external Holm mean-test families,fixed complete comparison design,before inference,all conditions and route groups retained
+reference_protection,validation_initial_index,9202201,index,validation scenario initialization,fixed scenario design,before validation,stride 7919
+reference_protection,external_initial_index,202609052,index,external paired scenario initialization,fixed geographic protocol,before external outcomes,stride 7919
+reference_protection,statistical_initial_index,202609055,index,bootstrap initialization,fixed inference configuration,before inference,not selected by outcome
+independent_input,eligibility_minimum,100,sessions,minimum valid station sessions in reference years,fixed source processing protocol,2017 and 2018 only,not selected by external results
+independent_input,maximum_charging_duration,48,h,positive finite duration no longer than connection,fixed source quality rule,before external outcomes,0 to 48 with zero excluded
+independent_input,reference_years,2017|2018,years,station eligibility coordinates demand means and budgets,fixed geographic protocol,2017 and 2018 only,2019 not used to tune restoration
+independent_input,evaluation_year,2020,year,independent charging input evaluation,fixed geographic protocol,before external outcomes,retrospective model transfer
+independent_input,graph_neighbours,4,stations,nonlearned geographic adjacency,original graph construction with training coordinates,2017 and 2018 only,learned weights unchanged
+independent_input,weekly_lag,168,h,second fixed forecast from corresponding prior-week hour,declared persistence comparator,strictly past observations,both forecasts reported
+independent_input,charging_budget,54.467754364,kWh per hour,external requested charging budget,training mean energy sum times 1.22,2017 and 2018 only,twenty times budget under electrical stress
+independent_input,communication_budget,50.324378967,service units,external communication resource budget,training capacity proxy sum times 0.72,2017 and 2018 only,not fitted to evaluation outcomes
+independent_input,repair_priority_budget,10,priority units,external continuous repair priority budget,maximum of 10 and 0.018 times training mean arrivals,2017 and 2018 only,not fitted to evaluation outcomes

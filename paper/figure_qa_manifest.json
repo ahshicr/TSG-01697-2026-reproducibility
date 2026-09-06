@@ -5,12 +5,12 @@
     "contract": {
       "core_conclusion": "Requested PC actions affect the next state only after the execution conditions are satisfied.",
       "archetype": "continuous infrastructure schematic",
-      "generation": "OpenAI native image generation and editing with manuscript-specific labels. The final edit used the native image tool after the local GPT Image CLI reported a missing key. The native model version was not supplied."
+      "generation": "OpenAI native image generation and editing with manuscript-specific labels. A local-label edit on 2026-09-05 replaced Central PC with Protected PC. All labels, scientific connections and the separate-experiment boundary were visually checked. Raster pixels outside the label are not asserted identical. The native model version was not supplied."
     },
     "outputs": {
       "png": {
         "path": "fig_executable_system.png",
-        "bytes": 1121369,
+        "bytes": 1117016,
         "pixels": [
           1774,
           887

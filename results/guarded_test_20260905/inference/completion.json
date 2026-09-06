@@ -1,0 +1,54 @@
+{
+  "status": "STATISTICS_COMPLETE_EXTERNAL_ADOPTION_PENDING",
+  "gates": [
+    {
+      "group": "published",
+      "validation_screen_pass": true,
+      "primary_noninferiority_mean": -0.5193662054575754,
+      "primary_noninferiority_upper": -0.2550422242972461,
+      "primary_noninferiority_pass": true,
+      "positive_excess_difference": -1.2480659299555232,
+      "positive_excess_ci_low": -1.4785272860427905,
+      "positive_excess_ci_high": -1.02960576459913,
+      "positive_excess_p": 3.397696666788878e-26,
+      "external_gate": "PENDING_INDEPENDENT_INPUT_EVALUATION",
+      "positive_excess_holm_p": 6.795393333577756e-26,
+      "positive_excess_pass": true
+    },
+    {
+      "group": "independent",
+      "validation_screen_pass": true,
+      "primary_noninferiority_mean": -0.435994942280884,
+      "primary_noninferiority_upper": -0.34192631252216954,
+      "primary_noninferiority_pass": true,
+      "positive_excess_difference": -0.18226996657180555,
+      "positive_excess_ci_low": -0.26909225846705415,
+      "positive_excess_ci_high": -0.10889383476602746,
+      "positive_excess_p": 1.0111942544245806e-05,
+      "external_gate": "PENDING_INDEPENDENT_INPUT_EVALUATION",
+      "positive_excess_holm_p": 1.0111942544245806e-05,
+      "positive_excess_pass": true
+    }
+  ],
+  "cost_comparisons": 80,
+  "tail_comparisons": 64,
+  "secondary_comparisons": 240,
+  "frozen_sha256": "ce0ac2900accce3ff256a26569b1d0dde1d870124499cda2f8172554f53f7de3",
+  "script_sha256": "6a2052ad9160dafaee0592e466795a205826ebe5dd9b356d64e53d45785e0a41",
+  "source_records": {
+    "primary": "90886101e902f42c0b6df1b2c439386ae015eb92d89986e86a20cb6ab4d435c7",
+    "matrix_scale_075": "f6df7348b631c9d429d3e6754f1451ac7885ac45697308d6c74b5cb6455e6aba",
+    "matrix_scale_125": "74ace2cb5aca7632fac8450d159e208ae227ea40c0c9aa4f26eb35d7bb3eb338",
+    "matrix_noise_015": "efa76e49ed3878583c8a3b7b3b3a4784f351e3f9c468415be836d9bc90f9dbe1",
+    "expanded_unsupported": "0f40d04e67f799c355ffdb2031610312cf94e7aa9636e424ac2f189fe5bfe213",
+    "zero_all_unsupported": "e94327147b9db729cb59c9759bb910f10dfdeb6db63f3a725848ad2740e59ed6",
+    "nonlinear_ood": "7da5b511cc40df400488e8778978ce4007f7e56ac9f8247bbe60c3d7cc12af70",
+    "electrical_stress": "1d006a6c974b3c8417f1159116d06999bf718fbfe3103e8a8977e6675fd03335"
+  },
+  "outputs": {
+    "paired_costs": "128572a08996f7cd8c0e74886a139a4427296f9ac9c6fef22f544e07c8a4a044",
+    "tails": "ddbade59237ae52b64377d0aa5e9066a08bc66cca3ab7952dec0def632319d57",
+    "secondary": "ef0a10af9a86e5f96b6e99e3136d22e2ec1832c5faffd68b30f3c8d229fa229a",
+    "diagnostics": "23b4500e81ef820272469f57161de837297fd36f9cd681e6c282b11bcce5e727"
+  }
+}
